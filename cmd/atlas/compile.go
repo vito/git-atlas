@@ -544,6 +544,18 @@ func RenderQueue(d *Data, der *Derived) []byte {
 				items = append(items, q)
 			}
 		}
+		// One entry per PR: a PR's tabs are re-read together.
+		var merged []QueueItem
+		for _, q := range items {
+			if n := len(merged); n > 0 && merged[n-1].PR == q.PR {
+				if q.Detail != "" {
+					merged[n-1].Detail += "\n" + q.Detail
+				}
+				continue
+			}
+			merged = append(merged, q)
+		}
+		items = merged
 		fmt.Fprintf(&b, "## %s (%d)\n\n%s\n\n", g.title, len(items), g.help)
 		if len(items) == 0 {
 			b.WriteString("Nothing.\n\n")
@@ -555,8 +567,10 @@ func RenderQueue(d *Data, der *Derived) []byte {
 				fmt.Fprintf(&b, " (%s, `%s`)", q.Date, short(q.SHA))
 			}
 			b.WriteString("\n")
-			if q.Detail != "" {
-				fmt.Fprintf(&b, "  - %s\n", q.Detail)
+			for _, l := range strings.Split(q.Detail, "\n") {
+				if l != "" {
+					fmt.Fprintf(&b, "  - %s\n", l)
+				}
 			}
 			if len(q.Files) > 0 {
 				fs := q.Files

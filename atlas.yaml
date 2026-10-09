@@ -13,7 +13,7 @@ schema: docs/docs-graphql/schema.graphqls
 cutoff:
   sha: 5ddd1941220d4a0345ac521ce06a9590a08b2631
   date: "2026-09-03"
-  label: main before #14000 (5ddd194, merge of #14002)
+  label: "main before #14000 (5ddd194, merge of #14002)"
 
 # A PR merged after the cutoff that touches one of these paths must have a
 # data/prs/<n>.yaml or an entry in data/skipped.yaml (see QUEUE.md).
