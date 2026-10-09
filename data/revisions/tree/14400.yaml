@@ -1,5 +1,5 @@
 source: code
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   Commits on a remote parent produce owned shallow storage (HistorySource). A remote
   parent's canonical tree(discardGitDir: true) is pinned into CheckoutBase.Tree, so

@@ -1,6 +1,6 @@
 source: code
 sha: "d8cf808035b1d1e2052022c987d0e58545e3c609"
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   Equivalent spellings of one tree become one call and one snapshot (treeCacheKey). Local
   source trees try three paths: incremental from any ancestor CheckoutBase (withCommit
