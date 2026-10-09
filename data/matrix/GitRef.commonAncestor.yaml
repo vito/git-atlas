@@ -1,4 +1,4 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   fbrec:
     status: gap
@@ -11,11 +11,9 @@ cells:
     note: No path marker.
   nego:
     status: "yes"
-    note: "refJoin negotiation (#14576)."
-    requires: 14576
-    prs: [14576]
+    note: "refJoin fallback fetch negotiates from joined commits (#14576, kept by #14167)."
+    prs: [14576, 14167]
   pack:
     status: "yes"
-    note: "#14167 refJoin pack copy."
-    requires: 14167
+    note: "refJoin pack copy, excluding history already joined (#14167)."
     prs: [14167]

@@ -1,4 +1,4 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   history:
     status: "yes"
@@ -9,7 +9,7 @@ cells:
     note: "Network-byte accounting (#14431) but no phase spans/markers."
   lock:
     status: gap
-    note: "Remote-source push preparation fetches under the mirror lock; #14167 does not cover push."
+    note: "Remote-source push preparation fetches under the mirror lock; #14167 left push out."
     prs: [14167]
   pack:
     status: gap

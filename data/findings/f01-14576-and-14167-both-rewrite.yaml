@@ -1,19 +1,24 @@
 kind: conflict
 title: "#14576 and #14167 both rewrite the same seams; land them deliberately"
-status: open
+status: fixed
+fixed_in: 14167
 discovered_in: 14167
 prs: [14167, 14576]
 size: M
 risk: medium
 apis: [GitRef.tree, GitRepository.withBundle, GitRef.commonAncestor]
 claim: >-
-  #14167 is based on main. It splits doGitCheckout into fetchGitCheckout +
+  #14167 was based on main. It splits doGitCheckout into fetchGitCheckout +
   finishGitCheckout(…, tmpref) while #14576 adds a gitCheckoutReuse parameter to
   finishGitCheckout; both rewrite importGitBundleInto's prerequisite copy (#14167's
   description already says the second to land keeps #14576's copy body and
   instrumentation); and both rewrite refJoin's per-ref fetch (#14576: --negotiation-tip of
   joined SHAs; #14167: packGitClosure with fetch fallback). A naive merge can drop the
-  negotiation tips from refJoin's fallback fetch.
+  negotiation tips from refJoin's fallback fetch. Resolved as proposed: #14576 merged
+  first and #14167 was rebased on it. Remote checkouts pass gitCheckoutFresh to the
+  reuse-mode finishGitCheckout, bundle import keeps copyGitBundlePrerequisites and its
+  phases (only the post-unlock tail moved to finishGitBundleImport), and
+  joinGitObjects' fallback fetch keeps --negotiation-tip for the joined commits.
 proposal: >-
   Land #14576 first, rebase #14167 on it: keep the reuse-mode finishGitCheckout and make
   #14167's copy phase one more 'objects provider'; keep negotiation tips on refJoin's
@@ -29,3 +34,7 @@ pointers:
   - core/git_bundle.go:copyGitBundlePrerequisites@4e9d0b0
   - at: core/git.go:refJoin@4e9d0b0
     note: both
+  - at: core/git.go:joinGitObjects@e119a8d
+    note: merged fallback keeps negotiation tips
+  - at: core/git_remote.go:RemoteGitRef.Tree@e119a8d
+    note: finishGitCheckout(…, gitCheckoutFresh)

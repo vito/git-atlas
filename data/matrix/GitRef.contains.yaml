@@ -1,4 +1,4 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   fbrec:
     status: gap
@@ -12,11 +12,11 @@ cells:
     note: "Same as log: no path marker."
   nego:
     status: "yes"
-    note: "refJoin and containsWithFullHistory negotiate from joined commits (#14576)."
-    requires: 14576
-    prs: [14576]
+    note: >-
+      refJoin's fallback fetch and containsWithFullHistory negotiate from joined commits
+      (#14576, kept by #14167).
+    prs: [14576, 14167]
   pack:
     status: "yes"
-    note: "refJoin pack-objects copy only in #14167 (conflicts with #14576's negotiated fetch)."
-    requires: 14167
-    prs: [14167, 14576]
+    note: "refJoin packs each ref's closure minus the refs already joined (#14167)."
+    prs: [14167]

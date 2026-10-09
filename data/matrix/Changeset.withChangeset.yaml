@@ -1,14 +1,12 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   fbrec:
     status: "yes"
     note: "git.merge.scoped_fallback[reason] (#14576)."
-    requires: 14576
     prs: [14576]
   instr:
     status: "yes"
     note: "git.merge.<phase> + git.<verb> ops (#14576)."
-    requires: 14576
     prs: [14576]
   layers:
     status: "yes"

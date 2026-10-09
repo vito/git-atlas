@@ -1,11 +1,10 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   canon:
     status: "yes"
     note: >-
       Its tree(discardGitDir: true, depth: 1, includeTags: false) was the motivating
       duplicate; now canonical (#14576).
-    requires: 14576
     prs: [14576]
   history:
     status: "yes"
@@ -17,7 +16,6 @@ cells:
   pack:
     status: "yes"
     note: "Bundle prerequisites packed (#14576)."
-    requires: 14576
     prs: [14576]
   replay:
     status: "yes"

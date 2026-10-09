@@ -1,33 +1,29 @@
 source: code
-sha: "655c54e254e447548294bbff50734009e6376059"
-verified_at: 2026-10-09
+verified_at: null
 what: >-
-  Proposed: hold the mirror lock only to update the mirror and copy objects out. A
-  full-history (depth 0) copy uses pack-objects in the checkout with the mirror as a
+  Remote checkouts hold the mirror lock only to update the mirror and copy objects out.
+  A full-history (depth 0) copy uses pack-objects in the checkout with the mirror as a
   transient alternate (reproducing the fetch's temp ref and tag auto-following; fallback:
-  fetch); it lists the mirror's tags before packing, so a tag of a tag falls back to the
-  fetch without first packing a history it would discard. Depth-limited copies keep
-  fetching. Checkout, submodule clones (network) and timestamps run after the unlock, in
-  the private copy. Adds 'waiting for / holding git mirror lock' spans (the holding span
-  is passthrough, and the mirror fetch and copy nest under it) and a wcprof
-  git.mirror.locked op. Based on main: finishGitCheckout has no reuse-mode parameter
-  there, unlike #14576.
+  discard the git dir and fetch); it lists the mirror's tags before packing, so a tag of
+  a tag falls back to the fetch without first packing a history it would discard.
+  Depth-limited copies keep fetching. Checkout, submodule clones (network) and timestamps
+  run after the unlock, in the private copy, through #14576's finishGitCheckout
+  (gitCheckoutFresh). Adds 'waiting for / holding git mirror lock' spans (the holding
+  span is passthrough; mount callbacks now receive its ctx, so the mirror fetch and copy
+  nest under it) and a wcprof git.mirror.locked op. Local checkouts are unchanged.
 effect: >-
   Full-history copy out of a warm dagger/dagger mirror: 1.16 s instead of 3.29 s of lock
   hold (median of 7).
 pointers:
-  - at: core/git_remote.go:RemoteGitRef.Tree
-    note: branch
-  - at: core/git.go:fetchGitCheckout
-    note: branch
+  - core/git_remote.go:RemoteGitRef.Tree
+  - core/git_remote.go:RemoteGitRepository.initRemote
   - core/git.go:copyGitCheckout
   - core/git.go:packGitCheckout
-  - at: core/git.go:gitTagCandidates
-    note: new, branch
-  - at: core/git_pack_copy.go:packGitObjects
-    note: new, branch
+  - {at: core/git.go:gitTagCandidates, note: new}
+  - {at: core/git_pack_copy.go:copyGitObjects, note: new}
 code: |
   GitRef.tree(discardGitDir, depth=1, includeTags)
+    args canonicalized: defaults dropped; no .git ⇒ depth, includeTags dropped (treeCacheKey)
     if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
     if keep .git, depth 0, no tags: return GitRef.__fullCheckout
       (saved under its own recipe kind: gitFullCheckout)
@@ -41,19 +37,28 @@ code: |
     remote: same contentDigest, on the lazy
 
   RemoteGitRef.Tree(…)
-    setup auth/known hosts/DNS outside the lock (submodules need them later)
+    setup auth/known hosts/DNS; new snapshot                  # outside the lock (submodules need auth later)
     lock git-remote::<url>                                    # held only to update the mirror and copy out
       mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
       (depth dropped once the mirror is complete: mirrorFetchDepth)
       (automatic maintenance runs synchronously, inside the lock)
-      copy out: depth 0 → list mirror tags (tag of a tag → fetch); pack-objects --revs via alternate
-        + followed tags (fallback: fetch); depth N → fetch file://mirror
+      copy out: init;
+        depth 0 → list mirror tags (tag of a tag → fetch); pack-objects --revs via alternate
+          + followed tags (fallback: rm .git, fetch)
+        depth N → fetch file://mirror SHA:tmpref (--depth=N)
     unlock → checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
     spans: waiting for / holding git mirror lock (fetch + copy nest under it); wcprof git.mirror.locked, git.copy[pack|fetch]
 
   LocalGitRef.Tree(…)
     mount repository snapshot read-only            # owned shallow: depth 1; deep reads hydrate first
-    discard and CheckoutBase(parent; remote parents pin their tree) and SHA == CommitSHA (sole parent):
-      incrementalTree: diff-tree parent SHA → COW child of parent's tree, write the delta only
-    discard: new snapshot: init + alternates → mounted objects (no fetch); checkout; rm .git
-    keep .git: new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout
+    discard:
+      ① incrementalTree: CheckoutBase (withCommit parent or pull receiver; any ancestor) → COW of its tree + delta
+      ② contentsCheckoutTree: COW of the retained checkout the storage came from, minus .git (+ delta)
+      ③ new snapshot: init + alternates → mounted objects (no fetch); checkout; rm .git
+      marker: git.tree.<incremental|checkout|full>[why]
+    keep .git, depth ≤ 0:
+      ① COW delta: child of the base's __fullCheckout; fetch --negotiation-tip=HEAD; write the delta
+      ② COW wipe: child of the repository snapshot; checkout -f every file (4 workers); no fetch
+      ③ new snapshot: init; fetch <mount> SHA:tmpref; checkout
+      marker: git.checkout.<delta|wipe|full>[why]
+    keep .git, depth > 0: new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout

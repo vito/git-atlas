@@ -1,36 +1,36 @@
 source: code
-sha: "655c54e254e447548294bbff50734009e6376059"
 verified_at: null
 what: >-
-  Proposed: bundle creation from a remote copies the targets and base out of the mirror
-  with one packGitClosure (one update-ref transaction), then runs git bundle create
-  unlocked. An annotated tag still comes from origin, but its peeled commit's history is
-  pack-copied from the mirror first under a temporary ref, so the origin fetch negotiates
-  against it and transfers only the tag object; the temporary refs are deleted before
-  bundling. The import side has the same shape as #14576's; the PR notes that whichever
-  merges second keeps #14576's copy body and instrumentation.
+  Bundle creation from a remote copies the targets and base out of the mirror with one
+  packGitClosure and one update-ref transaction (fallback: fetch each), then runs git
+  bundle create after the lock is released. An annotated tag still comes from origin,
+  but its peeled commit's history is pack-copied from the mirror first under a temporary
+  ref, so the origin fetch negotiates against it and transfers only the tag object; the
+  temporary refs are deleted before bundling. Local sources still bundle while mounted
+  (their scratch borrows objects). The import side keeps #14576's prerequisite copy and
+  instrumentation; its post-unlock tail moves into finishGitBundleImport, and the
+  prerequisites op now nests under git.mirror.locked.
 pointers:
-  - at: core/git_bundle.go:prepareGitBundleSource
-    note: branch
-  - at: core/git_bundle.go:copyGitBundleMirrorRefs
-    note: new, branch
-  - core/git_bundle.go:finishGitBundleFile
-  - core/git_bundle.go:copyGitBundlePrerequisites
-  - core/git_bundle.go:finishGitBundleImport
+  - core/git_bundle.go:CreateGitBundleFile
+  - {at: core/git_bundle.go:prepareGitBundleSource, note: new}
+  - {at: core/git_bundle.go:copyGitBundleMirrorRefs, note: new}
+  - {at: core/git_bundle.go:finishGitBundleFile, note: new}
+  - {at: core/git_bundle.go:finishGitBundleImport, note: new}
 code: |
   GitRepository.bundle(refs, base)                     # names resolved per session
     __bundleFile(pinned refs, base)                    # persisted
       mount source with targets + base (remote: mirror lock + fetch)
-        local source: scratch borrows objects via alternates (no fetch)
-        remote source: pack-objects closure of targets + base + annotated tags' peeled commits
-          via alternate, one update-ref (fallback: fetch)
-          annotated tag: fetch only the tag object from origin (haves = copied history); drop temp refs
-        release lock
-        git bundle create (detached HEAD preserved)       # unlocked
+        local source: scratch borrows objects via alternates (no fetch); git bundle create while mounted
+        remote source: scratch repo
+          targets + base: pack-objects closure via alternate, one update-ref (fallback: fetch each)
+          annotated tag: peeled commit copied under a temp ref; fetch only the tag object from origin; drop temp refs
+      release lock
+      remote: git bundle create (detached HEAD preserved)   # unlocked
   GitRepository.withBundle(bundle, prerequisiteRef)
     __withBundleDirectory → DirectoryGitBundleImportLazy   # lazy, persisted producer
       mount source with prerequisites (remote: mirror lock + depth-0 fetch)
-        new bare repo; copy prerequisites (copyGitBundlePrerequisites)
+        new bare repo; pack-objects --revs prerequisites via alternate (fallback: fetch each)
       release source / mirror lock
-      bundle verify; fetch bundle refs; pack-refs; write remotes   # unlocked
+      finishGitBundleImport: bundle verify; fetch bundle refs; pack-refs; write remotes   # unlocked
+      wcprof: git.bundle.source[depth=0] · prerequisites[pack|fetch] (under git.mirror.locked) · unbundle
   GitBundle.validate / refs / prerequisiteSHAs: parse and verify the header

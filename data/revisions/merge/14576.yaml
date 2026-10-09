@@ -1,5 +1,4 @@
 source: code
-sha: "d8cf808035b1d1e2052022c987d0e58545e3c609"
 verified_at: null
 what: >-
   Two-way merges first build a scoped base: the same full tree, but with objects only

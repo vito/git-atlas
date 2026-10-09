@@ -1,7 +1,7 @@
 {
   "upstream": {
     "branch": "main",
-    "sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+    "sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
     "date": "2026-10-09"
   },
   "prs": {
@@ -124,11 +124,10 @@
     "14167": {
       "number": 14167,
       "title": "fix(git): hold mirror locks only to copy objects out",
-      "state": "open",
-      "head_sha": "655c54e254e447548294bbff50734009e6376059",
-      "base": "main",
-      "created_at": "2026-09-16T17:07:51Z",
-      "source": "github"
+      "state": "merged",
+      "merged_at": "2026-10-09T19:54:03Z",
+      "merge_sha": "e119a8df81332e3fc21cc00e8d40a72f5f8c64cb",
+      "source": "git"
     },
     "14170": {
       "number": 14170,
@@ -401,11 +400,10 @@
     "14576": {
       "number": 14576,
       "title": "core: speed up workspace git checkouts, pulls and merges",
-      "state": "open",
-      "head_sha": "d8cf808035b1d1e2052022c987d0e58545e3c609",
-      "base": "main",
-      "created_at": "2026-10-08T18:37:16Z",
-      "source": "github"
+      "state": "merged",
+      "merged_at": "2026-10-09T18:38:10Z",
+      "merge_sha": "1659c5690daa8c5c0d6ae8f428432a15b3411399",
+      "source": "git"
     },
     "14593": {
       "number": 14593,
@@ -430,7 +428,7 @@
         "addedPaths: [String!]!"
       ],
       "doc": "Files and directories that were added in the newer directory.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.asPatch": {
@@ -438,7 +436,7 @@
         "asPatch: File!"
       ],
       "doc": "Return a Git-compatible patch of the changes",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.diffStats": {
@@ -446,7 +444,7 @@
         "diffStats: [DiffStat!]!"
       ],
       "doc": "Structured per-path diff statistics (kind and line counts) for this changeset.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.export": {
@@ -454,7 +452,7 @@
         "export(path: String!): String!"
       ],
       "doc": "Applies the diff represented by this changeset to a path on the host.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.isEmpty": {
@@ -462,7 +460,7 @@
         "isEmpty: Boolean!"
       ],
       "doc": "Returns true if the changeset is empty (i.e. there are no changes).",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.modifiedPaths": {
@@ -470,7 +468,7 @@
         "modifiedPaths: [String!]!"
       ],
       "doc": "Files and directories that existed before and were updated in the newer directory.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.removedPaths": {
@@ -478,7 +476,7 @@
         "removedPaths: [String!]!"
       ],
       "doc": "Files and directories that were removed. Directories are indicated by a\ntrailing slash, and their child paths are not included.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.withChangeset": {
@@ -489,7 +487,7 @@
         "): Changeset!"
       ],
       "doc": "Add changes to an existing changeset\n\nBy default the operation will fail in case of conflicts, for instance a file\nmodified in both changesets. The behavior can be adjusted using onConflict\nargument",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Changeset.withChangesets": {
@@ -500,7 +498,7 @@
         "): Changeset!"
       ],
       "doc": "Add changes from multiple changesets using git octopus merge strategy\n\nThis is more efficient than chaining multiple withChangeset calls when merging many changesets.\n\nOnly FAIL and FAIL_EARLY conflict strategies are supported (octopus merge cannot use -X ours/theirs).",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Directory.asGit": {
@@ -508,7 +506,7 @@
         "asGit: GitRepository!"
       ],
       "doc": "Converts this directory to a local git repository",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Directory.changes": {
@@ -518,7 +516,7 @@
         "): Changeset!"
       ],
       "doc": "Return the difference between this directory and another directory, typically an older snapshot.\n\nThe difference is encoded as a changeset, which also tracks removed files, and can be applied to other directories.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Directory.diff": {
@@ -528,7 +526,7 @@
         "): Directory!"
       ],
       "doc": "Return the difference between this directory and an another directory. The difference is encoded as a directory.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Directory.withChanges": {
@@ -538,7 +536,7 @@
         "): Directory!"
       ],
       "doc": "Return a directory with changes from another directory applied to it.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "File.asGitBundle": {
@@ -546,7 +544,7 @@
         "asGitBundle: GitBundle!"
       ],
       "doc": "Interpret this file as a Git bundle by lazily parsing its header.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitBundle.asFile": {
@@ -554,7 +552,7 @@
         "asFile: File!"
       ],
       "doc": "Return the bundle bytes as a File.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitBundle.objectFormat": {
@@ -562,7 +560,7 @@
         "objectFormat: String!"
       ],
       "doc": "Object format capability: sha1 or sha256.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitBundle.prerequisiteSHAs": {
@@ -570,7 +568,7 @@
         "prerequisiteSHAs: [String!]!"
       ],
       "doc": "Commits that must already exist wherever this bundle is applied.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitBundle.refs": {
@@ -578,7 +576,7 @@
         "refs: [GitBundleRef!]!"
       ],
       "doc": "Refs advertised by the bundle and the object IDs they resolve to.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitBundle.validate": {
@@ -586,7 +584,7 @@
         "validate: GitBundle!"
       ],
       "doc": "Perform full structural verification of the bundle and error if it is malformed.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitBundle.version": {
@@ -594,7 +592,7 @@
         "version: Int!"
       ],
       "doc": "Bundle format version (2 or 3).",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitCommit.ancestorReleaseTag": {
@@ -602,7 +600,7 @@
         "ancestorReleaseTag(includePreRelease: Boolean = false): GitRef"
       ],
       "doc": "The latest semver release tag reachable from this commit.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.authorEmail": {
@@ -610,7 +608,7 @@
         "authorEmail: String!"
       ],
       "doc": "Git author email.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.authorName": {
@@ -618,7 +616,7 @@
         "authorName: String!"
       ],
       "doc": "Git author name.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.authoredDate": {
@@ -626,7 +624,7 @@
         "authoredDate: String!"
       ],
       "doc": "Git author date, in RFC3339 format.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.changes": {
@@ -636,7 +634,7 @@
         "): Changeset!"
       ],
       "doc": "Returns the changes from the first parent to this commit, excluding Git metadata.\n\nRoot commits are compared with an empty tree. Merge commits are compared with their first parent, not a merge base.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitCommit.committedDate": {
@@ -644,7 +642,7 @@
         "committedDate: String!"
       ],
       "doc": "Git committer date, in RFC3339 format.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.committerEmail": {
@@ -652,7 +650,7 @@
         "committerEmail: String!"
       ],
       "doc": "Git committer email.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.committerName": {
@@ -660,7 +658,7 @@
         "committerName: String!"
       ],
       "doc": "Git committer name.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.message": {
@@ -668,7 +666,7 @@
         "message: String!"
       ],
       "doc": "Full commit message.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.messageBody": {
@@ -676,7 +674,7 @@
         "messageBody: String!"
       ],
       "doc": "Commit message body, excluding the headline.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.messageHeadline": {
@@ -684,7 +682,7 @@
         "messageHeadline: String!"
       ],
       "doc": "First line of the commit message.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.parentShas": {
@@ -692,7 +690,7 @@
         "parentShas: [String!]!"
       ],
       "doc": "Parent commit SHAs.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.releaseTag": {
@@ -700,7 +698,7 @@
         "releaseTag(includePreRelease: Boolean = false): GitRef"
       ],
       "doc": "The latest semver release tag that points directly at this commit.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.sha": {
@@ -708,7 +706,7 @@
         "sha: String!"
       ],
       "doc": "The full commit SHA.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.shortSha": {
@@ -716,7 +714,7 @@
         "shortSha: String!"
       ],
       "doc": "The abbreviated commit SHA.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitCommit.tree": {
@@ -728,7 +726,7 @@
         "): Directory!"
       ],
       "doc": "The filesystem tree at this commit.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.asRepository": {
@@ -736,7 +734,7 @@
         "asRepository: GitRepository!"
       ],
       "doc": "Return this ref's repository with HEAD pinned to the selected commit.\n\nPreserves the original repository backend, connection information, and other\nrefs. Does not modify a branch or checkout, or prune history.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRef.asWorkspace": {
@@ -744,7 +742,7 @@
         "asWorkspace(cwd: String = \"/\"): Workspace!"
       ],
       "doc": "Creates a synthetic workspace from this git ref.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.commitSHA": {
@@ -752,7 +750,7 @@
         "commitSHA: String!"
       ],
       "doc": "The resolved commit SHA at this ref.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.commonAncestor": {
@@ -762,7 +760,7 @@
         "): GitRef!"
       ],
       "doc": "Find the best common ancestor between this ref and another ref.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.contains": {
@@ -772,7 +770,7 @@
         "): Boolean!"
       ],
       "doc": "Return true when the other ref's commit equals this commit or is an ancestor of it.\n\nCompares commit history across branches, tags and detached refs. Incomplete or unavailable history is an error.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRef.log": {
@@ -784,7 +782,7 @@
         "): [GitCommit!]!"
       ],
       "doc": "Commits reachable from this ref, newest first, starting with the commit this ref resolves to.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.name": {
@@ -792,7 +790,7 @@
         "name: String!"
       ],
       "doc": "The resolved name of this ref.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.push": {
@@ -805,7 +803,7 @@
         "): GitPushResult!"
       ],
       "doc": "Push this ref's commit and history to a remote repository using the destination's credentials.\n\nThe source can come from a remote repository or an engine-side Git repository.\nTo publish a workspace's commits, use Workspace.git.head.push. Pushing does\nnot modify the calling client's checkout, and checkout hooks do not run.\n\nA missing remote ref is created. Without a lease, Git's normal non-force rules\napply. Each invocation performs a push; loading the returned receipt does not\npush again.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRef.targetCommit": {
@@ -813,7 +811,7 @@
         "targetCommit: GitCommit!"
       ],
       "doc": "The commit this ref resolves to.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.tree": {
@@ -825,7 +823,7 @@
         "): Directory!"
       ],
       "doc": "The filesystem tree at this ref.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRef.withCommit": {
@@ -844,7 +842,7 @@
         "): GitRef!"
       ],
       "doc": "Create a single-parent commit on this ref by applying a changeset's edits.\n\nThree-way merges the changeset against this ref's tree, using its before\nsnapshot as the base. Preserves compatible parent edits and fails on\nconflicts. Does not modify the input repository or host checkout.\n\nIdentity and dates are explicit; neither client Git configuration nor the current clock is consulted.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRemote.repository": {
@@ -852,7 +850,7 @@
         "repository: GitRepository!"
       ],
       "doc": "Access this remote's repository using its fetch URL and the caller's\ncredentials, or the source's existing capability for this exact destination.\n\nHEAD is the remote's HEAD, independent of the workspace's selected commit.\nRemote registration alone does not grant credentials.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRepository.asWorkspace": {
@@ -860,7 +858,7 @@
         "asWorkspace(cwd: String = \"/\"): Workspace!"
       ],
       "doc": "Creates a synthetic workspace from this repository's HEAD and uncommitted file changes.\n\nPending changes are applied at the repository root. The staging split is not\npreserved. The source repository is not modified.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.branch": {
@@ -868,7 +866,7 @@
         "branch(name: String!, noLock: Boolean = false): GitRef!"
       ],
       "doc": "Returns details of a branch.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.branches": {
@@ -876,7 +874,7 @@
         "branches(patterns: [String!]): [String!]!"
       ],
       "doc": "branches that match any of the given glob patterns.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.bundle": {
@@ -887,7 +885,7 @@
         "): GitBundle!"
       ],
       "doc": "Pack the given refs and the objects needed to reconstruct them into a Git bundle.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRepository.commit": {
@@ -895,7 +893,7 @@
         "commit(id: String!): GitCommit!"
       ],
       "doc": "Returns details of a commit.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.defaultRemote": {
@@ -903,7 +901,7 @@
         "defaultRemote: GitRemote"
       ],
       "doc": "Return the sole remote, otherwise origin, otherwise the selected branch's upstream remote, otherwise null.\n\nFrozen workspaces retain their captured upstream selection. Does not contact remote servers.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRepository.head": {
@@ -911,7 +909,7 @@
         "head(noLock: Boolean = false): GitRef!"
       ],
       "doc": "Returns details for HEAD.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.latest": {
@@ -919,7 +917,7 @@
         "latest(version: String = \"\", noLock: Boolean = false): GitRef!"
       ],
       "doc": "Return the latest stable release tag, falling back to HEAD when no release exists.\n\nRelease selection accepts an optional \"v\" prefix, incomplete versions, and\nzero-padded numeric components. This operation is pinned unless noLock is\nenabled.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.ref": {
@@ -927,7 +925,7 @@
         "ref(name: String!, noLock: Boolean = false): GitRef!"
       ],
       "doc": "Returns details of a ref.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.remote": {
@@ -935,7 +933,7 @@
         "remote(name: String!): GitRemote!"
       ],
       "doc": "Look up a remote by name. Fails when the remote does not exist.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRepository.remotes": {
@@ -943,7 +941,7 @@
         "remotes: [GitRemote!]!"
       ],
       "doc": "List this repository's named remotes, with registered remotes overriding configured ones. Does not contact remote servers.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRepository.tag": {
@@ -951,7 +949,7 @@
         "tag(name: String!, noLock: Boolean = false): GitRef!"
       ],
       "doc": "Returns details of a tag.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.tags": {
@@ -959,7 +957,7 @@
         "tags(patterns: [String!]): [String!]!"
       ],
       "doc": "tags that match any of the given glob patterns.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.uncommitted": {
@@ -967,7 +965,7 @@
         "uncommitted: Changeset!"
       ],
       "doc": "Returns the changeset of uncommitted changes in the git repository.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "GitRepository.withBundle": {
@@ -978,7 +976,7 @@
         "): GitRepository!"
       ],
       "doc": "Import a Git bundle after fetching and verifying all of its prerequisites.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRepository.withContents": {
@@ -988,7 +986,7 @@
         "): GitRepository!"
       ],
       "doc": "Replace this repository's storage with the supplied self-contained Git\nrepository, retaining its logical URL and push destinations.\n\nAccepts a whole checkout (including .git and pending file edits), .git\ncontents, or a bare repository. Does not initialize a repository, merge\nhistories, or modify either input.\n\nThe receiver's logical routing wins over the supplied Git configuration; that\nconfiguration is not rewritten. Use Directory.asGit to open the supplied\nrepository without retaining the receiver's routing.\n\nWhen the receiver is a remote repository (or was derived from one), that\nremote is retained with its authentication: refs the supplied storage does not\ncontain resolve through it.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "GitRepository.withRemote": {
@@ -996,7 +994,7 @@
         "withRemote(name: String!, url: String!, pushUrl: String = \"\"): GitRepository!"
       ],
       "doc": "Register a named remote on this repository, replacing any registered remote of the same name.\n\nRegistered remotes are recorded in checkouts materialized from this repository\n(GitRef.tree, Workspace.git.directory), so remote-aware tooling like gh can\nresolve and fetch from them. The origin remote also routes push when no\nexplicit destination is passed: its push URL, or its URL, becomes the default\ndestination.\n\nRouting metadata only, never a credential grant: pushes still authenticate\nwith the caller's own credentials and require approval as usual.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "Query.git": {
@@ -1013,7 +1011,7 @@
         "): GitRepository!"
       ],
       "doc": "Queries a Git repository.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Workspace.compareCommitsFrom": {
@@ -1025,7 +1023,7 @@
         "): [WorkspaceCommitPick!]!"
       ],
       "doc": "Preview which source commits withCommitsFrom would apply, skip, or report as conflicting.\n\nResults are ordered oldest first and account for earlier applicable commits in\nthe same preview. The preview does not apply commits or write to the checkout.\n\nA local receiver is snapshotted automatically; untracked files require\ninteractive approval. Source uncommitted changes are ignored. Exceeding\nmaxCommits fails rather than returning a partial preview. Divergent merge\ncommits require manual integration.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "Workspace.export": {
@@ -1036,7 +1034,7 @@
         "): Void!"
       ],
       "doc": "Write this workspace's commits and pending changes to a checkout on the calling client.\n\nPath selects the destination; omitting it uses the calling client's current\nlocal workspace root, including when exporting a snapshot or committed\nworkspace. Exported file paths are relative to the workspace root regardless\nof its working directory. This writes only to the client making the call,\nnever the source's client.\n\nA live workspace exported to its own checkout applies only its overlay edits,\nwithout capturing the whole checkout. This also applies with an explicit path.\nPass from with the same live base to apply only changes since that overlay\nstate.\n\nOther exports integrate divergent commits by cherry-picking, preserve\nunrelated checkout edits, and refuse conflicts. Live inputs are snapshotted\nautomatically; capturing untracked source files requires interactive approval.\nStable inputs retain their baseline. Pass from to save only work since an\nearlier source value, including previously saved pending edits that are now\ncommitted.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Workspace.git": {
@@ -1044,7 +1042,7 @@
         "git: WorkspaceGit!"
       ],
       "doc": "Git state for this workspace. Errors if the workspace is not in a git repository.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Workspace.snapshot": {
@@ -1052,7 +1050,7 @@
         "snapshot: Workspace!  @experimental"
       ],
       "doc": "Return a snapshot of this workspace as a stable value.\n\nGit capture is a progressive enhancement: if the workspace has no Git\nrepository or commits, or the client cannot capture Git, return this workspace\nunchanged. Approval rejections and capture failures remain errors.\n\nUse the returned workspace for subsequent reads, edits, and module loading\nagainst the captured baseline. Snapshotting an existing stable value preserves\nits baseline; snapshot currentWorkspace again to capture later checkout\nchanges.\n\nOnly the owning client can capture a local checkout. Tracked changes are\ncaptured automatically; untracked files require interactive approval. Remote\nGit refs are pinned to their resolved commits. Capturing leaves the checkout\nunchanged.\n\nThe recipe is portable when a remote can serve its base; otherwise it is frozen for this session only.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "Workspace.withChanges": {
@@ -1062,7 +1060,7 @@
         "): Workspace!"
       ],
       "doc": "Return this workspace with a changeset applied, without mutating the source.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "Workspace.withCommit": {
@@ -1077,7 +1075,7 @@
         "): Workspace!"
       ],
       "doc": "Create a Git commit from a changeset and return a stable workspace with HEAD advanced.\n\nThe changeset is three-way merged into both HEAD and the frozen working tree.\nCompatible unselected edits remain uncommitted; incoming changes need not\nalready be in the working tree. Conflicts with either tree fail without\nmodifying the workspace. Empty changesets, or changes already present in HEAD,\nfail with nothing to commit.\n\nA local workspace is snapshotted automatically before committing; untracked\nfiles require interactive approval. The host checkout is not modified.\n\nMissing author fields are resolved from Git config in the calling client's\nworking directory at commit time, then recorded explicitly for reproducible\ncommits. Unconfigured fields default to Dagger and dagger@localhost.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "Workspace.withCommitsFrom": {
@@ -1089,7 +1087,7 @@
         "): Workspace!"
       ],
       "doc": "Integrate source commits into this workspace and return the result, preserving\nthis workspace's uncommitted changes and metadata.\n\nFast-forward when the selected commits include all new ancestors of their tip;\notherwise cherry-pick them oldest first. Already integrated commits and\npatches already present are skipped. Any conflict fails the operation. Source\nuncommitted changes are not transferred; merge them explicitly if needed. Use\ncompareCommitsFrom to preview the integration.\n\nA local receiver is snapshotted automatically; untracked files require\ninteractive approval. The checkout is not modified. Export the result with an\nexplicit path to write it to a checkout.\n\nCherry-picks preserve the source author and author date, use the calling\nclient's Git config for committer identity, and reuse the source committer\ndate for reproducible hashes. Origin trailers track cherry-picked commits.\nDivergent merge commits require manual integration.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "Workspace.withReset": {
@@ -1097,7 +1095,7 @@
         "withReset(commit: String!, hard: Boolean = false): Workspace!"
       ],
       "doc": "Move this workspace's Git HEAD to a commit and return the resulting stable workspace.\n\nA local workspace is snapshotted automatically before resetting; untracked\nfiles require interactive approval. The host checkout is not modified. By\ndefault the difference between the previous working tree and the target commit\nstays uncommitted, as with git reset --mixed, so history can be reworked and\nreapplied with withCommit — e.g. to amend the latest commit message, reset\nto its parent and commit again.\n\nWith hard, the working tree is reset to the commit and every uncommitted change is discarded.\n\nCommits orphaned by the reset are not preserved: the frozen repository keeps\nreachable history only, so a reset cannot be undone by resetting forward\nagain.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "WorkspaceGit.directory": {
@@ -1105,7 +1103,7 @@
         "directory: Directory!"
       ],
       "doc": "Return a self-contained Git metadata directory for this workspace's HEAD,\nincluding its full reachable history and an index matching HEAD.\n\nMount this directory at .git alongside workspace.directory(\"/\") to create a\nusable checkout. Pending workspace edits remain uncommitted; the original\ncheckout's staging state is not preserved.\n\nThis is a snapshot: Git writes to a mounted copy do not update the workspace.\nThe workspace must have a Git repository with a HEAD commit.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": false
     },
     "WorkspaceGit.head": {
@@ -1113,7 +1111,7 @@
         "head: GitRef!"
       ],
       "doc": "The checked-out HEAD of this workspace.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     },
     "WorkspaceGit.uncommitted": {
@@ -1121,7 +1119,7 @@
         "uncommitted: Changeset!"
       ],
       "doc": "Uncommitted changes in this workspace, using the same rules as GitRepository.uncommitted.",
-      "schema_sha": "0bf4122718964a4ab4d490fa305834bce16eef0b",
+      "schema_sha": "6425d070f895d04b93b7019807fab7f04958e8d5",
       "at_base": true
     }
   },

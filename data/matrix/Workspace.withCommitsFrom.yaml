@@ -1,9 +1,8 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   ckbase:
     status: "yes"
     note: "__pullRepository (#14576)."
-    requires: 14576
     prs: [14576]
   cow:
     status: "yes"
@@ -14,12 +13,10 @@ cells:
   instr:
     status: "yes"
     note: "git.pull.* phases (#14576)."
-    requires: 14576
     prs: [14576]
   nego:
     status: "yes"
     note: "--negotiation-tip=HEAD (#14576)."
-    requires: 14576
     prs: [14576]
   nmerge:
     status: partial
@@ -34,7 +31,6 @@ cells:
   refresh:
     status: "yes"
     note: "#14576."
-    requires: 14576
     prs: [14576]
   replay:
     status: "yes"

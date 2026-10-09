@@ -1,23 +1,29 @@
 kind: lag
-title: "Mirror lock: only bundle import is narrowed on main + #14576"
+title: "Mirror lock: push preparation and full-history reads still hold it throughout"
 status: open
 discovered_in: 14576
 prs: [14167, 14576]
 size: M
 risk: medium
-apis: [GitRef.tree, GitRef.withCommit, GitRepository.bundle, GitRef.push, GitRef.log]
+apis: [GitRef.push, GitRef.log, GitRef.contains, GitRef.tree, GitRef.withCommit, GitRepository.bundle]
 claim: >-
-  Remote tree checkouts (including submodule clones over the network), commit-base
-  promotions, bundle creation, push preparation and full-history logs all hold
-  git-remote::<url> for their whole operation; #14576 narrows bundle import only. #14167
-  covers checkouts, promotions and bundle creation, but not push preparation or
-  log/contains unshallows.
+  Before #14167, remote tree checkouts (including submodule clones over the network),
+  commit-base promotions, bundle creation, push preparation and full-history logs all
+  held git-remote::<url> for their whole operation, and #14576 narrowed bundle import
+  only. #14167 narrows checkouts, promotions and bundle creation to 'update the mirror +
+  copy out' and adds the 'holding git mirror lock' span and git.mirror.locked op to every
+  holder; push preparation still fetches into its scratch repo under the lock, and
+  path/base-filtered logs (and same-repository contains/commonAncestor) unshallow the
+  mirror and run git against it while holding it.
 proposal: >-
-  After #14167, apply the same 'update + copy out, then unlock' split to push preparation;
-  make the lock-held span/op (#14167's git.mirror.locked) the standard for every holder.
+  Apply the same 'update + copy out, then unlock' split to push preparation (copy with
+  copyGitObjects, push from the private copy); for log/contains, consider reading from a
+  pack-copied private repository when the read is expected to be long.
 pointers:
-  - core/git_remote.go:initRemote@4e9d0b0
-  - core/git_remote.go:RemoteGitRef.Tree@4e9d0b0
-  - core/git_commit_remote.go:GitRemoteCommitBase@4e9d0b0
-  - core/git_bundle.go:CreateGitBundleFile@4e9d0b0
-  - core/git_push.go:GitRef.Push@4e9d0b0
+  - core/git_remote.go:RemoteGitRepository.initRemote@e119a8d
+  - core/git_push.go:GitRef.Push@e119a8d
+  - core/git.go:GitRef.Log@e119a8d
+  - at: core/git_remote.go:RemoteGitRef.Tree@e119a8d
+    note: narrowed by #14167
+  - at: core/git_bundle.go:CreateGitBundleFile@e119a8d
+    note: narrowed by #14167

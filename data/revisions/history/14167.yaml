@@ -1,19 +1,16 @@
 source: code
-sha: "655c54e254e447548294bbff50734009e6376059"
 verified_at: null
 what: >-
-  Proposed: refJoin copies each ref's closure with pack-objects via a transient alternate
-  (fallback: fetch), one ref at a time under its mutex; each pack excludes the history of
-  the refs already joined, so a fork and its upstream share one copy of their common
-  history. The branch is based on main, so it replaces the plain fetch, not #14576's
-  negotiated one: whichever lands second has to merge the two.
+  refJoin copies each ref's closure with pack-objects via a transient alternate, one ref
+  at a time under its mutex; each pack excludes the history of the refs already joined,
+  so a fork and its upstream share one copy of their common history. Any pack failure
+  falls back to #14576's fetch, which keeps negotiating from the joined commits
+  (joinGitObjects). Mount callbacks now receive the mount's ctx, so a remote ref's copy
+  nests under its mirror-lock span.
 pointers:
-  - at: core/git.go:refJoin
-    note: branch
-  - at: core/git.go:joinGitObjects
-    note: new, branch
-  - at: core/git_pack_copy.go:packGitClosure
-    note: branch
+  - core/git.go:refJoin
+  - {at: core/git.go:joinGitObjects, note: new}
+  - {at: core/git_pack_copy.go:packGitClosure, note: new}
 code: |
   GitRef.log(limit, paths, base)
     unfiltered: fetch limit generations; uneven shallow boundary → retry with full history
@@ -26,6 +23,7 @@ code: |
       owned shallow child vs its anchor/descendants → the child's store
       complete local donor holding every commit → alternates view (no fetch, no lock)
       owned child vs its exact remote parent → the child's objects
-      else refJoin: tmp repo; per ref, pack-objects its closure ^ refs already joined via alternate (fallback: fetch)
+      else refJoin: tmp repo; per ref (each under its own mirror lock):
+        pack-objects its closure ^ <joined SHAs> via alternate (fallback: fetch --negotiation-tip=<joined SHAs>)
     git merge-base [--is-ancestor]
-    contains, history incomplete → containsWithFullHistory: fetch --unshallow only what is needed
+    contains, history incomplete → containsWithFullHistory: fetch --unshallow --negotiation-tip=<joined SHAs>

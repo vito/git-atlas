@@ -47,7 +47,7 @@
   name: mirror lock narrowing
   desc: >-
     Hold git-remote::<url> only to update the mirror and copy out (#14576 bundle import;
-    #14167 everything else).
+    #14167 checkouts, promotions, bundle creation).
 - id: history
   name: no-fetch history
   desc: >-

@@ -1,9 +1,8 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   canon:
     status: "yes"
     note: "treeCacheKey (#14576) on top of pinned-by-SHA source trees (#14147)."
-    requires: 14576
     prs: [14147, 14576]
   ckbase:
     status: "yes"
@@ -12,7 +11,6 @@ cells:
   cow:
     status: "yes"
     note: "Local retained checkouts: delta → wipe → fetch (#14576)."
-    requires: 14576
     prs: [14576]
   fbrec:
     status: "yes"
@@ -28,15 +26,15 @@ cells:
   instr:
     status: "yes"
     note: "git.tree.<path>[why] and git.checkout.<path>[why] markers (#14576)."
-    requires: 14576
     prs: [14576]
   layers:
     status: "yes"
     note: COW outputs stay in one lineage, so later diffs walk layers.
   lock:
     status: "yes"
-    note: "Remote checkouts hold the mirror lock through checkout and submodule clones until #14167."
-    requires: 14167
+    note: >-
+      Remote checkouts hold the mirror lock only to update the mirror and copy out;
+      checkout and submodule clones run after the unlock (#14167).
     prs: [14167]
   nego:
     status: "yes"
@@ -45,9 +43,8 @@ cells:
   pack:
     status: "yes"
     note: >-
-      Remote depth-0 checkouts copy out with pack-objects only in #14167; refs still fetch
-      file://mirror + index-pack on main.
-    requires: 14167
+      Remote depth-0 checkouts copy out with pack-objects (#14167); depth-limited copies
+      still fetch file://mirror + index-pack by design.
     prs: [14167]
   refresh:
     status: na

@@ -1,4 +1,4 @@
-as_of: 4e9d0b0  # main 0e766ba + #14576
+as_of: e119a8d  # main after #14576 and #14167
 cells:
   fbrec:
     status: gap
@@ -15,8 +15,8 @@ cells:
   lock:
     status: gap
     note: >-
-      A full-history log unshallows the mirror under the lock; nothing narrows it (#14167
-      does not touch log).
+      A full-history log unshallows the mirror under the lock and reads it there; #14167
+      narrows checkouts, promotions and bundles, not log.
     prs: [14167]
   nego:
     status: partial

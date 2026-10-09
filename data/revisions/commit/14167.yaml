@@ -1,14 +1,15 @@
 source: code
-sha: "655c54e254e447548294bbff50734009e6376059"
 verified_at: null
 what: >-
-  Proposed: the commit-base promotion creates and mounts its snapshot before locking,
-  holds the mirror only for the pack-objects copy (through the shared packGitClosure
-  helper), and writes HEAD and remotes after the unlock.
+  The remote commit-base promotion creates and mounts its snapshot before locking, holds
+  the mirror only for the pack-objects copy (copyRemoteCommitBase, now on the shared
+  packGitObjects helper), and writes HEAD and remotes after the unlock
+  (finishRemoteCommitBase).
 pointers:
-  - at: core/git_commit_remote.go:copyRemoteCommitBase
-    note: branch
-  - core/git_commit_remote.go:finishRemoteCommitBase
+  - core/git_commit_remote.go:GitRemoteCommitBase
+  - {at: core/git_commit_remote.go:copyRemoteCommitBase, note: new}
+  - {at: core/git_commit_remote.go:finishRemoteCommitBase, note: new}
+  - {at: core/git_pack_copy.go:packGitObjects, note: new}
 code: |
   GitRef.withCommit(changes, message, date, author…)
     dir = __withCommitDirectory(args) → DirectoryGitCommitLazy   # saved recipe
@@ -18,10 +19,10 @@ code: |
         native: COW child of repo storage; scratch bare repo, objects via alternate
           read-tree; stage only changed paths (sparse); write-tree; commit-tree
           copy new objects only; publish branch / detached HEAD
-      else, or any failure:
+      else, or any failure (reason recorded: git.native.fallback[…]):
       tree = ref.tree(discardGitDir: true)
       applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
-      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      base = ref.asWorkspace.git.__checkout                  # local HEAD: COW delta / wipe
       COW child of base: applyContent; stage; git commit (hooks off)
     repo = __withCommitRepository: withContents(dir) + CheckoutBase{Parent, CommitSHA, Tree} + HistorySource + Upstream
     return repo.head

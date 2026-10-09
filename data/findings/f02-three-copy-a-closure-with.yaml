@@ -1,26 +1,30 @@
 kind: dup
-title: Three 'copy a closure with pack-objects through a transient alternate' helpers
+title: Two 'copy a closure with pack-objects through a transient alternate' helpers
 status: open
 discovered_in: 14167
 prs: [14167, 14400, 14576]
-size: "S–M"
+size: S
 risk: low
-apis: [GitRef.withCommit, GitRepository.withBundle, GitRepository.bundle, GitRef.tree]
+apis: [GitRepository.withBundle, GitRepository.bundle, GitRef.withCommit, GitRef.tree]
 claim: >-
   The same technique (pack-objects --revs in the destination, source objects via
   GIT_ALTERNATE_OBJECT_DIRECTORIES, GIT_NO_REPLACE_OBJECTS, GIT_NO_LAZY_FETCH, verify,
-  fallback to fetch) exists as packRemoteCommitBaseDepth (#14400),
-  packGitBundlePrerequisites (#14576, adds --use-bitmap-index), and #14167's
-  packGitObjects/packGitClosure, which #14167 also routes the commit-base promotion
-  through. Flags and refusal checks differ (bitmap use, shallow source/destination guards,
-  object-format checks).
+  fallback to fetch) existed three times before #14167: packRemoteCommitBaseDepth
+  (#14400), packGitBundlePrerequisites (#14576, adds --use-bitmap-index), and #14167's
+  packGitObjects/packGitClosure. #14167 routes the commit-base promotion
+  (copyRemoteCommitBase) through packGitObjects, so two remain on main:
+  packGitBundlePrerequisites keeps its own env, flags and fallback, while git_pack_copy.go
+  adds shallow source/destination and object-format guards and copyGitObjects' git.copy
+  instrumentation.
 proposal: >-
-  Adopt #14167's git_pack_copy.go as the single helper (with an opt-in bitmap flag), and
-  port #14576's bundle prerequisites to it.
+  Port the bundle prerequisites copy to git_pack_copy.go (newGitPackCopy + copyGitObjects)
+  with an opt-in bitmap flag.
 pointers:
-  - core/git_commit_remote.go:packRemoteCommitBaseDepth@4e9d0b0
-  - core/git_bundle.go:packGitBundlePrerequisites@4e9d0b0
-  - at: core/git_pack_copy.go:packGitObjects@3c07ff7
-    note: "#14167 branch"
-  - core/git_pack_copy.go:packGitClosure@3c07ff7
-  - core/git_pack_copy.go:newGitPackCopy@3c07ff7
+  - core/git_bundle.go:packGitBundlePrerequisites@e119a8d
+  - core/git_bundle.go:copyGitBundlePrerequisites@e119a8d
+  - core/git_pack_copy.go:packGitObjects@e119a8d
+  - core/git_pack_copy.go:newGitPackCopy@e119a8d
+  - at: core/git_commit_remote.go:copyRemoteCommitBase@e119a8d
+    note: already on packGitObjects
+  - at: core/git_commit_remote.go:packRemoteCommitBaseDepth@4e9d0b0
+    note: before #14167
