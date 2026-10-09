@@ -1,5 +1,5 @@
 source: code
-sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+sha: "d8cf808035b1d1e2052022c987d0e58545e3c609"
 verified_at: null
 what: >-
   A provenance mismatch used to skip the native path silently; it is now recorded like any
