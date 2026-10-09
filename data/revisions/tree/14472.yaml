@@ -31,7 +31,7 @@ code: |
 
   LocalGitRef.Tree(…)
     mount repository snapshot read-only
-    discard and CheckoutBase(parent) and SHA == CommitSHA (sole parent):
+    discard and CheckoutBase(local parent) and SHA == CommitSHA (sole parent):
       incrementalTree: diff-tree parent SHA → COW child of parent's tree, write the delta only
     discard: new snapshot: init + alternates → mounted objects (no fetch); checkout; rm .git
     keep .git: new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout
