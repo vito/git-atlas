@@ -10,3 +10,18 @@ check.skip = ["generate/stale"]
 # Optional; lets generate read unmerged PRs from the GitHub API. Remove it
 # (or use "env://GITHUB_TOKEN") if you don't have the gh CLI.
 githubToken = "cmd://gh auth token"
+
+[modules.editor]
+source = "github.com/vito/editor"
+
+[modules.committer]
+source = "github.com/vito/agents/committer"
+
+[modules.contributor]
+source = "github.com/vito/agents/contributor"
+
+[modules.staff]
+source = "github.com/vito/agents/staff"
+
+[modules.browser]
+source = "github.com/vito/agents/browser"
