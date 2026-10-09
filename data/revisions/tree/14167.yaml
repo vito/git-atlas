@@ -1,14 +1,17 @@
 source: code
-sha: "3c07ff709a5f5114ce1bba13fabccd9280250221"
+sha: "655c54e254e447548294bbff50734009e6376059"
 verified_at: null
 what: >-
   Proposed: hold the mirror lock only to update the mirror and copy objects out. A
   full-history (depth 0) copy uses pack-objects in the checkout with the mirror as a
   transient alternate (reproducing the fetch's temp ref and tag auto-following; fallback:
-  fetch); depth-limited copies keep fetching. Checkout, submodule clones (network) and
-  timestamps run after the unlock, in the private copy. Adds 'waiting for / holding git
-  mirror lock' spans and a wcprof git.mirror.locked op. Based on main: finishGitCheckout
-  has no reuse-mode parameter there, unlike #14576.
+  fetch); it lists the mirror's tags before packing, so a tag of a tag falls back to the
+  fetch without first packing a history it would discard. Depth-limited copies keep
+  fetching. Checkout, submodule clones (network) and timestamps run after the unlock, in
+  the private copy. Adds 'waiting for / holding git mirror lock' spans (the holding span
+  is passthrough, and the mirror fetch and copy nest under it) and a wcprof
+  git.mirror.locked op. Based on main: finishGitCheckout has no reuse-mode parameter
+  there, unlike #14576.
 effect: >-
   Full-history copy out of a warm dagger/dagger mirror: 1.16 s instead of 3.29 s of lock
   hold (median of 7).
@@ -19,6 +22,8 @@ pointers:
     note: branch
   - core/git.go:copyGitCheckout
   - core/git.go:packGitCheckout
+  - at: core/git.go:gitTagCandidates
+    note: new, branch
   - at: core/git_pack_copy.go:packGitObjects
     note: new, branch
 code: |
@@ -35,9 +40,10 @@ code: |
       mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
       (depth dropped once the mirror is complete: mirrorFetchDepth)
       (automatic maintenance runs synchronously, inside the lock)
-      copy out: depth 0 → pack-objects --revs via alternate + followed tags (fallback: fetch); depth N → fetch file://mirror
+      copy out: depth 0 → list mirror tags (tag of a tag → fetch); pack-objects --revs via alternate
+        + followed tags (fallback: fetch); depth N → fetch file://mirror
     unlock → checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
-    spans: waiting for / holding git mirror lock; wcprof git.mirror.locked, git.copy[pack|fetch]
+    spans: waiting for / holding git mirror lock (fetch + copy nest under it); wcprof git.mirror.locked, git.copy[pack|fetch]
 
   LocalGitRef.Tree(…)
     mount repository snapshot read-only            # owned shallow: depth 1; deep reads hydrate first

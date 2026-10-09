@@ -1,5 +1,5 @@
 source: code
-sha: "3c07ff709a5f5114ce1bba13fabccd9280250221"
+sha: "655c54e254e447548294bbff50734009e6376059"
 verified_at: null
 what: >-
   Proposed: the commit-base promotion creates and mounts its snapshot before locking,

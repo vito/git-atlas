@@ -16,26 +16,8 @@ The PR merged; re-read its tabs at the merge commit and drop their `sha:`. Block
 
 Nothing.
 
-## Open PRs whose head moved since their tabs were written (2)
+## Open PRs whose head moved since their tabs were written (0)
 
 Advisory: re-read the new head when convenient, then update the tabs' `sha:`.
 
-- [#14167](https://github.com/dagger/dagger/pull/14167) fix(git): hold mirror locks only to copy objects out
-  - revisions/bundle/14167.yaml describes 3c07ff7; the PR head is now 655c54e.
-  - revisions/commit/14167.yaml describes 3c07ff7; the PR head is now 655c54e.
-  - revisions/history/14167.yaml describes 3c07ff7; the PR head is now 655c54e.
-  - revisions/tree/14167.yaml describes 3c07ff7; the PR head is now 655c54e.
-  - revisions/wsgitdir/14167.yaml describes 3c07ff7; the PR head is now 655c54e.
-- [#14576](https://github.com/dagger/dagger/pull/14576) core: speed up workspace git checkouts, pulls and merges
-  - revisions/asws/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/bundle/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/commit/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/export/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/history/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/merge/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/pull/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/reset/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/tree/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/uncommitted/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/wscommit/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
-  - revisions/wsgitdir/14576.yaml describes 4e9d0b0; the PR head is now d8cf808.
+Nothing.

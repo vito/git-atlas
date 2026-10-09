@@ -1,13 +1,17 @@
 source: code
-sha: "3c07ff709a5f5114ce1bba13fabccd9280250221"
+sha: "655c54e254e447548294bbff50734009e6376059"
 verified_at: null
 what: >-
   Proposed: refJoin copies each ref's closure with pack-objects via a transient alternate
-  (fallback: fetch). The branch is based on main, so it replaces the plain fetch, not
-  #14576's negotiated one: whichever lands second has to merge the two.
+  (fallback: fetch), one ref at a time under its mutex; each pack excludes the history of
+  the refs already joined, so a fork and its upstream share one copy of their common
+  history. The branch is based on main, so it replaces the plain fetch, not #14576's
+  negotiated one: whichever lands second has to merge the two.
 pointers:
   - at: core/git.go:refJoin
     note: branch
+  - at: core/git.go:joinGitObjects
+    note: new, branch
   - at: core/git_pack_copy.go:packGitClosure
     note: branch
 code: |
@@ -22,6 +26,6 @@ code: |
       owned shallow child vs its anchor/descendants → the child's store
       complete local donor holding every commit → alternates view (no fetch, no lock)
       owned child vs its exact remote parent → the child's objects
-      else refJoin: tmp repo; pack-objects each ref's closure via alternate (fallback: fetch)
+      else refJoin: tmp repo; per ref, pack-objects its closure ^ refs already joined via alternate (fallback: fetch)
     git merge-base [--is-ancestor]
     contains, history incomplete → containsWithFullHistory: fetch --unshallow only what is needed
