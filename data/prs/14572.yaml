@@ -1,0 +1,2 @@
+summary: Stops dagger generate from deleting a removed file's directory.
+color: "#cf3059"

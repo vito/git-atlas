@@ -1,0 +1,13 @@
+source: pr-description
+verified_at: null
+what: >-
+  Walks a single overlay upperdir only when the upper snapshot is exactly one layer above
+  the lower; every other case double-walks both trees and reads the content of every file
+  whose metadata matches.
+pointers:
+  - engine/snapshots/diffapply_linux.go:differ.HandleChanges
+code: |
+  Directory.diff(other)
+    ApplySnapshotDiff(lower: other, upper: this)
+    upper is exactly one layer above lower → walk that upperdir
+    else double-walk both trees (read files whose metadata matches)

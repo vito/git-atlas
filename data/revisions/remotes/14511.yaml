@@ -1,0 +1,22 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced the read side for branch filtering: list configured remotes (URL rewrites
+  applied by git) overlaid by registered ones, choose the default remote (sole → origin
+  → the branch's upstream; frozen values keep the captured selection), and open a
+  remote's repository with the caller's credentials or the source's existing capability
+  for that exact URL.
+pointers:
+  - core/schema/git_remotes.go:remotes
+  - core/schema/git_remotes.go:remote
+  - core/schema/git_remotes.go:defaultRemote
+  - core/schema/git_remotes.go:remoteRepository
+  - core/git_local.go:readGitConfigRemotes
+code: |
+  GitRepository.withRemote(name, url, pushUrl)        # persisted
+    repo.Remotes = WithGitRemote(remotes, {name, url, pushUrl})
+    written into checkouts' .git/config; origin routes push
+  GitRepository.remotes / remote(name)
+    configured remotes (readGitConfigRemotes; git resolves rewrites) overlaid by registered ones
+  GitRepository.defaultRemote: sole → origin → branch upstream (frozen: captured selection) → null
+  GitRemote.repository: git(fetch URL) with caller credentials, or the source's capability for this exact URL

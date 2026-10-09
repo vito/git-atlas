@@ -1,0 +1,28 @@
+source: code
+verified_at: null
+what: >-
+  The working-tree merge goes through a private __mergeForWorkspaceCommit: a native merge
+  stages each delta in a private sparse index over borrowed objects, runs git merge-tree,
+  and replays only the changed-path checkout transitions on a COW child of Before. A
+  native conflict is final. When both deltas sit on HEAD's tree, the approved delta is
+  reused instead of being rebuilt and re-diffed.
+effect: >-
+  Median Workspace.withCommit on a 12k-file repo: 11.07 s (before the stack) → 4.59 s
+  (#14396) → 2.28 s.
+pointers:
+  - core/schema/workspace_commit.go:changesetMergeForWorkspaceCommit
+  - core/changeset_native.go:TryNativeWorkspaceMerge
+code: |
+  Workspace.withCommit(changes, message, date, author?)
+    author missing → read client git config; re-select with explicit identity
+    frozen = freeze(receiver)                            # snapshot if live
+    uncommitted = frozen.git.uncommitted
+    uncommitted and changes both on HEAD's tree → working = uncommitted
+    else working = (HEAD.tree(discardGitDir) + uncommitted).changes(from: changes.Before)
+    merged = working.__mergeForWorkspaceCommit(changes)    # persisted private recipe
+      native: stage each side sparsely; merge-tree --write-tree; replay checkouts on COW of Before
+      else:   working.withChangeset(changes, FAIL)         # general merge: git add -A of the whole base
+    C1 = frozen.git.head.withCommit(changes, …)          # see GitRef.withCommit
+    W1 = C1.asWorkspace
+    remaining = merged.changes(from: W1 root)
+    return W1.withChanges(remaining) + workspace metadata

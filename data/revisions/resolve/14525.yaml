@@ -1,0 +1,24 @@
+source: pr-description
+verified_at: null
+what: >-
+  noLock only skipped the lockfile; three per-session caches could still answer, so main
+  kept resolving to the commit seen at the session's first lookup. With noLock, the call
+  gets a fresh cache key (except full SHAs, which cannot change) and the repository
+  listing is re-run and replaced in place.
+notes: "See also: dagql PerCallWhen."
+pointers:
+  - core/git_remote.go:ContextWithLiveGitRemote
+code: |
+  GitRepository.ref(name, noLock)            # head · branch · tag · commit share this path
+    # cache: per client when the lock is consulted; full SHAs shared; noLock → fresh key per call
+    name~N / name^N → resolve base as below, then WalkRevision (remote: fetch walk depth, retry full)
+    noLock: skip lock read and write; mark context live
+    pin = workspace lock (git.ref, host/path identity, name)? → use the pinned SHA
+    remote = repo.LoadRemote()               # remote: ls-remote, cached per session (live: re-listed)
+                                              # local: ls-remote file://<gitdir>
+    abbreviated SHA → ResolveShortSHA (fetched objects only)
+    ref = remote.Lookup(name)                # strict: branch | tag | full SHA
+    owned storage: not found / SHA absent (HasCommit) → Upstream.ref(name)   # remote's own GitRef
+    write lock entry
+    return select __resolvedRef(name, SHA)    # persisted; digest: url + SHA + auth handles
+  latest(version): SelectGitRefWithVersionQuery → matching tags, then branches; lock stores ref + commit

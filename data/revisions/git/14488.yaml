@@ -1,0 +1,24 @@
+source: code
+verified_at: null
+what: >-
+  URLs a model passes to a tool are lifted into Git objects in the context of whoever
+  drives the conversation; a worker agent spawned by a module could not use the owner's
+  credentials. Agent-supplied addresses may now use the owner's credentials after owner
+  approval (AuthorizeGitRead), in a cache namespace of their own so they never mix with
+  the caller's own lookups.
+pointers:
+  - core/schema/git.go:gitSchema.git
+  - core/schema/git.go:agentAddressScopedInput
+code: |
+  Query.git(url, keepGitDir, sshKnownHosts, sshAuthSocket, httpAuth…)   # cache: per client; agent addresses namespaced
+    ambiguous scheme → try each clone URL candidate
+    ssh, no socket: scope client's SSH_AUTH_SOCK (Host._sshAuthSocket) → re-select git(…, sshAuthSocket)
+    https, no token:
+      advertisement = cachedPublicRemote(url)    # one probe per session; nil = private
+      agent-supplied address → AuthorizeGitRead(owner) → use the owner's credential helper
+      private → GetCredential (client helper) → setSecret → re-select git(…, httpAuthToken)
+    return select __gitRepository(explicit args)   # client-independent, shared
+    public → backend.PrimePublicRemote(advertisement)   # seeds the session ls-remote cache
+  __gitRepository(…)                            # cache: CacheScopeInput only
+    mirror = Query._remoteGitMirror(url)       # one bare repo per URL
+    return GitRepository{RemoteGitRepository{url, auth, services, mirror}}

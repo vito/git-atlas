@@ -1,0 +1,4 @@
+summary: >-
+  Keys git lock entries by a scheme-less host/path identity, so HTTPS, SSH and SCP
+  spellings of one repository share a pin.
+color: "#0f8b96"

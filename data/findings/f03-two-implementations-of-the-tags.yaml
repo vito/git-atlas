@@ -1,0 +1,25 @@
+kind: dup
+title: Two implementations of 'the tags a fetch would have auto-followed'
+status: open
+discovered_in: 14167
+prs: [14167, 14576]
+size: S
+risk: medium
+apis: [GitRef.tree, WorkspaceGit.directory]
+claim: >-
+  #14576's cowGitCheckoutTags lists tags with for-each-ref --merged=<sha> (a commit walk)
+  and refuses any tag that does not peel to a commit; #14167's gitFollowedTags lists every
+  tag, checks the destination for the peeled object, refuses tags of tags, and packs
+  annotated tag objects. Both then write a refs/dagger.tmp/<id> ref plus the tags in one
+  update-ref --stdin. They will disagree on tags of trees/blobs and tags of tags, and both
+  re-implement doGitCheckout's fetch semantics.
+proposal: >-
+  One followedTags(dest, source, head) with one documented refusal set, shared by the COW
+  wipe/delta paths and the pack copy-out.
+pointers:
+  - at: core/git_local_cow.go:cowGitCheckoutTags@4e9d0b0
+    note: tmpref + update-ref --stdin
+  - core/git_local_cow.go:cowGitCheckout@4e9d0b0
+  - at: core/git.go:gitFollowedTags@3c07ff7
+    note: "#14167 branch"
+  - core/git.go:packGitCheckout@3c07ff7

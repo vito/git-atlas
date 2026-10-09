@@ -1,0 +1,19 @@
+source: pr-description
+verified_at: null
+what: >-
+  Metadata is read with git cat-file from a depth-1 mount of the commit (remote: a mirror
+  read under its lock) and persisted per field; commits listed by log are the same cached
+  objects as repo.commit(sha), with metadata pre-filled from the log output. Release tags
+  are per session: remote tags come from the session's ls-remote, local tags from the
+  storage. No implementation change since the cutoff.
+pointers:
+  - core/git.go:GitCommit.Metadata
+  - core/git.go:PrefillMetadata
+  - core/schema/git.go:gitSchema.log
+  - core/schema/git.go:selectGitReleaseTag
+code: |
+  GitCommit.sha / message / authorName … / parentShas      # each persisted
+    Metadata(): commit.Mount(depth 1) → git cat-file commit SHA → parse   # remote: under the mirror lock
+    from log(): repo.commit(sha) + PrefillMetadata(log entry)   # no second cat-file
+  GitCommit.releaseTag / ancestorReleaseTag (per session)
+    tags = session ls-remote (remote) + local tag refs; select semver; ancestor: depth-0 mount

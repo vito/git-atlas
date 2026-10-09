@@ -1,0 +1,21 @@
+source: code
+verified_at: null
+what: >-
+  Changeset merges (including the workspace reconciliation) get saved recipes (fd99afc);
+  merge conflicts are reported where they are wrapped.
+pointers:
+  - core/changeset.go:DirectoryMergeChangesetsLazy
+code: |
+  Workspace.withCommit(changes, message, date, author?)
+    author missing → read client git config; re-select with explicit identity
+    frozen = freeze(receiver)                            # snapshot if live
+    uncommitted = frozen.git.uncommitted
+    uncommitted and changes both on HEAD's tree → working = uncommitted
+    else working = (HEAD.tree(discardGitDir) + uncommitted).changes(from: changes.Before)
+    merged = working.__mergeForWorkspaceCommit(changes) → DirectoryMergeChangesetsLazy   # saved recipe
+      native: stage each side sparsely; merge-tree --write-tree; replay checkouts on COW of Before
+      else:   working.withChangeset(changes, FAIL)         # general merge: git add -A of the whole base
+    C1 = frozen.git.head.withCommit(changes, …)          # see GitRef.withCommit
+    W1 = C1.asWorkspace
+    remaining = merged.changes(from: W1 root)
+    return W1.withChanges(remaining) + workspace metadata

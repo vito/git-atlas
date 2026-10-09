@@ -1,0 +1,16 @@
+source: code
+verified_at: null
+what: >-
+  The workspace repository was the whole synced root; for worktrees and submodules the
+  engine followed the .git pointer file itself and flattened the real git dir, which only
+  worked for simple layouts and copied the repository through the sync.
+pointers:
+  - core/schema/workspace.go:workspaceGitRepository
+  - core/schema/workspace.go:flattenWorkspaceGitPointer
+code: |
+  Workspace.git → WorkspaceGit                         # errors unless .git exists
+  WorkspaceGit.head = __repository.head
+  WorkspaceGit.__repository:
+    dir = resolveRootfs('.')                           # sync the whole root from the host
+    dir = flattenWorkspaceGitPointer(dir)              # engine follows .git pointer files itself
+    return LocalGitRepository{dir}

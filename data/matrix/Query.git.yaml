@@ -1,0 +1,11 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  instr:
+    status: partial
+    note: "Only a 'git remote visibility' span; no marker for which auth path was chosen."
+  nego:
+    status: na
+  replay:
+    status: "yes"
+    note: "__gitRepository: client-independent recipe once inputs are explicit (#14147)."
+    prs: [14147]

@@ -1,0 +1,30 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  ckbase:
+    status: "yes"
+    note: "CheckoutBase or inferred base (#14576)."
+    prs: [14576]
+  cow:
+    status: "yes"
+    note: "#14576."
+    requires: 14576
+    prs: [14576]
+  instr:
+    status: "yes"
+    note: "git.checkout.<path>[why]."
+    requires: 14576
+    prs: [14576]
+  lock:
+    status: "yes"
+    note: "Remote HEADs: #14167."
+    requires: 14167
+    prs: [14167]
+  pack:
+    status: "yes"
+    note: "Remote HEADs: #14167."
+    requires: 14167
+    prs: [14167]
+  replay:
+    status: "yes"
+    note: "gitFullCheckout recipe kind (#14472)."
+    prs: [14472]

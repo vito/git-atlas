@@ -1,0 +1,7 @@
+source: pr-description
+verified_at: null
+what: Delegates to the repository's uncommitted changeset.
+pointers:
+  - core/schema/workspace.go:workspaceGitUncommitted
+code: |
+  WorkspaceGit.uncommitted = __repository.uncommitted      # GitRepository.uncommitted

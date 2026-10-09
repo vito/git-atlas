@@ -1,0 +1,4 @@
+summary: >-
+  Reconstructs a host repository's .git from client-sent packs instead of flattening it,
+  and adds Git bundles (GitRepository.bundle / withBundle, File.asGitBundle).
+color: "#2f6fed"

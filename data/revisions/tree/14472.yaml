@@ -1,0 +1,31 @@
+source: code
+verified_at: null
+what: >-
+  The full checkout is saved under its own recipe kind (gitFullCheckout), so an engine
+  that predates it rejects the recipe instead of rebuilding a tree without .git; part of
+  saving recipes for every cached value that could otherwise not be rebuilt when a
+  remote-cache part goes missing (5447b74).
+pointers:
+  - core/git.go:persistedDirectoryLazyKindGitFullCheckout
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
+    if keep .git, depth 0, no tags: return GitRef.__fullCheckout
+      (saved under its own recipe kind: gitFullCheckout)
+    dir = DirectoryGitTreeLazy{ref, discard, depth, includeTags}   # built on first read, persisted
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes]), set after materialization
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      (depth dropped once the mirror is complete: mirrorFetchDepth)
+      (automatic maintenance runs synchronously, inside the lock)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    discard and CheckoutBase(parent) and SHA == CommitSHA (sole parent):
+      incrementalTree: diff-tree parent SHA → COW child of parent's tree, write the delta only
+    discard: new snapshot: init + alternates → mounted objects (no fetch); checkout; rm .git
+    keep .git: new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout

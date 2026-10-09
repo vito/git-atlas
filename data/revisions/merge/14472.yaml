@@ -1,0 +1,15 @@
+source: pr-description
+verified_at: null
+what: "Merges get a saved recipe; conflicts are reported where they are wrapped."
+pointers:
+  - core/changeset.go:DirectoryMergeChangesetsLazy
+code: |
+  Changeset.withChangeset(other, onConflict)   # withChangesets: octopus, FAIL/FAIL_EARLY only
+    FAIL_EARLY: path conflicts → fail before merging
+    base = MergeBeforeDirectories(ours, theirs)
+    COW scratch of base (withGitMergeWorkspace) → DirectoryMergeChangesetsLazy   # saved recipe
+      git init; git add -A; commit 'base'          # an object for every base file
+      branch per side: applyContent(diff); commit
+      git merge (-X ours|theirs | markers); verify declared paths landed
+      rm .git
+    return Changeset(before: base, after: scratch)

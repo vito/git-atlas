@@ -1,0 +1,18 @@
+source: code
+verified_at: null
+what: >-
+  __pullDirectory gets a saved recipe (13458a9): commit identity and dates come from the
+  source commits and options, so a rerun reproduces the same history.
+pointers:
+  - core/workspace_pull.go:DirectoryWorkspacePullLazy
+code: |
+  Workspace.withCommitsFrom(source, commits, maxCommits)    # compareCommitsFrom: same fold, apply = false
+    dir = __pullDirectory(…) → DirectoryWorkspacePullLazy   # saved recipe
+      base = receiver.git.__checkout                       # full retained checkout
+      COW scratch of base:
+        fetch source HEAD from its repository's mount
+        apply receiver's uncommitted; add -A; commit dirty snapshot; reset --hard
+        fold: fast-forward (reset --hard tip) | cherry-pick oldest first (patch-id / origin dedupe)
+        merge-tree dirty onto new HEAD; read-tree --reset -u
+    repo = receiver.head.repo.withContents(dir)
+    return repo.head.asWorkspace.withChanges(repo.uncommitted)

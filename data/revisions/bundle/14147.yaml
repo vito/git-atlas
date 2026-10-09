@@ -1,0 +1,21 @@
+source: pr-description
+verified_at: null
+what: >-
+  Bundling a local source borrows its objects through alternates instead of fetching them
+  into the scratch repository; detached heads are preserved (885867d).
+pointers:
+  - at: core/git_bundle.go:createGitBundleFromSource
+    note: de5b0cf
+code: |
+  GitRepository.bundle(refs, base)                     # names resolved per session
+    __bundleFile(pinned refs, base)                    # persisted
+      mount source with targets + base (remote: mirror lock + fetch)
+        local source: scratch borrows objects via alternates (no fetch)
+        remote source: scratch repo: fetch targets and base
+        git bundle create (detached HEAD preserved)
+  GitRepository.withBundle(bundle, prerequisiteRef)
+    __withBundleDirectory                              # persisted
+      mount source with prerequisites (remote: mirror lock + depth-0 fetch)
+        new bare repo; fetch each prerequisite's history
+        bundle verify; fetch bundle refs; pack-refs; write remotes
+  GitBundle.validate / refs / prerequisiteSHAs: parse and verify the header

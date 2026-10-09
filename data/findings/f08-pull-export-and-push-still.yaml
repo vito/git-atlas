@@ -1,0 +1,21 @@
+kind: lag
+title: Pull, export and push still copy history with fetch + index-pack
+status: open
+discovered_in: 14576
+prs: [14167]
+size: M
+risk: low-medium
+apis: [Workspace.withCommitsFrom, Workspace.export, GitRef.push]
+claim: >-
+  Pull and export fetch the source HEAD into a COW copy of a retained checkout (now
+  negotiated), and push fetches into a scratch repository (under the mirror lock for
+  remote sources). Bundle prerequisites and promotions already avoid index-pack's
+  re-hashing with pack-objects via an alternate, and #14167 extends that to checkouts and
+  joins, but not to these three.
+proposal: >-
+  Route all three through the shared pack copy helper (finding 2), keeping fetch as the
+  fallback; for push, also release the mirror lock after the copy.
+pointers:
+  - core/workspace_pull.go:WorkspacePullCommits@4e9d0b0
+  - core/workspace_export.go:WorkspaceSaveDirectory@4e9d0b0
+  - core/git_push.go:GitRef.Push@4e9d0b0

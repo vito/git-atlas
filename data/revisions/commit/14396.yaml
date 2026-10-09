@@ -1,0 +1,29 @@
+source: code
+verified_at: null
+what: >-
+  Same-base commits are written natively: stage only the changed paths (plus their
+  ancestor .gitattributes/.gitignore) in a private read-tree index over borrowed objects,
+  write-tree, commit-tree, copy only new objects into a COW child of the parent storage,
+  publish the branch or detached HEAD. Unsupported storage or gitlink edits fall back with
+  fixed reason codes; any failure falls back; >64 overlay layers fall back.
+effect: >-
+  12k-file / 98 MB repo, three one-file commits: median Workspace.withCommit 11.07 s →
+  4.59 s.
+pointers:
+  - core/git_commit_create.go:GitCommitChangesetNative
+  - core/git_commit_create.go:GitCommitChangesetNativeBase
+  - core/git_commit_create.go:nativeFallback
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args)                        # persisted private recipe
+      same-base provenance (Before = tree(discardGitDir) of this SHA, same repo recipe)?
+        native: COW child of repo storage; scratch bare repo, objects via alternate
+          read-tree; stage only changed paths (sparse); write-tree; commit-tree
+          copy new objects only; publish branch / detached HEAD
+      else, or any failure:
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = parent.repo.withContents(dir)
+    return repo.head

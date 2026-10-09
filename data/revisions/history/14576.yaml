@@ -1,0 +1,26 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  refJoin fetches commit IDs, which write no ref, so every fetch after the first
+  negotiated from nothing and received the whole shared history again (two forks compared
+  ⇒ history transferred twice). Each fetch now passes --negotiation-tip for the commits
+  already joined; so does the --unshallow fetch in contains.
+pointers:
+  - core/git.go:refJoin
+  - core/git_remotes.go:containsWithFullHistory
+code: |
+  GitRef.log(limit, paths, base)
+    unfiltered: fetch limit generations; uneven shallow boundary → retry with full history
+    owned shallow storage: answer above the boundary; deeper → __hydrateRepository
+    paths/base: ref.mount(depth 0) → git log …    # remote: --unshallow the mirror, under its lock
+  GitRef.commonAncestor(other) / contains(other)
+    mountRefs(a, b):
+      same repository → mount once
+      local refs → alternates view over the mounted object stores (no fetch)
+      owned shallow child vs its anchor/descendants → the child's store
+      complete local donor holding every commit → alternates view (no fetch, no lock)
+      owned child vs its exact remote parent → the child's objects
+      else refJoin: tmp repo; fetch each ref --negotiation-tip=<joined SHAs> (each under its own mirror lock)
+    git merge-base [--is-ancestor]
+    contains, history incomplete → containsWithFullHistory: fetch --unshallow --negotiation-tip=<joined SHAs>

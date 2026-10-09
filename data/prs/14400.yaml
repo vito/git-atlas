@@ -1,0 +1,7 @@
+summary: >-
+  Commits on remote workspaces natively by promoting the base commit into owned shallow
+  storage, with history answered from local proofs first.
+effects: |-
+  history: Ahead/behind against the remote parent works with the remote's service stopped (TestWorkspaceRemoteParentHistoryDoesNotFetch).
+  withCommit: First commit on a remote-backed workspace no longer pays ~18 s for a full checkout + general merge.
+color: "#e67700"

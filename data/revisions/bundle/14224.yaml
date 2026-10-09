@@ -1,0 +1,18 @@
+source: pr-description
+verified_at: null
+what: The import becomes a lazy, persisted producer (DirectoryGitBundleImportLazy).
+pointers:
+  - core/git_bundle.go:DirectoryGitBundleImportLazy
+code: |
+  GitRepository.bundle(refs, base)                     # names resolved per session
+    __bundleFile(pinned refs, base)                    # persisted
+      mount source with targets + base (remote: mirror lock + fetch)
+        local source: scratch borrows objects via alternates (no fetch)
+        remote source: scratch repo: fetch targets and base
+        git bundle create (detached HEAD preserved)
+  GitRepository.withBundle(bundle, prerequisiteRef)
+    __withBundleDirectory → DirectoryGitBundleImportLazy   # lazy, persisted producer
+      mount source with prerequisites (remote: mirror lock + depth-0 fetch)
+        new bare repo; fetch each prerequisite's history
+        bundle verify; fetch bundle refs; pack-refs; write remotes
+  GitBundle.validate / refs / prerequisiteSHAs: parse and verify the header

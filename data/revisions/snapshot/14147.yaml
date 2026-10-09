@@ -1,0 +1,21 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced: capture Git history and approved pending edits as a stable value. A live
+  host workspace is captured by the client (CaptureGit) and rebuilt as a recipe over the
+  remote (plus a bundle for unpushed commits); without a remote URL, from Host.__gitDir
+  (session-local). Git-ref workspaces are pinned by SHA.
+pointers:
+  - core/schema/workspace_checkpoint.go:snapshot
+  - core/schema/workspace_checkpoint.go:freeze
+  - core/schema/workspace_checkpoint.go:checkpointClientLocal
+  - core/schema/workspace_checkpoint.go:checkpointCapturedGitCompositionWithBase
+code: |
+  Workspace.snapshot / freeze
+    live host workspace: CaptureGit (client): HEAD, remote URL, unpushed bundle, worktree commit
+      untracked files → interactive approval
+      repo = git(url) [.withBundle(bundle, prerequisiteRef)]      # no remote: Host.__gitDir
+      W = repo.ref(HEAD sha).asWorkspace
+        .withChanges(worktree.tree(discard, depth 1, no tags).changes(from: HEAD.tree(…)))
+    git-ref workspace: pin the ref by SHA; keep the overlay
+    nothing capturable: return the workspace unchanged

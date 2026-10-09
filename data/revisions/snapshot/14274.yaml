@@ -1,0 +1,18 @@
+source: pr-description
+verified_at: null
+what: >-
+  Private SSH repos with no SSH_AUTH_SOCK: reuse push's SSH preparation to start a
+  session-managed agent for the owner's checkout capture, and pass an identity-scoped
+  socket explicitly (keeping host socket paths out of the portable recipe).
+pointers:
+  - core/schema/workspace_checkpoint.go:checkpointSSHAuthArgs
+code: |
+  Workspace.snapshot / freeze
+    live host workspace: CaptureGit (client): HEAD, remote URL, unpushed bundle, worktree commit
+      untracked files → interactive approval
+      SSH origin, no agent → PrepareGitSSHAuth; pass a scoped socket to git(url)
+      repo = git(url) [.withBundle(bundle, prerequisiteRef)]      # no remote: Host.__gitDir
+      W = repo.ref(HEAD sha).asWorkspace
+        .withChanges(worktree.tree(discard, depth 1, no tags).changes(from: HEAD.tree(…)))
+    git-ref workspace: pin the ref by SHA; keep the overlay
+    nothing capturable: return the workspace unchanged

@@ -1,0 +1,15 @@
+source: pr-description
+verified_at: null
+what: >-
+  Copies the declared added/modified paths straight out of After; the filtered copy only
+  descends into the changed paths' parents, so it costs the size of the change and does
+  not evaluate Before.
+effect: >-
+  Part of ~150 ms → proportional-to-change for a one-file edit on a 5,000-file workspace
+  (diff ~88 ms, of which ~63 ms evaluating Before).
+pointers:
+  - core/directory.go:WithChanges
+code: |
+  Directory.withChanges(changes)              # Workspace.withChanges records it in the overlay
+    copy declared added/modified paths straight out of changes.After (only their parents descended)
+    remove declared removals; recreate empty added directories

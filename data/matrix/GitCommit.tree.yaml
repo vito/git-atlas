@@ -1,0 +1,23 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  canon:
+    status: "yes"
+    note: "commitTreeCacheKey (#14576)."
+    requires: 14576
+    prs: [14576]
+  cow:
+    status: "yes"
+    note: Same pinned recipe as GitRef.tree.
+    requires: 14576
+    prs: [14576]
+  incr:
+    status: "yes"
+    note: Same pinned recipe as GitRef.tree.
+  instr:
+    status: "yes"
+    note: Same markers as GitRef.tree.
+    requires: 14576
+    prs: [14576]
+  replay:
+    status: "yes"
+    note: Shared recipe.

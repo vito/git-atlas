@@ -1,0 +1,11 @@
+source: pr-description
+verified_at: null
+what: >-
+  Writes only the declared added and modified paths and applies the declared removals, so
+  an incremental export leaves untouched host files alone.
+pointers:
+  - core/changeset.go:Changeset.Export
+code: |
+  Changeset.export(path)
+    write only declared added/modified paths from After
+    apply declared removals

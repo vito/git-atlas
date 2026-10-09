@@ -1,0 +1,27 @@
+source: code
+sha: "3c07ff709a5f5114ce1bba13fabccd9280250221"
+verified_at: null
+what: >-
+  Proposed: refJoin copies each ref's closure with pack-objects via a transient alternate
+  (fallback: fetch). The branch is based on main, so it replaces the plain fetch, not
+  #14576's negotiated one: whichever lands second has to merge the two.
+pointers:
+  - at: core/git.go:refJoin
+    note: branch
+  - at: core/git_pack_copy.go:packGitClosure
+    note: branch
+code: |
+  GitRef.log(limit, paths, base)
+    unfiltered: fetch limit generations; uneven shallow boundary → retry with full history
+    owned shallow storage: answer above the boundary; deeper → __hydrateRepository
+    paths/base: ref.mount(depth 0) → git log …    # remote: --unshallow the mirror, under its lock
+  GitRef.commonAncestor(other) / contains(other)
+    mountRefs(a, b):
+      same repository → mount once
+      local refs → alternates view over the mounted object stores (no fetch)
+      owned shallow child vs its anchor/descendants → the child's store
+      complete local donor holding every commit → alternates view (no fetch, no lock)
+      owned child vs its exact remote parent → the child's objects
+      else refJoin: tmp repo; pack-objects each ref's closure via alternate (fallback: fetch)
+    git merge-base [--is-ancestor]
+    contains, history incomplete → containsWithFullHistory: fetch --unshallow only what is needed

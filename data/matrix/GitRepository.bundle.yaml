@@ -1,0 +1,26 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  instr:
+    status: gap
+    note: "No phase spans or markers for bundle creation, unlike import (#14576)."
+    prs: [14576]
+  lock:
+    status: "yes"
+    note: >-
+      Whole creation runs under the mirror lock on main and #14576; #14167 releases it
+      before git bundle create.
+    requires: 14167
+    prs: [14167, 14576]
+  nego:
+    status: "yes"
+    note: Fetches negotiate from refs they wrote (per 9ec3921's survey).
+  pack:
+    status: "yes"
+    note: >-
+      Remote sources: #14167 copies targets + base with packGitClosure; main/#14576 fetch
+      them under the lock. Local sources borrow via alternates (#14147).
+    requires: 14167
+    prs: [14147, 14167, 14576]
+  replay:
+    status: "yes"
+    note: __bundleFile persisted.

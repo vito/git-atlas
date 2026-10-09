@@ -1,0 +1,16 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced withContents (first named withDirectory, renamed in cbdc392): replace a
+  repository's storage with a self-contained one (checkout, .git, or bare) while keeping
+  the receiver's URL, remotes and push routing; never infers provenance. asRepository pins
+  HEAD to a ref while keeping its backend.
+pointers:
+  - core/schema/git.go:withContents
+  - core/schema/git.go:gitRefAsRepository
+code: |
+  Directory.asGit = GitRepository{LocalGitRepository{this}}     # no URL, no routing
+  GitRepository.withContents(directory)               # persisted
+    backend = LocalGitRepository{directory}; ValidateSelfContained
+    keep receiver's URL, remotes, upstream selection, discard flag
+  GitRef.asRepository: clone repo; HEAD pinned to this ref

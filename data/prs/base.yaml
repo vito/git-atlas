@@ -1,0 +1,12 @@
+baseline: true
+title: "Baseline: main before #14000 (5ddd194)"
+summary: >-
+  Everything on main before #14000 merged, collapsed into one baseline tab per family. It
+  includes #13998 and #14012 (both reached main as rebased commits in the history rewrite
+  of 2026-09-02) and #14002.
+why: >-
+  Baseline tabs were first read at b20b3b6, a merge of #14012 on a fork branch that never
+  reached main. Between it and 5ddd194 no core/git*.go or core/schema/git*.go file
+  differs; core/changeset.go (+49, #14002) and core/schema/workspace.go (+141, module
+  wiring) do, so changeset and workspace baselines are worth a re-read.
+color: "#8a93a6"

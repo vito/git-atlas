@@ -1,0 +1,28 @@
+source: code
+verified_at: null
+what: >-
+  The tree becomes a lazy, persisted producer (DirectoryGitTreeLazy): nothing is checked
+  out until the directory is read, and its recipe can rebuild it after a restart or on
+  another engine. The remote content digest is published only after materialization, so
+  credential scopes never alias before a fetch succeeds (26d7160).
+pointers:
+  - core/schema/git.go:gitSchema.tree
+  - core/git.go:DirectoryGitTreeLazy
+  - core/git.go:deferGitTreeContentDigest
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
+    if keep .git, depth 0, no tags: return GitRef.__fullCheckout
+    dir = DirectoryGitTreeLazy{ref, discard, depth, includeTags}   # built on first read, persisted
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes]), set after materialization
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      (automatic maintenance runs synchronously, inside the lock)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout; [rm .git]

@@ -1,0 +1,51 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  ckbase:
+    status: "yes"
+    note: "Records CheckoutBase/HistorySource/Upstream (#14399, #14400, #14433)."
+    prs: [14399, 14400, 14433]
+  cow:
+    status: "yes"
+    note: >-
+      Native output is a COW child of the parent storage; the checkout fallback's
+      __checkout is COW with #14576.
+    prs: [14576]
+  fbrec:
+    status: "yes"
+    note: "Provenance skips now recorded (#14576)."
+    requires: 14576
+    prs: [14576]
+  history:
+    status: "yes"
+    note: "Depth-1 promotion; approved host donor for depth 0 (#14401)."
+    prs: [14401]
+  instr:
+    status: partial
+    note: >-
+      Span attributes + nativeFallback markers; no phase ops for the native transaction
+      (merges have them since #14576).
+    prs: [14576]
+  lock:
+    status: "yes"
+    note: >-
+      Promotion holds the lock for snapshot creation + pack + HEAD writes until #14167
+      narrows it.
+    requires: 14167
+    prs: [14167]
+  ncommit:
+    status: "yes"
+    note: "#14396; remote parents #14400."
+    prs: [14396, 14400]
+  nmerge:
+    status: gap
+    note: >-
+      The checkout fallback still merges with the general withChangeset (git add -A base);
+      it could use the native merge or at least gets the scoped base indirectly.
+  pack:
+    status: "yes"
+    note: "Remote commit-base promotion uses pack-objects (#14400)."
+    prs: [14400]
+  replay:
+    status: "yes"
+    note: "DirectoryGitCommitLazy + __withCommitRepository (#14472, #14399)."
+    prs: [14399, 14472]

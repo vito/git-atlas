@@ -1,0 +1,23 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  Same two fixes as pulls: refresh the retained index before resets and add -A, and fetch
+  the source HEAD with --negotiation-tip=HEAD instead of re-receiving the whole history.
+pointers:
+  - core/workspace_export.go:WorkspaceSaveDirectory
+code: |
+  Workspace.export(path, from)
+    path empty → caller's local workspace root
+    live overlay onto its own checkout → exportOverlay (sparse writes; no capture)
+    freeze source (and from)
+    metadata, bundle = CaptureGit(path)                  # destination, untracked dropped
+    destination = reuse source's owned base if it is the captured HEAD (__workspaceExportBaseReady)
+      else rebuild from capture (git(url).withBundle(…).ref(HEAD).asWorkspace)
+        SSH origin, no agent → PrepareGitSSHAuth for the owner
+    dir = source.__saveDirectory(destination, from, committer)   # NotReplayable
+      COW of destination git.__checkout
+      update-index --refresh                             # attr dagger.git.export.index_refreshed
+      fetch source HEAD --negotiation-tip=HEAD; snapshot both sides' dirt; cherry-pick integrate; 2-parent transport commit
+    bundle = dir.asGit.bundle(refs: [HEAD], base: destination HEAD)
+    client ApplyBundle(bundle, expected checkout-state digest)

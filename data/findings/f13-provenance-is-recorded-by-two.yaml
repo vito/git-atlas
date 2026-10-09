@@ -1,0 +1,21 @@
+kind: naming
+title: Provenance is recorded by two private recipes and inferred by string-matching elsewhere
+status: open
+discovered_in: 14576
+prs: [14576]
+size: M
+risk: medium
+apis: [GitRepository.withContents, Workspace.withReset, GitRepository.withBundle]
+claim: >-
+  __withCommitRepository and (#14576) __pullRepository record CheckoutBase explicitly;
+  resets, bundle imports, snapshots and recordings made before checkout bases rely on
+  gitContentsCheckoutBase, which recognizes storage by its producing frame's field name
+  ('__fullCheckout', '__checkout', directory(path: '.git'), '__pullDirectory') and
+  re-loads the pull receiver from its recipe.
+proposal: >-
+  Keep inference for old traces, but record CheckoutBase at every producer that knows it
+  (reset, export save, bundle import of a known base), so new traces never need it.
+pointers:
+  - core/git_local_checkout_tree.go:gitContentsCheckoutBase@4e9d0b0
+  - core/schema/workspace_pull.go:pullRepository@4e9d0b0
+  - core/schema/git_commit_create.go:gitRefWithCommitRepository@4e9d0b0

@@ -1,0 +1,17 @@
+source: code
+sha: "3c07ff709a5f5114ce1bba13fabccd9280250221"
+verified_at: null
+what: >-
+  Proposed: remote HEADs copy their full history out of the mirror with pack-objects and
+  finish the checkout after releasing the lock.
+effect: "1.16 s vs 3.29 s lock hold for a full-history copy of dagger/dagger."
+pointers:
+  - at: core/git_remote.go:RemoteGitRef.Tree
+    note: branch
+code: |
+  WorkspaceGit.directory = git.__checkout.directory('.git')
+  WorkspaceGit.__checkout = git.head.__fullCheckout           # keyed by the resolved ref
+  GitRef.__fullCheckout = Backend.Tree(keep .git, depth 0)   # recipe kind gitFullCheckout
+    remote: lock only for mirror fetch + pack-objects copy-out; checkout after unlock
+    local:  new snapshot: init; fetch the whole history from the mount; checkout
+    finish: read-tree HEAD (index without stat data); mtime = 1s

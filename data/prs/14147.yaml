@@ -1,0 +1,5 @@
+summary: >-
+  Introduces workspace Git snapshotting and the workspace Git APIs (snapshot, withCommit,
+  withCommitsFrom, withReset, export, push, withContents, withRemote), and makes Query.git
+  client-independent once its inputs are explicit.
+color: "#8f5b2e"

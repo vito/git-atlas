@@ -1,0 +1,25 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced: a public transport for history. bundle packs named refs (thin against a
+  base, recorded as a prerequisite); withBundle imports one after fetching and verifying
+  its prerequisites, including through a named-ref hint for servers that refuse SHA
+  fetches. Everything runs inside the source mount, i.e. under a remote mirror's lock.
+pointers:
+  - core/git_bundle.go:CreateGitBundleFile
+  - core/git_bundle.go:ImportGitBundle
+  - core/schema/git.go:bundle
+  - core/schema/git.go:bundleFile
+  - core/schema/git.go:withBundle
+  - core/schema/git.go:withBundleDirectory
+code: |
+  GitRepository.bundle(refs, base)                     # names resolved per session
+    __bundleFile(pinned refs, base)                    # persisted
+      mount source with targets + base (remote: mirror lock + fetch)
+        scratch repo: fetch targets and base; git bundle create
+  GitRepository.withBundle(bundle, prerequisiteRef)
+    __withBundleDirectory                              # persisted
+      mount source with prerequisites (remote: mirror lock + depth-0 fetch)
+        new bare repo; fetch each prerequisite's history
+        bundle verify; fetch bundle refs; pack-refs; write remotes
+  GitBundle.validate / refs / prerequisiteSHAs: parse and verify the header

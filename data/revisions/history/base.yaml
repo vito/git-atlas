@@ -1,0 +1,19 @@
+source: code
+verified_at: null
+what: >-
+  log mounts the ref with full history (for a remote: --unshallow the mirror under its
+  lock). Two refs from different repositories are joined in a scratch repository that
+  fetches each one.
+pointers:
+  - core/git.go:GitRef.Log
+  - core/git.go:MergeBase
+  - core/git.go:mountRefs
+  - core/git.go:refJoin
+code: |
+  GitRef.log(limit, paths, base)
+    ref.mount(depth 0) → git log …                # remote: --unshallow the mirror, under its lock
+  GitRef.commonAncestor(other)
+    mountRefs(a, b):
+      same repository → mount once
+      else refJoin: tmp repo; fetch each ref from its backend (each under its own mirror lock)
+    git merge-base

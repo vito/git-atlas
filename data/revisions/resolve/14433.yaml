@@ -1,0 +1,26 @@
+source: pr-description
+verified_at: null
+what: >-
+  Owned storage (snapshots, commits) lists only its own refs, so after a dirty capture or
+  a first commit, ref('main') had nothing to find and module code cannot fall back to
+  git(url) without host credentials. Owned storage now resolves locally first and falls
+  through to its retained Upstream remote (with its original authentication) on
+  RefNotFound, a missing full SHA, or a revision whose base resolved upstream.
+pointers:
+  - core/schema/git.go:gitSchema.upstreamRef
+  - core/schema/git.go:gitSchema.commitSHARef
+  - core/git_local.go:LocalGitRepository.HasCommit
+code: |
+  GitRepository.ref(name, noLock)            # head · branch · tag · commit share this path
+    # cache: per client when the lock is consulted; full SHAs shared
+    name~N / name^N → resolve base as below, then WalkRevision (remote: fetch walk depth, retry full)
+    noLock: skip lock read and write
+    pin = workspace lock (git.ref, host/path identity, name)? → use the pinned SHA
+    remote = repo.LoadRemote()               # remote: ls-remote, cached per session
+                                              # local: ls-remote file://<gitdir>
+    abbreviated SHA → ResolveShortSHA (fetched objects only)
+    ref = remote.Lookup(name)                # strict: branch | tag | full SHA
+    owned storage: not found / SHA absent (HasCommit) → Upstream.ref(name)   # remote's own GitRef
+    write lock entry
+    return select __resolvedRef(name, SHA)    # persisted; digest: url + SHA + auth handles
+  latest(version): SelectGitRefWithVersionQuery → matching tags, then branches; lock stores ref + commit

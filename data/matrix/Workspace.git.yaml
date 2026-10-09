@@ -1,0 +1,24 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  canon:
+    status: gap
+    note: >-
+      Host fast path selects tree(discardGitDir: false, depth: 0, includeTags: true);
+      includeTags keeps it from routing to __fullCheckout or being canonicalized, although
+      the local COW path ignores includeTags.
+  ckbase:
+    status: gap
+    note: gitContentsCheckoutBase does not recognize __withGitUncommitted over a checkout.
+  cow:
+    status: partial
+    note: >-
+      Both host-workspace checkouts (the canonical HEAD tree, then git.__checkout over the
+      uncommitted result) are COW with #14576 but find no base (withDirectory /
+      __withGitUncommitted recipes are not recognized), so both wipe.
+    prs: [14576]
+  instr:
+    status: gap
+    note: No marker for fast path (PackUncommitted) vs fallback (full root sync).
+  replay:
+    status: partial
+    note: "Host-backed: session-local by nature; frozen workspaces avoid it."

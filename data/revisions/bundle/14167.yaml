@@ -1,0 +1,28 @@
+source: code
+sha: "3c07ff709a5f5114ce1bba13fabccd9280250221"
+verified_at: null
+what: >-
+  Proposed: bundle creation from a remote copies the targets and base out of the mirror
+  with one packGitClosure (one update-ref transaction; annotated tags still from origin),
+  then runs git bundle create unlocked. The import side has the same shape as #14576's;
+  the PR notes that whichever merges second keeps #14576's copy body and instrumentation.
+pointers:
+  - at: core/git_bundle.go:prepareGitBundleSource
+    note: branch
+  - core/git_bundle.go:finishGitBundleFile
+  - core/git_bundle.go:copyGitBundlePrerequisites
+  - core/git_bundle.go:finishGitBundleImport
+code: |
+  GitRepository.bundle(refs, base)                     # names resolved per session
+    __bundleFile(pinned refs, base)                    # persisted
+      mount source with targets + base (remote: mirror lock + fetch)
+        local source: scratch borrows objects via alternates (no fetch)
+        remote source: pack-objects closure of targets + base via alternate (fallback: fetch); release lock
+        git bundle create (detached HEAD preserved)       # unlocked
+  GitRepository.withBundle(bundle, prerequisiteRef)
+    __withBundleDirectory → DirectoryGitBundleImportLazy   # lazy, persisted producer
+      mount source with prerequisites (remote: mirror lock + depth-0 fetch)
+        new bare repo; copy prerequisites (copyGitBundlePrerequisites)
+      release source / mirror lock
+      bundle verify; fetch bundle refs; pack-refs; write remotes   # unlocked
+  GitBundle.validate / refs / prerequisiteSHAs: parse and verify the header

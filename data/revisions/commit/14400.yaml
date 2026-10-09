@@ -1,0 +1,30 @@
+source: code
+verified_at: null
+what: >-
+  Remote parents used to fall back to the full checkout and general merge for the first
+  commit (~18 s on dagger/dagger). The pinned remote commit's closure is promoted once per
+  exact recipe into owned storage (__nativeCommitBase(depth 1): pack-objects --revs from a
+  read-only mirror mount under the lock), shared by reconciliation and commit. The result
+  records HistorySource and the parent's pinned tree.
+effect: >-
+  First commit on a remote-backed workspace no longer pays ~18 s for a full checkout +
+  general merge.
+pointers:
+  - core/git_commit_remote.go:nativeCommitRepository
+  - core/git_commit_remote.go:GitRemoteCommitBase
+  - core/git_commit_remote.go:packRemoteCommitBaseDepth
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args) → DirectoryGitCommitLazy   # saved recipe
+      same-base provenance (Before = tree(discardGitDir) of this SHA, same repo recipe)?
+        remote parent: storage = ref(SHA).__nativeCommitBase(depth 1)   # pack-objects closure, mirror lock
+        native: COW child of repo storage; scratch bare repo, objects via alternate
+          read-tree; stage only changed paths (sparse); write-tree; commit-tree
+          copy new objects only; publish branch / detached HEAD
+      else, or any failure:
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = __withCommitRepository: withContents(dir) + CheckoutBase{Parent, CommitSHA, Tree} + HistorySource
+    return repo.head

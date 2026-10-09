@@ -1,0 +1,18 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced: move HEAD to a commit (mixed by default: the previous working tree stays
+  pending; hard discards it). The target is materialized from the frozen workspace's
+  retained checkout, whose fetched object database held exactly HEAD's history, so
+  orphaned commits were simply absent.
+pointers:
+  - core/schema/workspace_reset.go:withReset
+code: |
+  Workspace.withReset(commit, hard)
+    frozen = freeze(receiver)
+    base = frozen.git.__checkout
+    sha = resolve commit (full or abbreviated SHA, ref name) in base's objects
+    dir = base.asGit.ref(sha).tree(depth: 0)              # = __fullCheckout of the target
+    W = frozen.head.repo.withContents(dir).head.asWorkspace
+    !hard: remaining = (frozen root − .git).changes(from: W root); W = W.withChanges(remaining)
+    return W + workspace metadata

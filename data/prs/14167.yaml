@@ -1,0 +1,7 @@
+summary: >-
+  Holds remote mirror locks only to update the mirror and copy objects out (pack-objects
+  through an alternate), instead of through checkouts, promotions and bundle creation.
+effects: |-
+  tree / checkout: Full-history copy out of a warm dagger/dagger mirror: 1.16 s instead of 3.29 s of lock hold (median of 7).
+  ws .git dir: 1.16 s vs 3.29 s lock hold for a full-history copy of dagger/dagger.
+color: "#d98a00"

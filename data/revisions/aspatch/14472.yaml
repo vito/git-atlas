@@ -1,0 +1,11 @@
+source: pr-description
+verified_at: null
+what: asPatch gets a saved recipe (28176d3).
+pointers:
+  - core/changeset.go:FileChangesetPatchLazy
+code: |
+  Changeset.asPatch → File → FileChangesetPatchLazy    # saved recipe
+    paths = ComputePaths()
+    mount Before/After; git diff --no-index --binary on the changed paths
+    rewrite diff --git headers to a/ b/
+    automatic previews: bounded (truncating writer)

@@ -1,0 +1,7 @@
+summary: >-
+  Reconciles workspace deltas with a native sparse merge (merge-tree) in
+  Workspace.withCommit.
+effects: >-
+  ws withCommit: Median Workspace.withCommit on a 12k-file repo: 11.07 s (before the
+  stack) → 4.59 s (#14396) → 2.28 s.
+color: "#5f3dc4"

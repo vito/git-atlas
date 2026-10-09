@@ -1,0 +1,21 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  fbrec:
+    status: gap
+    note: No reason codes.
+  history:
+    status: "yes"
+    note: Cached view / donor / owned shallow before refJoin.
+  instr:
+    status: gap
+    note: No path marker.
+  nego:
+    status: "yes"
+    note: "refJoin negotiation (#14576)."
+    requires: 14576
+    prs: [14576]
+  pack:
+    status: "yes"
+    note: "#14167 refJoin pack copy."
+    requires: 14167
+    prs: [14167]

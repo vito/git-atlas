@@ -1,0 +1,21 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  A copy-on-write checkout shares its repository's objects, orphans included, so resetting
+  back to a reverted draft started to succeed. The target must now be an ancestor of HEAD
+  (GitRef.contains). The target's checkout is a COW checkout too; note that the delta
+  planner only accepts a base that is an ANCESTOR of the target, so a reset to an older
+  commit takes the wipe path.
+pointers:
+  - core/schema/workspace_reset.go:requireWorkspaceResetReachable
+code: |
+  Workspace.withReset(commit, hard)
+    frozen = freeze(receiver)
+    base = frozen.git.__checkout                        # local HEAD: COW delta / wipe
+    sha = resolveWorkspaceResetTarget(commit)            # SHA, prefix, ref, HEAD~1, main^2 …
+    require base.HEAD contains sha                       # reachability, not object presence
+    dir = base.asGit.ref(sha).tree(depth: 0)              # = __fullCheckout of the target (older target ⇒ COW wipe)
+    W = frozen.head.repo.withContents(dir).head.asWorkspace
+    !hard: remaining = (frozen root − .git).changes(from: W root); W = W.withChanges(remaining)
+    return W + workspace metadata

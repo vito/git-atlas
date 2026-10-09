@@ -1,0 +1,9 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  layers:
+    status: "yes"
+    note: Paths from ComputePaths.
+  replay:
+    status: "yes"
+    note: "FileChangesetPatchLazy (#14472)."
+    prs: [14472]

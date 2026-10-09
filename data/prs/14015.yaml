@@ -1,0 +1,7 @@
+summary: >-
+  Removes per-invocation costs of loading a module from a remote git ref, including a
+  per-session cache of the remote visibility probe.
+effects: >-
+  Query.git: Part of removing the per-invocation cost of a remote git-ref module source
+  (the PR's write-up: hack/designs/git-ref-module-source-cost.md).
+color: "#1f9d6b"

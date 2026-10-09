@@ -1,0 +1,33 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  Two-way merges first build a scoped base: the same full tree, but with objects only
+  where the merge can read or write (declared paths, diff entries, removed/added/replaced
+  subtrees, control files); every other file is hashed with update-index --info-only and
+  trees use --missing-ok (rename detection unchanged). Any failure except the merge's own
+  conflict redoes it with the full base. Throwaway objects are uncompressed. Every git
+  command is a git.<verb> wcprof op. The octopus merge keeps the full base.
+effect: >-
+  9k-file slice: base 1.45 s → 0.6 s, 12.1k → 3.7k objects; full base 2.6 s → 1.3 s
+  (uncompressed).
+pointers:
+  - core/changeset.go:gitMergeChangesets
+  - core/changeset.go:newGitMergeScope
+  - core/changeset.go:initScopedGitRepo
+  - core/changeset.go:gitThrowawayConfig
+  - core/changeset.go:beginGitProfileOp
+code: |
+  Changeset.withChangeset(other, onConflict)   # withChangesets: octopus, FAIL/FAIL_EARLY only
+    FAIL_EARLY: path conflicts → fail before merging (paths from layer walks)
+    base = MergeBeforeDirectories(ours, theirs)
+    COW scratch of base (withGitMergeWorkspace) → DirectoryMergeChangesetsLazy   # saved recipe
+      scoped base: objects only in scope; others update-index --info-only; write-tree --missing-ok
+        any failure but a conflict → redo with the full base (git.merge.scoped_fallback[…])
+      full base: git init; git add -A; commit 'base' (core.compression=0)   # octopus: always
+      branch per side: applyContent(diff); commit
+      git merge (-X ours|theirs | markers); verify declared paths landed
+      restore directories emptied by the merge
+      rm .git
+      wcprof: git.merge.<phase>, git.<verb> per command
+    return Changeset(before: base, after: scratch)

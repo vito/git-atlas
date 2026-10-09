@@ -1,0 +1,35 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  canon:
+    status: "yes"
+    note: "Both sides in one lineage thanks to treeCacheKey (#14576)."
+    requires: 14576
+    prs: [14576]
+  fbrec:
+    status: "yes"
+    note: "native_merge.fallback_reason (+ side-prefixed provenance in #14576)."
+    prs: [14576]
+  instr:
+    status: "yes"
+    note: "Merge phases + markers (#14576)."
+    requires: 14576
+    prs: [14576]
+  layers:
+    status: "yes"
+    note: "#14466."
+    prs: [14466]
+  ncommit:
+    status: "yes"
+    note: Via GitRef.withCommit.
+  nmerge:
+    status: "yes"
+    note: "#14397; dirs/metadata native in #14576."
+    prs: [14397, 14576]
+  replay:
+    status: "yes"
+    note: __mergeForWorkspaceCommit persisted.
+  scoped:
+    status: "yes"
+    note: "General fallback scoped (#14576)."
+    requires: 14576
+    prs: [14576]

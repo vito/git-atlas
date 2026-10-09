@@ -1,0 +1,19 @@
+source: code
+verified_at: null
+what: >-
+  Query.git turns implicit credentials into explicit arguments and re-selects itself: an
+  HTTPS remote that is not public gets a token from the client's credential helper (stored
+  with setSecret), an SSH remote gets the client's agent socket scoped by key
+  fingerprints. Visibility is probed with an anonymous go-git ls-remote on every call. The
+  result is cached per client.
+pointers:
+  - core/schema/git.go:gitSchema.git
+code: |
+  Query.git(url, keepGitDir, sshKnownHosts, sshAuthSocket, httpAuth…)   # cache: per client
+    ambiguous scheme → try each clone URL candidate
+    ssh, no socket: scope client's SSH_AUTH_SOCK (Host._sshAuthSocket) → re-select git(…, sshAuthSocket)
+    https, no token:
+      IsRemotePublic(url)                       # anonymous probe, every call
+      private → GetCredential (client helper) → setSecret → re-select git(…, httpAuthToken)
+    mirror = Query._remoteGitMirror(url)       # one bare repo per URL
+    return GitRepository{RemoteGitRepository{url, auth, services, mirror}}

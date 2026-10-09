@@ -1,0 +1,12 @@
+source: pr-description
+verified_at: null
+what: >-
+  The repository result became shared across sessions and clients, but tags and branches
+  move: listings are answered per session (d980a3d).
+pointers:
+  - at: core/schema/git.go
+    note: PerSessionInput
+code: |
+  GitRepository.tags(patterns) / branches(patterns)   # cache: per session
+    remote = repo.LoadRemote()               # ls-remote, cached per session
+    return remote.Filter(patterns).Tags() / .Branches()

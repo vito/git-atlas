@@ -1,0 +1,15 @@
+source: pr-description
+verified_at: null
+what: >-
+  The SSH agent preparation (lazily discovering the owner's identities) is the same path
+  snapshots now reuse.
+pointers:
+  - core/git_push.go:prepareGitPushSSHAuth
+code: |
+  GitRef.push(to, remote, branch, expectedRemoteSHA)      # DoNotCache, NotReplayable
+    destination = to | registered remote | origin push routing
+    AuthorizeGitPush (owner approval; owner URL rewrites resolved first)
+    scratch bare repo: fetch SHA:refs/dagger/push/source from the source mount (remote: mirror lock)
+    SSH destination without agent: PrepareGitSSHAuth (shared with snapshot)
+    destination credentials only (helper token / SSH agent mounted per operation)
+    git push [--force-with-lease=…]; parse → GitPushResult{CREATED|FAST_FORWARD|FORCED|UP_TO_DATE}

@@ -1,0 +1,7 @@
+source: pr-description
+verified_at: null
+what: Directory.asGit opens any directory as a LocalGitRepository with no URL or routing.
+pointers:
+  - core/schema/directory.go:asGit
+code: |
+  Directory.asGit = GitRepository{LocalGitRepository{this}}     # no URL, no routing

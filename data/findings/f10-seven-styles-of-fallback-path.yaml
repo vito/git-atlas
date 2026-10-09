@@ -1,0 +1,32 @@
+kind: naming
+title: Seven styles of fallback/path recording
+status: open
+discovered_in: 14576
+prs: [14167]
+size: S
+risk: low
+apis: [GitRef.tree, Workspace.withCommit, GitRepository.withBundle, GitRef.log]
+claim: >-
+  nativeFallback writes '<attr>' = error and a wcprof marker '<attr minus dagger., minus
+  _reason>[reason]' (so markers are named git.native.fallback, git.native_merge.fallback,
+  git.checkout.cow.fallback, git.checkout.delta.fallback, git.checkout.contents.fallback,
+  git.checkout.incremental.fallback); the scoped merge writes
+  dagger.git.scoped_merge.fallback_reason plus git.merge.scoped_fallback[…]; source
+  trees write dagger.git.tree.{path,detail,skipped} and git.tree.<path>[…]; COW
+  checkouts write dagger.git.checkout.cow.{path,detail,skipped} and
+  git.checkout.<path>[…]; bundles write dagger.git.bundle.prerequisites.pack_fallback
+  (attribute only) and git.bundle.prerequisites[pack|fetch]; #14167 writes
+  dagger.git.copy.{method,pack_fallback} and git.copy[pack|fetch]; gitCheckoutParentTree
+  writes dagger.git.checkout.parent_tree.fallback. Attribute suffixes vary: fallback,
+  fallback_reason, pack_fallback, skipped. History reads record nothing.
+proposal: >-
+  One recordPath(ctx, family, path, detail, skipped, err) helper with one attribute schema
+  (dagger.git.<family>.{path,detail,skipped}) and one marker grammar
+  (git.<family>.<path>[why]); use it for history reads and bundle creation too.
+pointers:
+  - core/git_commit_create.go:nativeFallback@4e9d0b0
+  - core/changeset_merge_phases.go:recordFallbackMarker@4e9d0b0
+  - core/git_source_tree.go:startGitSourceTree@4e9d0b0
+  - core/git_local_cow.go:recordCowCheckoutPath@4e9d0b0
+  - core/git_bundle.go:recordGitBundlePhase@4e9d0b0
+  - core/schema/git_commit_create.go:gitCheckoutParentTree@4e9d0b0

@@ -1,0 +1,18 @@
+source: pr-description
+verified_at: null
+what: >-
+  Compares the storage directory (dirty) with a cleaned copy: a COW child where restore
+  runs on a private copy of the index (so the index is not reported as changed). reset
+  --hard is avoided because it rewrites every file.
+pointers:
+  - core/schema/git.go:gitSchema.uncommitted
+  - core/git_local.go:LocalGitRepository.Cleaned
+code: |
+  GitRepository.uncommitted
+    dirty = Backend.Dirty()                     # local: the storage directory
+    clean = __cleaned                           # persisted field
+      COW child of storage; copy .git/index to a private file
+      git restore --staged .
+      git restore .
+      git clean -fd
+    return dirty.changes(from: clean)

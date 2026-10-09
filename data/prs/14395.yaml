@@ -1,0 +1,5 @@
+summary: Answers history reads from objects the engine already has, without fetching.
+effects: >-
+  history: After a workspace commit, ahead/behind comparisons no longer re-copy the whole
+  history (TestWorkspaceCommittedHistoryDoesNotFetch).
+color: "#0b7285"

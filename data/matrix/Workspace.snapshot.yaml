@@ -1,0 +1,24 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  canon:
+    status: "yes"
+    note: >-
+      Its tree(discardGitDir: true, depth: 1, includeTags: false) was the motivating
+      duplicate; now canonical (#14576).
+    requires: 14576
+    prs: [14576]
+  history:
+    status: "yes"
+    note: "Registers approved host donors (#14401)."
+    prs: [14401]
+  instr:
+    status: partial
+    note: "'checkpoint …' phase spans; no wcprof ops."
+  pack:
+    status: "yes"
+    note: "Bundle prerequisites packed (#14576)."
+    requires: 14576
+    prs: [14576]
+  replay:
+    status: "yes"
+    note: Portable recipe when a remote serves the base.

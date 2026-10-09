@@ -1,0 +1,27 @@
+kind: dup
+title: Six ways to produce a worktree, each with its own gates and instrumentation
+status: open
+discovered_in: 14576
+prs: [14167]
+size: L
+risk: medium-high
+apis: [GitRef.tree, WorkspaceGit.directory, Workspace.withReset]
+claim: >-
+  doGitCheckout (fetch), doLocalGitTreeCheckout (alternates), incrementalTree,
+  contentsCheckoutTree, cowTree delta, cowTree wipe, plus #14167's
+  copyGitCheckout/packGitCheckout. They share
+  planIncrementalGitCheckout/applyIncrementalGitCheckout and finishGitCheckout, but each
+  re-validates layout (nativeCommitGitDir vs retainedCheckoutHead vs nativeGitDir), each
+  fixes the snapshot root differently (setSnapshotRootInfo vs finishRetainedCheckoutTree),
+  and source trees vs retained checkouts record different marker families (git.tree.* vs
+  git.checkout.*).
+proposal: >-
+  Model a checkout as (base snapshot, object source, worktree writer, metadata writer)
+  chosen by one planner that emits one marker; keep the existing functions as strategies.
+pointers:
+  - core/git_local.go:LocalGitRef.Tree@4e9d0b0
+  - core/git_local_incremental.go@4e9d0b0
+  - core/git_local_checkout_tree.go@4e9d0b0
+  - core/git_local_cow.go@4e9d0b0
+  - core/git.go:doGitCheckout@4e9d0b0
+  - core/git.go:finishGitCheckout@4e9d0b0

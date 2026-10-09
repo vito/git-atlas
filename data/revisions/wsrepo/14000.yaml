@@ -1,0 +1,21 @@
+source: code
+verified_at: null
+what: >-
+  The client's own git packs its repository (PackCheckout, keyed by a CheckoutState
+  digest) and the engine rebuilds a canonical .git, so worktrees, submodules, separate git
+  dirs and partial clones all work. Host workspaces skip the full root sync: check out the
+  canonical HEAD and apply only the client's git-visible uncommitted delta
+  (PackUncommitted → __withGitUncommitted); old clients fall back to the full directory.
+pointers:
+  - core/schema/workspace.go:materializeWorkspaceGitUncommitted
+  - core/git_hostdir.go:MaterializeHostGitCheckout
+  - engine/session/git/git_pack.go:PackCheckout
+code: |
+  Workspace.git → WorkspaceGit                         # errors unless .git exists
+  WorkspaceGit.head = __repository.head
+  WorkspaceGit.__repository:
+    host-backed: canonical = Host.__gitDir (client PackCheckout, keyed by CheckoutState)
+      clean = canonical.asGit.head.tree(discardGitDir: false, depth: 0, includeTags: true)
+      dir = clean.__withGitUncommitted(client PackUncommitted delta)   # no full root sync
+    fallback: dir = resolveRootfs('.'); MaterializeHostGitCheckout(dir)   # canonical .git
+    return LocalGitRepository{dir}

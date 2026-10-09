@@ -1,0 +1,17 @@
+source: pr-description
+verified_at: null
+what: >-
+  A source with owned shallow history (a commit on a remote-backed workspace) hydrates its
+  complete history before the push copies it: mounts that request refs always hydrate.
+pointers:
+  - at: core/git_local.go:LocalGitRepository.mount
+    note: "refs → fullHistory"
+code: |
+  GitRef.push(to, remote, branch, expectedRemoteSHA)      # DoNotCache, NotReplayable
+    destination = to | registered remote | origin push routing
+    AuthorizeGitPush (owner approval; owner URL rewrites resolved first)
+    owned shallow source → hydrate complete history first
+    scratch bare repo: fetch SHA:refs/dagger/push/source from the source mount (remote: mirror lock)
+    SSH destination without agent: PrepareGitSSHAuth (shared with snapshot)
+    destination credentials only (helper token / SSH agent mounted per operation)
+    git push [--force-with-lease=…]; parse → GitPushResult{CREATED|FAST_FORWARD|FORCED|UP_TO_DATE}

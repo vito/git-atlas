@@ -1,0 +1,13 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  The root's tree(discardGitDir: true) is now the same call (and snapshot) as every other
+  spelling of that tree, e.g. a snapshot's tree(discardGitDir: true, depth: 1,
+  includeTags: false), so diffs between them walk layers.
+pointers:
+  - core/schema/git.go:canonicalGitTreeArgs
+code: |
+  GitRef.asWorkspace(cwd): root = ref.tree(discardGitDir: true); Workspace{source: this ref}
+    (canonical: shares one call and snapshot with every equivalent spelling)
+  GitRepository.asWorkspace(cwd): head.asWorkspace(cwd).withChanges(uncommitted)

@@ -1,0 +1,23 @@
+source: pr-description
+verified_at: null
+what: >-
+  When After's snapshot is Before's layers plus more (or both are siblings over one
+  ancestor), only those layers can hold differences: walk them, resolving each path in the
+  merged views. Otherwise the double walk. The walk taken is recorded.
+effect: >-
+  One-file edit on a 5,000-file / 22 MB workspace used to cost ~40 ms per path computation
+  plus whole-tree walks; this makes it proportional to the change.
+pointers:
+  - core/changeset.go:withMountedDirs
+  - core/changeset.go:changesetLayers
+  - core/changeset_delta.go:recordChangesetWalk
+  - engine/snapshots/fsdiff/overlay_layers_linux.go:GetLayerDelta
+code: |
+  Directory.changes(from) → Changeset{Before: from, After: this}      # lazy
+  Changeset.addedPaths / modifiedPaths / removedPaths / isEmpty → ComputePaths
+    mount Before and After
+    After = Before + layers (or siblings over a common ancestor)? → walk only those layers
+    else fsdiff.WalkChanges(Before, After)     # double walk; inode, then content
+    attr dagger.changeset.paths.walk = layers | trees
+  PathCountExceeds(limit): same walk, aborted past the budget (inode-only)
+  diffStats: git diff --numstat on the changed paths

@@ -1,0 +1,23 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  Retained checkouts and commits store an index without stat data, so restore found every
+  entry changed and rewrote the whole worktree into the new layer. The private index is
+  refreshed first (content compare, read-only), so restore rewrites only files that really
+  differ.
+effect: >-
+  Up to 6.6 s per call on dagger/dagger, 100+ calls per resume (every pulled repository's
+  uncommitted).
+pointers:
+  - core/git_local.go:cleanGitWorktree
+code: |
+  GitRepository.uncommitted
+    dirty = Backend.Dirty()                     # local: the storage directory
+    clean = __cleaned → DirectoryGitCleanedLazy  # persisted producer; unchanged → storage itself
+      COW child of storage; copy .git/index to a private file
+      git restore --staged .
+      git update-index -q --unmerged --refresh  # errors ignored: only loses the shortcut
+      git restore .
+      git clean -fd
+    return dirty.changes(from: clean)

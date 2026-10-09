@@ -1,0 +1,18 @@
+source: code
+verified_at: null
+what: >-
+  Introduced: a self-contained .git with full reachable history and an index matching
+  HEAD. It shares one materialization with public retained trees: WorkspaceGit.__checkout
+  selects head.__fullCheckout, which is keyed by the resolved ref and not by pending
+  edits. Pulls, resets and exports all start from this checkout.
+pointers:
+  - core/schema/workspace_commit.go:workspaceGitDirectory
+  - core/schema/workspace_commit.go:workspaceGitFullCheckout
+  - core/schema/git.go:gitSchema.fullCheckout
+code: |
+  WorkspaceGit.directory = git.__checkout.directory('.git')
+  WorkspaceGit.__checkout = git.head.__fullCheckout           # keyed by the resolved ref
+  GitRef.__fullCheckout = Backend.Tree(keep .git, depth 0)
+    remote: lock; mirror fetch --unshallow; checkout (see GitRef.tree)
+    local:  new snapshot: init; fetch the whole history from the mount; checkout
+    finish: read-tree HEAD (index without stat data); mtime = 1s

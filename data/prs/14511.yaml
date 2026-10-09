@@ -1,0 +1,5 @@
+summary: >-
+  Adds branch filtering, GitRef.contains, and the remotes API (remotes, remote,
+  defaultRemote, GitRemote.repository).
+effects: "history: With 32 unrelated shortened histories, two git history checks instead of 35."
+color: "#218c5f"

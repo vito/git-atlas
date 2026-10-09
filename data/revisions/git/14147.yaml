@@ -1,0 +1,21 @@
+source: code
+verified_at: null
+what: >-
+  Once every implicit input is explicit, Query.git delegates to a new client-independent
+  __gitRepository, so all clients with the same inputs share one repository result and one
+  downstream cache lineage (commit 57addd3). __gitRepository honors a deliberate
+  per-client cache bust (workspace lock refresh) via CacheScopeInput (4e8f4d1).
+pointers:
+  - core/schema/git.go:gitSchema.git
+  - core/schema/git.go:gitSchema.gitRepository
+code: |
+  Query.git(url, keepGitDir, sshKnownHosts, sshAuthSocket, httpAuth…)   # cache: per client
+    ambiguous scheme → try each clone URL candidate
+    ssh, no socket: scope client's SSH_AUTH_SOCK (Host._sshAuthSocket) → re-select git(…, sshAuthSocket)
+    https, no token:
+      cachedIsRemotePublic(url)                 # one anonymous probe per session
+      private → GetCredential (client helper) → setSecret → re-select git(…, httpAuthToken)
+    return select __gitRepository(explicit args)   # client-independent, shared
+  __gitRepository(…)                            # cache: CacheScopeInput only
+    mirror = Query._remoteGitMirror(url)       # one bare repo per URL
+    return GitRepository{RemoteGitRepository{url, auth, services, mirror}}

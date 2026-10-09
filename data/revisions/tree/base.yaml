@@ -1,0 +1,26 @@
+source: code
+verified_at: null
+what: >-
+  The resolver builds the tree eagerly. Remote refs hold the mirror lock while they fetch
+  into the mirror AND check out, submodules included. Local refs fetch the history (to the
+  requested depth) from the mounted repository into a fresh snapshot, even for trees
+  without .git.
+pointers:
+  - core/schema/git.go:gitSchema.tree
+  - core/git_remote.go:RemoteGitRef.Tree
+  - core/git_local.go:LocalGitRef.Tree
+  - core/git.go:doGitCheckout
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    dir = ref.Backend.Tree(discard, depth, includeTags)        # eager, in the resolver
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name])
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA (--depth=N | --unshallow)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout; [rm .git]

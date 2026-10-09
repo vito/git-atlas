@@ -1,0 +1,18 @@
+source: pr-description
+verified_at: null
+what: >-
+  latest gains an optional SemVer version query: the greatest matching stable release (or
+  a requested prerelease channel), checking tags first and then branches; the lock stores
+  the selected ref and commit.
+pointers:
+  - core/git.go:SelectGitRefWithVersionQuery
+  - core/schema/git.go:gitSchema.latest
+code: |
+  GitRepository.ref(name)                    # head · branch · tag · commit share this path
+    pin = workspace lock (git.ref, repo url, name)? → use the pinned SHA
+    remote = repo.LoadRemote()               # remote: ls-remote, cached per session
+                                              # local: ls-remote file://<gitdir>
+    ref = remote.Lookup(name)                # strict: branch | tag | full SHA
+    write lock entry
+    return gitRefResult(ref)                 # content digest: url + SHA + discard flag
+  latest(version): SelectGitRefWithVersionQuery → matching tags, then branches; lock stores ref + commit

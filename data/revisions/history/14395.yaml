@@ -1,0 +1,24 @@
+source: pr-description
+verified_at: null
+what: >-
+  Local refs are compared through a temporary bare repository whose alternates point at
+  the mounted read-only object stores: nothing is copied or fetched. Unfiltered short logs
+  fetch only limit generations and retry with full history if a boundary is uneven; path
+  filters and base exclusions keep full history.
+effect: >-
+  After a workspace commit, ahead/behind comparisons no longer re-copy the whole history
+  (TestWorkspaceCommittedHistoryDoesNotFetch).
+pointers:
+  - core/git.go:mountCachedGitRefs
+  - core/git.go:withGitObjectView
+  - core/git.go:gitLogReachesShallowBoundary
+code: |
+  GitRef.log(limit, paths, base)
+    unfiltered: fetch limit generations; uneven shallow boundary → retry with full history
+    paths/base: ref.mount(depth 0) → git log …    # remote: --unshallow the mirror, under its lock
+  GitRef.commonAncestor(other)
+    mountRefs(a, b):
+      same repository → mount once
+      local refs → alternates view over the mounted object stores (no fetch)
+      else refJoin: tmp repo; fetch each ref from its backend (each under its own mirror lock)
+    git merge-base

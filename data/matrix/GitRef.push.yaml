@@ -1,0 +1,22 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  history:
+    status: "yes"
+    note: "Owned shallow sources hydrate first (#14400)."
+    prs: [14400]
+  instr:
+    status: partial
+    note: "Network-byte accounting (#14431) but no phase spans/markers."
+  lock:
+    status: gap
+    note: "Remote-source push preparation fetches under the mirror lock; #14167 does not cover push."
+    prs: [14167]
+  pack:
+    status: gap
+    note: >-
+      History is copied into the push scratch repo with git fetch (index-pack re-hashes
+      everything), under the mirror lock for remote sources; the pack-objects copy used
+      for promotions and bundle prerequisites would apply.
+  replay:
+    status: na
+    note: NotReplayable + DoNotCache by design.

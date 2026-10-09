@@ -1,0 +1,24 @@
+source: code
+verified_at: null
+what: >-
+  git's detached automatic maintenance could repack the mirror (rewriting its shallow
+  file) while the next fetch used it: 'shallow file has changed since we read it'.
+  gc.autoDetach and maintenance.autoDetach are false, so maintenance finishes inside the
+  lock and mount.
+pointers:
+  - core/git_remote.go:RemoteGitRepository.setup
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    dir = ref.Backend.Tree(discard, depth, includeTags)        # eager, in the resolver
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name])
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      (automatic maintenance runs synchronously, inside the lock)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout; [rm .git]

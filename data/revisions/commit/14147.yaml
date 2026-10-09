@@ -1,0 +1,19 @@
+source: code
+verified_at: null
+what: >-
+  Introduced: a single-parent commit by three-way merging the changeset against the ref's
+  tree, with explicit identity and dates. The commit is made with git commit in a COW
+  child of the ref's full retained checkout.
+pointers:
+  - core/schema/git_commit_create.go:gitRefWithCommit
+  - core/schema/git_commit_create.go:gitRefWithCommitDirectory
+  - core/git_commit_create.go:GitCommitChangeset
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args)                        # persisted private recipe
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = parent.repo.withContents(dir)
+    return repo.head

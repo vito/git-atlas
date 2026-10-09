@@ -1,0 +1,13 @@
+source: pr-description
+verified_at: null
+what: >-
+  Owned storage also lists its Upstream's names (same patterns), so listings match what
+  ref() accepts; an unreachable upstream fails the listing instead of truncating it.
+pointers:
+  - core/schema/git.go:withUpstreamNames
+code: |
+  GitRepository.tags(patterns) / branches(patterns)   # cache: per session
+    remote = repo.LoadRemote()               # ls-remote, cached per session
+    local = remote.Filter(patterns).Tags() / .Branches()
+    owned storage with Upstream: + Upstream's names (unreachable upstream → error)
+    return union

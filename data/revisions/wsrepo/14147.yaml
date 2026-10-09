@@ -1,0 +1,18 @@
+source: code
+verified_at: null
+what: >-
+  Frozen (value) workspaces are a pinned GitRef plus an overlay: head returns that ref and
+  __repository its repository directly, with no host access.
+pointers:
+  - core/schema/workspace.go:workspaceGitHead
+  - core/workspace.go:Workspace.SourceGitRef
+code: |
+  Workspace.git → WorkspaceGit                         # errors unless .git exists
+  WorkspaceGit.head = frozen ? its pinned GitRef : __repository.head
+  WorkspaceGit.__repository:
+    frozen (git-ref source): ref.Repo
+    host-backed: canonical = Host.__gitDir (client PackCheckout, keyed by CheckoutState)
+      clean = canonical.asGit.head.tree(discardGitDir: false, depth: 0, includeTags: true)
+      dir = clean.__withGitUncommitted(client PackUncommitted delta)   # no full root sync
+    fallback: dir = resolveRootfs('.'); MaterializeHostGitCheckout(dir)   # canonical .git
+    return LocalGitRepository{dir}

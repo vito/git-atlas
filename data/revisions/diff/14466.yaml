@@ -1,0 +1,16 @@
+source: pr-description
+verified_at: null
+what: >-
+  The layers separating two snapshots of one lineage (several layers apart, siblings on
+  one ancestor, identical layers) list every difference and are walked instead. Each diff
+  records its walk on its own span and as a wcprof op.
+pointers:
+  - engine/snapshots/diffapply_linux.go:differ.HandleChanges
+  - engine/snapshots/fsdiff:WalkLayerDeltaChanges
+code: |
+  Directory.diff(other)
+    ApplySnapshotDiff(lower: other, upper: this)
+    upper is exactly one layer above lower → walk that upperdir
+    same lineage → walk only the separating layers (resolved in merged views)
+    else double-walk both trees (read files whose metadata matches)
+    span 'snapshot diff' · wcprof snapshot.diff[layer|layers|trees]

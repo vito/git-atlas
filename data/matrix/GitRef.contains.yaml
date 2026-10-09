@@ -1,0 +1,22 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  fbrec:
+    status: gap
+    note: Same as log.
+  history:
+    status: "yes"
+    note: "Local proofs first (#14400); fetch only needed history (#14511)."
+    prs: [14400, 14511]
+  instr:
+    status: gap
+    note: "Same as log: no path marker."
+  nego:
+    status: "yes"
+    note: "refJoin and containsWithFullHistory negotiate from joined commits (#14576)."
+    requires: 14576
+    prs: [14576]
+  pack:
+    status: "yes"
+    note: "refJoin pack-objects copy only in #14167 (conflicts with #14576's negotiated fetch)."
+    requires: 14167
+    prs: [14167, 14576]

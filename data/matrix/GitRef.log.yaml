@@ -1,0 +1,25 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  fbrec:
+    status: gap
+    note: Retry-with-full-history and hydration fallbacks are not recorded with reason codes.
+  history:
+    status: "yes"
+    note: "Bounded short logs (#14395), owned shallow + hydration (#14400)."
+    prs: [14395, 14400]
+  instr:
+    status: gap
+    note: >-
+      No marker for which history path answered (bounded / cached view / donor / owned
+      shallow / refJoin / hydrate).
+  lock:
+    status: gap
+    note: >-
+      A full-history log unshallows the mirror under the lock; nothing narrows it (#14167
+      does not touch log).
+    prs: [14167]
+  nego:
+    status: partial
+    note: "Mirror fetches pin tips; but path/base-filtered logs still --unshallow the whole mirror."
+  pack:
+    status: na

@@ -1,0 +1,9 @@
+family: bundle
+since: 14000
+label: "validate · asFile · refs · prerequisiteSHAs"
+also:
+  - GitBundle.asFile
+  - GitBundle.version
+  - GitBundle.objectFormat
+  - GitBundle.refs
+  - GitBundle.prerequisiteSHAs

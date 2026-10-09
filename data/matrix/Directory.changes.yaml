@@ -1,0 +1,15 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  fbrec:
+    status: partial
+    note: "layers_error / delta_error attributes; no wcprof marker (snapshot.diff has one)."
+  instr:
+    status: "yes"
+    note: dagger.changeset.paths.walk attribute.
+  layers:
+    status: "yes"
+    note: "#14466."
+    prs: [14466]
+  replay:
+    status: "yes"
+    note: Lazy changeset.

@@ -1,0 +1,24 @@
+source: pr-description
+verified_at: null
+what: >-
+  Freezing a Git workspace re-recorded its whole pending overlay as an inlined patch with
+  no limit (a 184 MB test binary became a 129 MB span attribute and an unrestorable
+  trace). Git workspaces are now frozen as-is: named refs are re-selected by SHA, the
+  overlay is kept by reference, and host overlays use bounded patches (over 16 MiB or
+  binary → raw changeset).
+pointers:
+  - core/schema/workspace_checkpoint.go:checkpointGitRef
+  - core/schema/workspace_checkpoint.go:checkpointOverlay
+code: |
+  Workspace.snapshot / freeze
+    live host workspace: CaptureGit (client): HEAD, remote URL, unpushed bundle, worktree commit
+      untracked files → interactive approval
+      SSH origin, no agent → PrepareGitSSHAuth; pass a scoped socket to git(url)
+      repo = git(url) [.withBundle(bundle, prerequisiteRef)]      # no remote: Host.__gitDir
+      clean capture on a remote ref → register approved host history donor
+      repo = repo.__withRemoteSelection(captured remotes, upstream)
+      W = repo.ref(HEAD sha).asWorkspace
+        .withChanges(worktree.tree(discard, depth 1, no tags).changes(from: HEAD.tree(…)))
+      host overlay edits → bounded patch (≤ 16 MiB, no binaries) else raw changeset
+    git-ref workspace: re-select by SHA; overlay kept by reference (no re-rendered patch)
+    nothing capturable: return the workspace unchanged

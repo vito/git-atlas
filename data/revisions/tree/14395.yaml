@@ -1,0 +1,31 @@
+source: code
+verified_at: null
+what: >-
+  Source-only trees of local repositories no longer fetch and repack history only to
+  delete .git: the scratch checkout borrows the mounted objects through a temporary
+  alternates file (44fea25). A depth limit is dropped once the mirror is complete, because
+  shallow-fetching into a complete mirror adds boundaries a later full read must undo
+  (7a6d27e).
+pointers:
+  - core/git_local.go:doLocalGitTreeCheckout
+  - core/git.go:writeGitAlternates
+  - core/git_remote.go:mirrorFetchDepth
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
+    if keep .git, depth 0, no tags: return GitRef.__fullCheckout
+    dir = DirectoryGitTreeLazy{ref, discard, depth, includeTags}   # built on first read, persisted
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes]), set after materialization
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      (depth dropped once the mirror is complete: mirrorFetchDepth)
+      (automatic maintenance runs synchronously, inside the lock)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    discard: new snapshot: init + alternates → mounted objects (no fetch); checkout; rm .git
+    keep .git: new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout

@@ -1,0 +1,33 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  The scratch checkout has a detached HEAD and no refs, so the fetch negotiated from
+  nothing and re-received the whole history; it now negotiates from HEAD. The retained
+  index has no stat data, so add -A re-hashed (and copied up) everything and reset rewrote
+  every file; the index is refreshed first, and a clean receiver skips the dirty snapshot
+  entirely. The pulled storage is opened via a new persisted __pullRepository that records
+  the receiver's HEAD as CheckoutBase, so the new HEAD's trees are deltas. Phases are
+  traced (git.pull.*).
+effect: >-
+  ~5 s per pull fetch on dagger/dagger; Workspace.__pullDirectory self time 125 s → 42 s
+  on a cold resume; 23 full checkouts (~107 s) of pulled HEADs removed.
+pointers:
+  - core/workspace_pull.go:WorkspacePullCommits
+  - core/workspace_pull.go:refreshWorkspacePullIndex
+  - core/schema/workspace_pull.go:pullRepository
+  - core/schema/workspace_pull.go:pullCheckoutParent
+code: |
+  Workspace.withCommitsFrom(source, commits, maxCommits)    # compareCommitsFrom: same fold, apply = false
+    dir = __pullDirectory(…) → DirectoryWorkspacePullLazy   # saved recipe
+      base = receiver.git.__checkout                       # local HEAD: COW delta / wipe
+      COW scratch of base:
+        fetch source HEAD from its repository's mount --negotiation-tip=HEAD
+        update-index --refresh                             # stat-less retained index
+        clean? dirty snapshot = base tree (skip apply/add/reset)
+        apply receiver's uncommitted; add -A; commit dirty snapshot; reset --hard
+        fold: fast-forward (reset --hard tip) | cherry-pick oldest first (patch-id / origin dedupe)
+        merge-tree dirty onto new HEAD; read-tree --reset -u
+        wcprof: git.pull.fetch · refresh · dirty[clean|snapshot] · fold · merge
+    repo = __pullRepository: withContents(dir) + CheckoutBase = receiver HEAD
+    return repo.head.asWorkspace.withChanges(repo.uncommitted)

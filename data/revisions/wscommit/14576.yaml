@@ -1,0 +1,37 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  Native merges now accept new and empty directories and directory metadata changes
+  (umask-000 agent patches create 0777 dirs, which used to force the general merge). The
+  general fallback builds a scoped base: objects only for declared paths, diff entries,
+  replaced subtrees and control files; everything else hashed with update-index
+  --info-only (full base on any failure). Every merge git command is a wcprof op under its
+  phase; fallbacks are markers. Canonical tree args keep both sides in one lineage, so
+  walks hit layers.
+effect: >-
+  Native merges on a 16k-file workspace ~105 ms instead of 250–480 ms; scoped base on a
+  9k-file slice 0.6 s vs 1.45 s; __mergeWithChangeset p50 7.3 → 4.4 s (uncompressed
+  throwaway objects).
+pointers:
+  - core/changeset.go:gitMergeChangesets
+  - core/changeset.go:initScopedGitRepo
+  - core/changeset_native.go:validateNativeWorkspaceDelta
+  - core/changeset_merge_phases.go:mergePhases
+code: |
+  Workspace.withCommit(changes, message, date, author?)
+    author missing → read client git config; re-select with explicit identity
+    frozen = freeze(receiver)                            # snapshot if live
+    uncommitted = frozen.git.uncommitted
+    uncommitted and changes both on HEAD's tree → working = uncommitted
+    else working = (HEAD.tree(discardGitDir) + uncommitted).changes(from: changes.Before)
+    merged = working.__mergeForWorkspaceCommit(changes) → DirectoryMergeChangesetsLazy   # saved recipe
+      native: stage each side sparsely; merge-tree --write-tree; replay checkouts on COW of Before
+        (new/empty directories and directory metadata now native)
+      else:   __mergeWithChangeset: scoped base (objects only in scope) → full git add -A base
+      (paths and diffs from layer walks, not whole-tree walks)
+      markers: git.native_merge.fallback[…] · git.merge.scoped_fallback[…] · git.<verb> per command
+    C1 = frozen.git.head.withCommit(changes, …)          # see GitRef.withCommit
+    W1 = C1.asWorkspace
+    remaining = merged.changes(from: W1 root)
+    return W1.withChanges(remaining) + workspace metadata

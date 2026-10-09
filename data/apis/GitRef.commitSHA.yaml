@@ -1,0 +1,4 @@
+family: resolve
+since: pre-cutoff
+also: [GitRef.name, GitRef.targetCommit]
+notes: "Trivial accessors over the resolved ref; their history is the resolution path."

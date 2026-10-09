@@ -1,0 +1,15 @@
+source: pr-description
+verified_at: null
+what: >-
+  When the commit's tree is a COW descendant of its parent's tree (an incremental
+  checkout), paths come from walking only the layers in between. Two independent checkouts
+  (e.g. remote history) still walk both whole trees.
+pointers:
+  - core/changeset.go:ComputePaths
+  - core/changeset_delta.go:collectChangesetDelta
+code: |
+  GitCommit.changes(against)
+    before = against ?? first parent ?? empty directory
+    after = this.tree(discardGitDir: true); before = before.tree(discardGitDir: true)
+    return after.changes(from: before)
+    paths: layers between the trees if one descends from the other; else double walk

@@ -1,0 +1,31 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  Prerequisites are copied with pack-objects --revs (--use-bitmap-index) through a
+  transient alternate, writing their own index: no negotiation, no index-pack re-hashing.
+  Any failure discards the partial pack and fetches. Verify and unbundle run after the
+  source mount (and mirror lock) are released. The import is traced with phases and
+  markers.
+effect: >-
+  On a cold resume the copy was 7 s of a 74 s import, all under the lock; synthetic
+  15k-commit history: fetch 2.4 s, pack 1.6 s, pack with a bitmap 0.5 s.
+pointers:
+  - core/git_bundle.go:copyGitBundlePrerequisites
+  - core/git_bundle.go:packGitBundlePrerequisites
+  - core/git_bundle.go:recordGitBundlePhase
+code: |
+  GitRepository.bundle(refs, base)                     # names resolved per session
+    __bundleFile(pinned refs, base)                    # persisted
+      mount source with targets + base (remote: mirror lock + fetch)
+        local source: scratch borrows objects via alternates (no fetch)
+        remote source: scratch repo: fetch targets and base
+        git bundle create (detached HEAD preserved)
+  GitRepository.withBundle(bundle, prerequisiteRef)
+    __withBundleDirectory → DirectoryGitBundleImportLazy   # lazy, persisted producer
+      mount source with prerequisites (remote: mirror lock + depth-0 fetch)
+        new bare repo; pack-objects --revs prerequisites via alternate (fallback: fetch each)
+      release source / mirror lock
+      bundle verify; fetch bundle refs; pack-refs; write remotes   # unlocked
+      wcprof: git.bundle.source[depth=0] · prerequisites[pack|fetch] · unbundle
+  GitBundle.validate / refs / prerequisiteSHAs: parse and verify the header

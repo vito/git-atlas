@@ -1,0 +1,31 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  fbrec:
+    status: "yes"
+    note: "git.merge.scoped_fallback[reason] (#14576)."
+    requires: 14576
+    prs: [14576]
+  instr:
+    status: "yes"
+    note: "git.merge.<phase> + git.<verb> ops (#14576)."
+    requires: 14576
+    prs: [14576]
+  layers:
+    status: "yes"
+    note: "#14466."
+    prs: [14466]
+  nmerge:
+    status: gap
+    note: >-
+      The native merge only serves the private __mergeForWorkspaceCommit; public merges
+      whose sides have git-tree provenance never try it.
+  replay:
+    status: "yes"
+    note: "DirectoryMergeChangesetsLazy (#14472)."
+    prs: [14472]
+  scoped:
+    status: partial
+    note: >-
+      Two-way merges get the scoped base (#14576); withChangesets (octopus) always uses
+      the full git add -A base.
+    prs: [14576]

@@ -1,0 +1,5 @@
+summary: >-
+  Reuses the public remote's ref advertisement within a session, skipping a second
+  ls-remote.
+effects: "Query.git: Skips the second ls-remote for public remotes."
+color: "#9c36b5"

@@ -1,0 +1,16 @@
+source: pr-description
+verified_at: null
+what: >-
+  Targets resolve like GitRepository.ref, including revision suffixes such as HEAD~1 and
+  main^2 (74749a1).
+pointers:
+  - core/schema/workspace_reset.go:resolveWorkspaceResetTarget
+code: |
+  Workspace.withReset(commit, hard)
+    frozen = freeze(receiver)
+    base = frozen.git.__checkout
+    sha = resolveWorkspaceResetTarget(commit)            # SHA, prefix, ref, HEAD~1, main^2 …
+    dir = base.asGit.ref(sha).tree(depth: 0)              # = __fullCheckout of the target
+    W = frozen.head.repo.withContents(dir).head.asWorkspace
+    !hard: remaining = (frozen root − .git).changes(from: W root); W = W.withChanges(remaining)
+    return W + workspace metadata

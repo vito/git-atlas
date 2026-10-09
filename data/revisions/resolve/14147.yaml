@@ -1,0 +1,20 @@
+source: pr-description
+verified_at: null
+what: >-
+  Abbreviated commit SHAs resolve against locally available objects (1aa7f22).
+  Lock-consulting lookups are cached per client, while full-SHA lookups never consult the
+  lock and stay shared engine-wide, which is how snapshots pin their refs (4e8f4d1).
+pointers:
+  - core/schema/git.go:gitLockScopedInput
+  - core/git.go:GitRepository.ResolveShortSHA
+code: |
+  GitRepository.ref(name)                    # head · branch · tag · commit share this path
+    # cache: per client when the lock is consulted; full SHAs shared
+    pin = workspace lock (git.ref, host/path identity, name)? → use the pinned SHA
+    remote = repo.LoadRemote()               # remote: ls-remote, cached per session
+                                              # local: ls-remote file://<gitdir>
+    abbreviated SHA → ResolveShortSHA (fetched objects only)
+    ref = remote.Lookup(name)                # strict: branch | tag | full SHA
+    write lock entry
+    return gitRefResult(ref)                 # content digest: url + SHA + discard flag
+  latest(version): SelectGitRefWithVersionQuery → matching tags, then branches; lock stores ref + commit

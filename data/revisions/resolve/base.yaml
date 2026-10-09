@@ -1,0 +1,20 @@
+source: pr-description
+verified_at: null
+what: >-
+  Every named lookup goes through one path: consult the workspace lockfile pin, otherwise
+  list the remote (ls-remote, cached per session since #11366; local storage lists itself
+  over file://), look the name up strictly, write the pin, and build the GitRef with a
+  content digest of url + SHA.
+pointers:
+  - core/schema/git.go:gitSchema.ref
+  - core/git.go:GitRepository.LoadRemote
+  - core/git_remote.go:RemoteGitRepository.Remote
+code: |
+  GitRepository.ref(name)                    # head · branch · tag · commit share this path
+    pin = workspace lock (git.ref, repo url, name)? → use the pinned SHA
+    remote = repo.LoadRemote()               # remote: ls-remote, cached per session
+                                              # local: ls-remote file://<gitdir>
+    ref = remote.Lookup(name)                # strict: branch | tag | full SHA
+    write lock entry
+    return gitRefResult(ref)                 # content digest: url + SHA + discard flag
+  latest(): greatest semver tag, else HEAD

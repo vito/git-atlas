@@ -1,0 +1,5 @@
+summary: Applies, diffs and merges changesets by their snapshot layers.
+effects: |-
+  changeset paths: One-file edit on a 5,000-file / 22 MB workspace used to cost ~40 ms per path computation plus whole-tree walks; this makes it proportional to the change.
+  withChanges: Part of ~150 ms → proportional-to-change for a one-file edit on a 5,000-file workspace (diff ~88 ms, of which ~63 ms evaluating Before).
+color: "#d6336c"

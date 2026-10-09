@@ -1,0 +1,8 @@
+source: pr-description
+verified_at: null
+what: A workspace whose root is the ref's source tree.
+pointers:
+  - core/schema/workspace.go:syntheticWorkspaceFromGitRef
+code: |
+  GitRef.asWorkspace(cwd): root = ref.tree(discardGitDir: true); Workspace{source: this ref}
+  GitRepository.asWorkspace(cwd): head.asWorkspace(cwd)

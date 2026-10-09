@@ -1,0 +1,2 @@
+summary: Keeps fetched SHAs pinned in the remote mirror so later fetches negotiate from them.
+color: "#e8590c"

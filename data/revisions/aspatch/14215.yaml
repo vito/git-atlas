@@ -1,0 +1,14 @@
+source: pr-description
+verified_at: null
+what: >-
+  Automatic summaries bound the patch they read (truncating writer, preview limits) so an
+  unrelated-tree swap no longer produces a 134 MB patch in telemetry.
+pointers:
+  - at: core/changeset.go:AsPatch
+    note: bounded previews
+code: |
+  Changeset.asPatch → File
+    paths = ComputePaths()
+    mount Before/After; git diff --no-index --binary on the changed paths
+    rewrite diff --git headers to a/ b/
+    automatic previews: bounded (truncating writer)

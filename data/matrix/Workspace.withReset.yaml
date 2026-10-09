@@ -1,0 +1,19 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  ckbase:
+    status: gap
+    note: >-
+      Records no CheckoutBase; relies on #14576's recipe inference (contents kind
+      'checkout') for the new HEAD's source tree.
+    prs: [14576]
+  cow:
+    status: partial
+    note: >-
+      Target checkout is a COW child, but resetting to an OLDER commit fails the delta
+      planner's ancestor gate (base HEAD must be an ancestor of the target) and takes the
+      wipe path, rewriting every file.
+  refresh:
+    status: na
+  replay:
+    status: "yes"
+    note: Composed from public, persisted recipes.

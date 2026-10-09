@@ -1,0 +1,17 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced: push a ref's history with the destination's credentials, after owner
+  approval, with fast-forward checks or an explicit lease. History is copied into a
+  disposable repository first, so checkout config, hooks and source credentials cannot
+  affect the push. Each call pushes; the receipt can be replayed without pushing.
+pointers:
+  - core/git_push.go:GitRef.Push
+  - core/schema/git_push.go
+code: |
+  GitRef.push(to, remote, branch, expectedRemoteSHA)      # DoNotCache, NotReplayable
+    destination = to | registered remote | origin push routing
+    AuthorizeGitPush (owner approval; owner URL rewrites resolved first)
+    scratch bare repo: fetch SHA:refs/dagger/push/source from the source mount (remote: mirror lock)
+    destination credentials only (helper token / SSH agent mounted per operation)
+    git push [--force-with-lease=…]; parse → GitPushResult{CREATED|FAST_FORWARD|FORCED|UP_TO_DATE}

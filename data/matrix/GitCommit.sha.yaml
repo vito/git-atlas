@@ -1,0 +1,10 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  history:
+    status: partial
+    note: >-
+      Depth-1 mount; remote metadata reads happen under the mirror lock and queue behind
+      long holders.
+  replay:
+    status: "yes"
+    note: Each field persisted.

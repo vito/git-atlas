@@ -1,0 +1,14 @@
+source: pr-description
+verified_at: null
+what: >-
+  Frozen workspaces compare their overlay root with the ref's source tree and drop
+  additions that the tree's .gitignore ignores, as git status would (4f661f3).
+pointers:
+  - core/schema/workspace.go:workspaceGitUncommitted
+  - core/schema/workspace.go:gitRefWorkspaceChanges
+code: |
+  WorkspaceGit.uncommitted:
+    frozen with overlay: root.changes(from: ref.tree(discardGitDir: true))
+      minus additions ignored by the tree's .gitignore
+    frozen, no overlay: empty changeset
+    live: __repository.uncommitted                        # GitRepository.uncommitted

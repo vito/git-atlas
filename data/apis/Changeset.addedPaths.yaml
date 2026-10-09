@@ -1,0 +1,9 @@
+family: paths
+since: pre-cutoff
+label: "addedPaths · modifiedPaths · removedPaths · isEmpty · diffStats"
+also:
+  - Changeset.modifiedPaths
+  - Changeset.removedPaths
+  - Changeset.isEmpty
+  - Changeset.diffStats
+aliases: [Changeset.paths]

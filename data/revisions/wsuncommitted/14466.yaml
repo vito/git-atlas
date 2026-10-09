@@ -1,0 +1,15 @@
+source: pr-description
+verified_at: null
+what: >-
+  The overlay root is built on the HEAD tree, so its paths are computed by walking only
+  the layers in between rather than both whole trees.
+pointers:
+  - core/changeset.go:ComputePaths
+  - engine/snapshots/fsdiff/overlay_layers_linux.go:GetLayerDelta
+code: |
+  WorkspaceGit.uncommitted:
+    frozen with overlay: root.changes(from: ref.tree(discardGitDir: true))
+      paths: walk only the overlay's layers (same lineage)
+      minus additions ignored by the tree's .gitignore
+    frozen, no overlay: empty changeset
+    live: __repository.uncommitted                        # GitRepository.uncommitted

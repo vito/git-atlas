@@ -1,0 +1,15 @@
+source: pr-description
+verified_at: null
+what: >-
+  A changeset is lazy; its paths are computed by mounting both directories and
+  double-walking them (inode first, then content for distinct files whose stat matches),
+  since #13615 replaced a full-content git diff.
+pointers:
+  - core/changeset.go:ComputePaths
+  - core/changeset_delta.go:collectChangesetDelta
+code: |
+  Directory.changes(from) → Changeset{Before: from, After: this}      # lazy
+  Changeset.addedPaths / modifiedPaths / removedPaths / isEmpty → ComputePaths
+    mount Before and After
+    fsdiff.WalkChanges(Before, After)          # double walk; inode, then content
+  diffStats: git diff --numstat on the changed paths

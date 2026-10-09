@@ -1,0 +1,16 @@
+family: commitmeta
+since: pre-cutoff
+label: "sha · message · author… · parentShas"
+also:
+  - GitCommit.shortSha
+  - GitCommit.authoredDate
+  - GitCommit.committedDate
+  - GitCommit.authorName
+  - GitCommit.authorEmail
+  - GitCommit.committerName
+  - GitCommit.committerEmail
+  - GitCommit.message
+  - GitCommit.messageHeadline
+  - GitCommit.messageBody
+  - GitCommit.parentShas
+aliases: [GitCommit.metadata]

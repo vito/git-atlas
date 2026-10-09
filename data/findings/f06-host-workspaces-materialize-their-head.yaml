@@ -1,0 +1,32 @@
+kind: lag
+title: Host workspaces materialize their HEAD worktree twice, and neither is a delta
+status: open
+discovered_in: 14576
+prs: [14576]
+size: "S–M"
+risk: low
+apis: [Workspace.git, WorkspaceGit.directory]
+claim: >-
+  materializeWorkspaceGitUncommitted checks out canonical.asGit.head.tree(discardGitDir:
+  false, depth: 0, includeTags: true) and applies the client's uncommitted delta on top
+  (__withGitUncommitted). git.__checkout of that workspace is then head.__fullCheckout of
+  the repository over the result: another full worktree. With #14576 both are COW
+  checkouts, but neither finds a base. The canonical repository's recipe ends in
+  withDirectory, and the second one's storage is a __withGitUncommitted child of a 'tree'
+  call; gitContentsCheckoutBase recognizes only __fullCheckout, __checkout, their .git and
+  __pullDirectory, so both take the wipe path and rewrite every file. The first has
+  nothing to build on, but the second could be a near-free delta of the first (same HEAD).
+  Also, includeTags keeps the first one from routing to __fullCheckout or being
+  canonicalized, although LocalGitRef.Tree's COW path ignores includeTags (it records
+  reachable tags itself).
+proposal: >-
+  Select __fullCheckout for the canonical HEAD (or drop includeTags for local depth-0
+  trees in canonicalGitTreeArgs, after checking tag parity), and teach
+  gitContentsCheckoutBase that __withGitUncommitted over a checkout is a
+  'pull-receiver'-like case whose base is that checkout.
+pointers:
+  - core/schema/workspace.go:materializeWorkspaceGitUncommitted@4e9d0b0
+  - core/git_local_checkout_tree.go:gitContentsCheckoutBase@4e9d0b0
+  - core/schema/git.go:gitSchema.tree@4e9d0b0
+  - core/schema/git.go:canonicalGitTreeArgs@4e9d0b0
+  - core/git_local.go:LocalGitRef.Tree@4e9d0b0

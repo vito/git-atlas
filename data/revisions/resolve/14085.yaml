@@ -1,0 +1,17 @@
+source: pr-description
+verified_at: null
+what: >-
+  Lock entries for git-latest and git-sha are keyed by a scheme-less host/path identity,
+  so HTTPS, SSH and SCP-style spellings of one repository share a pin; old entries are
+  normalized on the next write.
+pointers:
+  - core/schema/git.go:gitLockInputs
+code: |
+  GitRepository.ref(name)                    # head · branch · tag · commit share this path
+    pin = workspace lock (git.ref, host/path identity, name)? → use the pinned SHA
+    remote = repo.LoadRemote()               # remote: ls-remote, cached per session
+                                              # local: ls-remote file://<gitdir>
+    ref = remote.Lookup(name)                # strict: branch | tag | full SHA
+    write lock entry
+    return gitRefResult(ref)                 # content digest: url + SHA + discard flag
+  latest(version): SelectGitRefWithVersionQuery → matching tags, then branches; lock stores ref + commit

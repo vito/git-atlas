@@ -1,0 +1,5 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  replay:
+    status: "yes"
+    note: "Persisted; __withRemoteSelection records captured routing."

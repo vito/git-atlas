@@ -1,0 +1,12 @@
+source: pr-description
+verified_at: null
+what: >-
+  Mount both sides and run git diff --no-index --binary over the changed paths (with
+  GIT_DIR=/dev/null), rewriting diff --git headers.
+pointers:
+  - core/changeset.go:Changeset.AsPatch
+code: |
+  Changeset.asPatch → File
+    paths = ComputePaths()
+    mount Before/After; git diff --no-index --binary on the changed paths
+    rewrite diff --git headers to a/ b/

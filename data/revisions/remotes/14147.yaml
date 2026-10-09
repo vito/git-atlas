@@ -1,0 +1,13 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced: register a named remote as routing metadata. Registered remotes are written
+  into every checkout's .git/config (part of the tree content digest) and origin routes
+  push; never a credential grant.
+pointers:
+  - core/schema/git_push.go:gitSchema.withRemote
+  - core/git.go:WithGitRemote
+code: |
+  GitRepository.withRemote(name, url, pushUrl)        # persisted
+    repo.Remotes = WithGitRemote(remotes, {name, url, pushUrl})
+    written into checkouts' .git/config; origin routes push

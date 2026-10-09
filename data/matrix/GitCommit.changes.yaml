@@ -1,0 +1,18 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  canon:
+    status: "yes"
+    note: "Uses tree(discardGitDir: true) (canonical)."
+  incr:
+    status: gap
+    note: >-
+      The commit's own diff-tree is the exact path list; the incremental planner already
+      parses it, but changes() still walks two trees.
+  layers:
+    status: partial
+    note: >-
+      Layer walk only when the commit's tree is a COW descendant of the parent's
+      (incremental). Remote history: two independent checkouts → whole-tree double walk.
+  replay:
+    status: "yes"
+    note: Persisted.

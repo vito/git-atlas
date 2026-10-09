@@ -1,0 +1,13 @@
+summary: >-
+  Speeds up workspace git checkouts, pulls and merges: COW checkouts, canonical tree
+  arguments, incremental trees from any ancestor, fetch negotiation tips, a scoped merge
+  base, packed bundle prerequisites, and path/fallback markers.
+effects: |-
+  tree / checkout: Cold resume of a heavy agent trace 10m23s → 4m53s (whole PR); e.g. 40 full source trees (165 s) and 26 full-history fetches (~3.4 s each) removed; a committed head's checkout layer 21 MiB → 0.5 MiB.
+  ws .git dir: ~3.4 s of transfer + index-pack per checkout × 26 on one resume removed; synthetic 5000-commit history 0.6–1.7 s → 0.13 s (wipe); committed head's layer 21 MiB → 0.5 MiB (delta).
+  repo uncommitted: Up to 6.6 s per call on dagger/dagger, 100+ calls per resume (every pulled repository's uncommitted).
+  ws withCommit: Native merges on a 16k-file workspace ~105 ms instead of 250–480 ms; scoped base on a 9k-file slice 0.6 s vs 1.45 s; __mergeWithChangeset p50 7.3 → 4.4 s (uncompressed throwaway objects).
+  pull: ~5 s per pull fetch on dagger/dagger; Workspace.__pullDirectory self time 125 s → 42 s on a cold resume; 23 full checkouts (~107 s) of pulled HEADs removed.
+  bundles: On a cold resume the copy was 7 s of a 74 s import, all under the lock; synthetic 15k-commit history: fetch 2.4 s, pack 1.6 s, pack with a bitmap 0.5 s.
+  changeset merge: 9k-file slice: base 1.45 s → 0.6 s, 12.1k → 3.7k objects; full base 2.6 s → 1.3 s (uncompressed).
+color: "#c2255c"

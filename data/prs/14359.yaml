@@ -1,0 +1,2 @@
+summary: "GitRepository.ref accepts revision suffixes such as HEAD~3 and main^2."
+color: "#66a80f"

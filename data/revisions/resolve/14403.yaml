@@ -1,0 +1,21 @@
+source: pr-description
+verified_at: null
+what: >-
+  noLock on ref/branch/tag/head/latest skips both lockfile reads and writes, for callers
+  that need the live upstream value without consuming or changing the workspace pin.
+pointers:
+  - at: core/schema/git.go
+    note: noLock args
+code: |
+  GitRepository.ref(name, noLock)            # head · branch · tag · commit share this path
+    # cache: per client when the lock is consulted; full SHAs shared
+    name~N / name^N → resolve base as below, then WalkRevision (remote: fetch walk depth, retry full)
+    noLock: skip lock read and write
+    pin = workspace lock (git.ref, host/path identity, name)? → use the pinned SHA
+    remote = repo.LoadRemote()               # remote: ls-remote, cached per session
+                                              # local: ls-remote file://<gitdir>
+    abbreviated SHA → ResolveShortSHA (fetched objects only)
+    ref = remote.Lookup(name)                # strict: branch | tag | full SHA
+    write lock entry
+    return select __resolvedRef(name, SHA)    # persisted; digest: url + SHA + auth handles
+  latest(version): SelectGitRefWithVersionQuery → matching tags, then branches; lock stores ref + commit

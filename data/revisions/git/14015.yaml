@@ -1,0 +1,21 @@
+source: code
+verified_at: null
+what: >-
+  A remote reached from both the CLI and module dependency resolution was probed once per
+  client, because Query.git is per-client. The visibility probe is now cached per session
+  (it sends no credentials, so the URL identifies the answer), except behind a service
+  binding.
+effect: >-
+  Part of removing the per-invocation cost of a remote git-ref module source (the PR's
+  write-up: hack/designs/git-ref-module-source-cost.md).
+pointers:
+  - core/schema/git.go:cachedIsRemotePublic
+code: |
+  Query.git(url, keepGitDir, sshKnownHosts, sshAuthSocket, httpAuth…)   # cache: per client
+    ambiguous scheme → try each clone URL candidate
+    ssh, no socket: scope client's SSH_AUTH_SOCK (Host._sshAuthSocket) → re-select git(…, sshAuthSocket)
+    https, no token:
+      cachedIsRemotePublic(url)                 # one anonymous probe per session
+      private → GetCredential (client helper) → setSecret → re-select git(…, httpAuthToken)
+    mirror = Query._remoteGitMirror(url)       # one bare repo per URL
+    return GitRepository{RemoteGitRepository{url, auth, services, mirror}}

@@ -1,0 +1,26 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  history:
+    status: "yes"
+    note: "Owned storage resolves locally first, then through Upstream (#14433)."
+    prs: [14433]
+  instr:
+    status: partial
+    note: >-
+      'git remote metadata' span (cache hit logged); no marker for lock-pinned vs live vs
+      upstream resolution.
+  lock:
+    status: partial
+    note: >-
+      Remote revision walks and short-SHA expansion read the mirror under its lock; short,
+      but they queue behind long holders (see GitRef.tree).
+  nego:
+    status: "yes"
+    note: "Revision walks fetch into the mirror, which pins fetched SHAs (#14170)."
+    prs: [14170]
+  pack:
+    status: na
+  replay:
+    status: "yes"
+    note: "Ends in persisted __resolvedRef (#14224 stack)."
+    prs: [14224]

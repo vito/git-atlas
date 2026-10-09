@@ -1,0 +1,25 @@
+source: code
+verified_at: null
+what: >-
+  A depth-0 promotion (complete history, e.g. for hydration) first asks the owning client
+  to donate the commit's exact closure (PackCommit) when a clean capture registered it as
+  an approved donor; any donor failure falls back to the remote.
+pointers:
+  - core/git_host_history.go:approvedHostCommitPack
+  - engine/session/git/git_pack_commit.go:PackCommit
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args) → DirectoryGitCommitLazy   # saved recipe
+      same-base provenance (Before = tree(discardGitDir) of this SHA, same repo recipe)?
+        remote parent: storage = ref(SHA).__nativeCommitBase(depth 1)   # pack-objects closure, mirror lock
+          (depth 0: approved host donor PackCommit first, else the remote)
+        native: COW child of repo storage; scratch bare repo, objects via alternate
+          read-tree; stage only changed paths (sparse); write-tree; commit-tree
+          copy new objects only; publish branch / detached HEAD
+      else, or any failure:
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = __withCommitRepository: withContents(dir) + CheckoutBase{Parent, CommitSHA, Tree} + HistorySource
+    return repo.head

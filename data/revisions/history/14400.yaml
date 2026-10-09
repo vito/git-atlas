@@ -1,0 +1,29 @@
+source: pr-description
+verified_at: null
+what: >-
+  Joined reads first try proofs that need no remote: an owned shallow child against its
+  anchor or descendants, a complete local donor that holds every commit, an owned child
+  standing in for its exact remote parent. Only then refJoin. Owned shallow storage
+  hydrates (__hydrateRepository) when a read crosses its boundary; it never truncates.
+effect: >-
+  Ahead/behind against the remote parent works with the remote's service stopped
+  (TestWorkspaceRemoteParentHistoryDoesNotFetch).
+pointers:
+  - core/git_history_native.go:mountOwnedShallowHistory
+  - core/git_history_native.go:mountRefsWithLocalDonor
+  - core/git_history_native.go:nativeParentHistoryRefs
+  - core/git_local_history.go:HydrateGitRepository
+code: |
+  GitRef.log(limit, paths, base)
+    unfiltered: fetch limit generations; uneven shallow boundary → retry with full history
+    owned shallow storage: answer above the boundary; deeper → __hydrateRepository
+    paths/base: ref.mount(depth 0) → git log …    # remote: --unshallow the mirror, under its lock
+  GitRef.commonAncestor(other)
+    mountRefs(a, b):
+      same repository → mount once
+      local refs → alternates view over the mounted object stores (no fetch)
+      owned shallow child vs its anchor/descendants → the child's store
+      complete local donor holding every commit → alternates view (no fetch, no lock)
+      owned child vs its exact remote parent → the child's objects
+      else refJoin: tmp repo; fetch each ref from its backend (each under its own mirror lock)
+    git merge-base

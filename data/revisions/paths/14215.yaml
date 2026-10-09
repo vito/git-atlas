@@ -1,0 +1,16 @@
+source: pr-description
+verified_at: null
+what: >-
+  Automatic previews ask whether a changeset exceeds a budget; the walk now aborts as soon
+  as it does, comparing inodes only, instead of finishing a 20 s walk of two unrelated
+  trees.
+pointers:
+  - core/changeset_delta.go:collectChangesetDeltaBounded
+  - core/changeset.go:PathCountExceeds
+code: |
+  Directory.changes(from) → Changeset{Before: from, After: this}      # lazy
+  Changeset.addedPaths / modifiedPaths / removedPaths / isEmpty → ComputePaths
+    mount Before and After
+    fsdiff.WalkChanges(Before, After)          # double walk; inode, then content
+  PathCountExceeds(limit): same walk, aborted past the budget (inode-only)
+  diffStats: git diff --numstat on the changed paths

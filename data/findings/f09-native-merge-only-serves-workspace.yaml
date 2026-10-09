@@ -1,0 +1,21 @@
+kind: lag
+title: "Native merge only serves workspace commits; public merges and the octopus lag"
+status: open
+discovered_in: 14576
+size: M
+risk: medium
+apis: [Changeset.withChangeset, GitRef.withCommit]
+claim: >-
+  TryNativeWorkspaceMerge is reachable only through the private __mergeForWorkspaceCommit.
+  Changeset.withChangeset (public) and GitRef.withCommit's checkout fallback (which calls
+  withChangeset) always use the general merge, even when both sides prove git-tree
+  provenance. withChangesets (octopus) never gets the scoped base.
+proposal: >-
+  Try the native merge in MergeWithChangeset when both changesets pass
+  GitCommitChangesetNativeBase; extend the scoped base to the octopus merge.
+pointers:
+  - core/changeset.go:mergeForWorkspaceCommit@4e9d0b0
+  - core/changeset.go:MergeWithChangeset@4e9d0b0
+  - core/changeset.go:gitOctopusMergeChangesets@4e9d0b0
+  - at: core/git_commit_create.go:gitCommitDirectory@4e9d0b0
+    note: fallback

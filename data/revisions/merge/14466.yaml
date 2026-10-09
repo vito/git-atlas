@@ -1,0 +1,19 @@
+source: pr-description
+verified_at: null
+what: >-
+  Merges keep their path computations and diffs proportional to the change (layer walks),
+  instead of whole-tree walks of the base.
+pointers:
+  - at: core/changeset.go
+    note: "2094a4a"
+code: |
+  Changeset.withChangeset(other, onConflict)   # withChangesets: octopus, FAIL/FAIL_EARLY only
+    FAIL_EARLY: path conflicts → fail before merging (paths from layer walks)
+    base = MergeBeforeDirectories(ours, theirs)
+    COW scratch of base (withGitMergeWorkspace) → DirectoryMergeChangesetsLazy   # saved recipe
+      git init; git add -A; commit 'base'          # an object for every base file
+      branch per side: applyContent(diff); commit
+      git merge (-X ours|theirs | markers); verify declared paths landed
+      restore directories emptied by the merge
+      rm .git
+    return Changeset(before: base, after: scratch)

@@ -1,0 +1,12 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  fbrec:
+    status: "yes"
+    note: trees_reason attribute.
+  instr:
+    status: "yes"
+    note: "snapshot.diff[layer|layers|trees]."
+  layers:
+    status: "yes"
+    note: "#14466."
+    prs: [14466]

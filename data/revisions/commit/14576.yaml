@@ -1,0 +1,27 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  A provenance mismatch used to skip the native path silently; it is now recorded like any
+  other fallback (before-not-git-tree, before-commit-mismatch, …) on the span and as a
+  wcprof git.native.fallback[reason] marker. The checkout fallback's __checkout is now
+  usually a COW checkout (see WorkspaceGit.directory).
+pointers:
+  - core/git_commit_create.go:gitCommitChangesetNativeBaseReason
+  - core/git_commit_create.go:nativeFallback
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args) → DirectoryGitCommitLazy   # saved recipe
+      same-base provenance (Before = tree(discardGitDir) of this SHA, same repo recipe)?
+        remote parent: storage = ref(SHA).__nativeCommitBase(depth 1)   # pack-objects closure, mirror lock
+          (depth 0: approved host donor PackCommit first, else the remote)
+        native: COW child of repo storage; scratch bare repo, objects via alternate
+          read-tree; stage only changed paths (sparse); write-tree; commit-tree
+          copy new objects only; publish branch / detached HEAD
+      else, or any failure (reason recorded: git.native.fallback[…]):
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # local HEAD: COW delta / wipe
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = __withCommitRepository: withContents(dir) + CheckoutBase{Parent, CommitSHA, Tree} + HistorySource + Upstream
+    return repo.head

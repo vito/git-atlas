@@ -1,0 +1,23 @@
+source: code
+verified_at: null
+what: >-
+  The anonymous probe already receives the ref advertisement; the selected remote then ran
+  git ls-remote for the same refs. The probe now returns the advertisement (HEAD,
+  branches, tags, peeled tags, symrefs, in native order), which primes the session's
+  ls-remote cache. Only anonymous HTTP(S) remotes seed it.
+effect: Skips the second ls-remote for public remotes.
+pointers:
+  - core/schema/git.go:cachedPublicRemote
+  - core/git_remote.go:RemoteGitRepository.PrimePublicRemote
+code: |
+  Query.git(url, keepGitDir, sshKnownHosts, sshAuthSocket, httpAuth…)   # cache: per client
+    ambiguous scheme → try each clone URL candidate
+    ssh, no socket: scope client's SSH_AUTH_SOCK (Host._sshAuthSocket) → re-select git(…, sshAuthSocket)
+    https, no token:
+      advertisement = cachedPublicRemote(url)    # one probe per session; nil = private
+      private → GetCredential (client helper) → setSecret → re-select git(…, httpAuthToken)
+    return select __gitRepository(explicit args)   # client-independent, shared
+    public → backend.PrimePublicRemote(advertisement)   # seeds the session ls-remote cache
+  __gitRepository(…)                            # cache: CacheScopeInput only
+    mirror = Query._remoteGitMirror(url)       # one bare repo per URL
+    return GitRepository{RemoteGitRepository{url, auth, services, mirror}}

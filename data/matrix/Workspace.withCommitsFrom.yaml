@@ -1,0 +1,42 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  ckbase:
+    status: "yes"
+    note: "__pullRepository (#14576)."
+    requires: 14576
+    prs: [14576]
+  cow:
+    status: "yes"
+    note: Scratch is a COW child of __checkout.
+  fbrec:
+    status: na
+    note: No fast/slow alternatives.
+  instr:
+    status: "yes"
+    note: "git.pull.* phases (#14576)."
+    requires: 14576
+    prs: [14576]
+  nego:
+    status: "yes"
+    note: "--negotiation-tip=HEAD (#14576)."
+    requires: 14576
+    prs: [14576]
+  nmerge:
+    status: partial
+    note: >-
+      Dirt is merged with merge-tree + read-tree on a full retained checkout; the sparse
+      native merge (no checkout) is not used.
+  pack:
+    status: gap
+    note: >-
+      Source history arrives by fetch + index-pack into the scratch; a pack-objects copy
+      (as for bundle prerequisites) would skip negotiation and re-hashing.
+  refresh:
+    status: "yes"
+    note: "#14576."
+    requires: 14576
+    prs: [14576]
+  replay:
+    status: "yes"
+    note: "DirectoryWorkspacePullLazy (#14472) + __pullRepository."
+    prs: [14472]

@@ -1,0 +1,24 @@
+source: code
+verified_at: null
+what: >-
+  FETCH_HEAD is not a negotiation tip, so each fetch into the mirror claimed to have
+  nothing and re-received shared history. Each fetched SHA is now pinned as
+  refs/dagger.fetched/<sha> (also for commits fetched by older engines), so later fetches
+  advertise it as 'have'.
+pointers:
+  - core/git_remote.go:gitRefsToFetch
+  - core/git_remote.go:fetchedGitRef
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    dir = ref.Backend.Tree(discard, depth, includeTags)        # eager, in the resolver
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name])
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout; [rm .git]

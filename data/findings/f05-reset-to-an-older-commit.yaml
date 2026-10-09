@@ -1,0 +1,26 @@
+kind: lag
+title: Reset to an older commit always rewrites the whole worktree
+status: open
+discovered_in: 14576
+prs: [14576]
+size: M
+risk: medium
+apis: [Workspace.withReset]
+claim: >-
+  withReset materializes the target with base.asGit.ref(sha).tree(depth: 0). With #14576
+  that is a COW checkout whose inferred base is the receiver's checkout, but
+  planIncrementalGitCheckout only accepts a base that is an ancestor of the target; going
+  back in history fails with not-ancestor and takes the wipe path. The diff-tree delta is
+  exact in either direction, and withReset already proves reachability
+  (requireWorkspaceResetReachable). Reset also records no CheckoutBase and relies on
+  recipe-string inference for the new HEAD's source tree.
+proposal: >-
+  Allow a 'descendant base' when the target is proven reachable from it (reverse delta),
+  and give withReset a private __resetRepository recipe that records CheckoutBase like
+  __withCommitRepository / __pullRepository.
+pointers:
+  - core/schema/workspace_reset.go:withReset@4e9d0b0
+  - core/schema/workspace_reset.go:requireWorkspaceResetReachable@4e9d0b0
+  - core/git_local_incremental.go:planIncrementalGitCheckout@4e9d0b0
+  - core/git_local_incremental.go:incrementalCheckoutAncestor@4e9d0b0
+  - core/git_local_cow.go:cowDeltaTree@4e9d0b0

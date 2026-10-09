@@ -1,0 +1,14 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced (b8626ba): the changeset from the first parent (or an arbitrary 'against'
+  commit, even from another repository) to this commit, built from the two source-only
+  trees.
+pointers:
+  - core/schema/git.go:gitSchema.commitChanges
+code: |
+  GitCommit.changes(against)
+    before = against ?? first parent ?? empty directory
+    after = this.tree(discardGitDir: true); before = before.tree(discardGitDir: true)
+    return after.changes(from: before)
+    paths: double walk of both trees

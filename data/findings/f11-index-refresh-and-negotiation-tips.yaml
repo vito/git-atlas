@@ -1,0 +1,27 @@
+kind: dup
+title: Index refresh and negotiation tips are re-applied by hand at each site
+status: open
+discovered_in: 14576
+size: S
+risk: low
+apis:
+  - GitRepository.uncommitted
+  - Workspace.withCommitsFrom
+  - Workspace.export
+  - GitRef.contains
+claim: >-
+  update-index --refresh appears in cleanGitWorktree (errors ignored, unrecorded) and
+  refreshWorkspacePullIndex (recorded as index_refreshed by pulls and exports).
+  --negotiation-tip is added separately in refJoin, containsWithFullHistory,
+  WorkspacePullCommits, WorkspaceSaveDirectory and cowCheckoutDeltaWorktree. Any new
+  consumer of a retained checkout (or fetch into a ref-less repository) has to remember
+  both.
+proposal: >-
+  A small 'retained checkout session' helper (open COW child → refresh → run) and a
+  fetchInto(dst, src, shas, tips) helper.
+pointers:
+  - core/git_local.go:cleanGitWorktree@4e9d0b0
+  - core/workspace_pull.go:refreshWorkspacePullIndex@4e9d0b0
+  - core/git.go:refJoin@4e9d0b0
+  - core/git_remotes.go:containsWithFullHistory@4e9d0b0
+  - core/git_local_cow.go:cowCheckoutDeltaWorktree@4e9d0b0

@@ -1,0 +1,23 @@
+source: code
+verified_at: null
+what: >-
+  Introduced: integrate a frozen source workspace's commits, fast-forwarding when the
+  selection includes every new ancestor and cherry-picking oldest first otherwise;
+  picked/redundant commits are skipped (ancestry, patch-id, origin trailers); conflicts
+  fail. All writes happen in a COW scratch copy of the receiver's retained checkout.
+pointers:
+  - core/schema/workspace_pull.go:withCommitsFrom
+  - core/schema/workspace_pull.go:computeWorkspacePull
+  - core/workspace_pull.go:WorkspacePullCommits
+  - core/workspace_pull.go:foldWorkspacePull
+code: |
+  Workspace.withCommitsFrom(source, commits, maxCommits)    # compareCommitsFrom: same fold, apply = false
+    dir = __pullDirectory(…)
+      base = receiver.git.__checkout                       # full retained checkout
+      COW scratch of base:
+        fetch source HEAD from its repository's mount
+        apply receiver's uncommitted; add -A; commit dirty snapshot; reset --hard
+        fold: fast-forward (reset --hard tip) | cherry-pick oldest first (patch-id / origin dedupe)
+        merge-tree dirty onto new HEAD; read-tree --reset -u
+    repo = receiver.head.repo.withContents(dir)
+    return repo.head.asWorkspace.withChanges(repo.uncommitted)

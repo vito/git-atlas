@@ -1,0 +1,24 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  fbrec:
+    status: gap
+    note: >-
+      A failed refresh silently loses the shortcut (by design), with no attribute or
+      marker to notice it.
+  instr:
+    status: gap
+    note: >-
+      cleanGitWorktree ignores the refresh result and records nothing; pulls/exports
+      record index_refreshed, __cleaned does not.
+  layers:
+    status: "yes"
+    note: Cleaned is a COW child of the storage, so dirty vs cleaned is a layer walk.
+  refresh:
+    status: "yes"
+    note: "__cleaned refreshes its private index before restore (#14576)."
+    requires: 14576
+    prs: [14576]
+  replay:
+    status: "yes"
+    note: "DirectoryGitCleanedLazy (#14224 stack)."
+    prs: [14224]

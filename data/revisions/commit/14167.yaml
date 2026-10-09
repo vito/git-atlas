@@ -1,0 +1,27 @@
+source: code
+sha: "3c07ff709a5f5114ce1bba13fabccd9280250221"
+verified_at: null
+what: >-
+  Proposed: the commit-base promotion creates and mounts its snapshot before locking,
+  holds the mirror only for the pack-objects copy (through the shared packGitClosure
+  helper), and writes HEAD and remotes after the unlock.
+pointers:
+  - at: core/git_commit_remote.go:copyRemoteCommitBase
+    note: branch
+  - core/git_commit_remote.go:finishRemoteCommitBase
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args) → DirectoryGitCommitLazy   # saved recipe
+      same-base provenance (Before = tree(discardGitDir) of this SHA, same repo recipe)?
+        remote parent: storage = ref(SHA).__nativeCommitBase(depth 1)   # lock only for the pack-objects copy
+          (depth 0: approved host donor PackCommit first, else the remote)
+        native: COW child of repo storage; scratch bare repo, objects via alternate
+          read-tree; stage only changed paths (sparse); write-tree; commit-tree
+          copy new objects only; publish branch / detached HEAD
+      else, or any failure:
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = __withCommitRepository: withContents(dir) + CheckoutBase{Parent, CommitSHA, Tree} + HistorySource + Upstream
+    return repo.head

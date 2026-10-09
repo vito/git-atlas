@@ -1,0 +1,5 @@
+family: tree
+since: pre-cutoff
+notes: >-
+  Shares the pinned recipe with GitRef.tree (repo.ref(SHA).tree), even when the commit
+  came from a mutable ref's targetCommit.

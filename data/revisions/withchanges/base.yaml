@@ -1,0 +1,12 @@
+source: pr-description
+verified_at: null
+what: >-
+  Built a structural Before.diff(After) and copied the declared paths out of it; the diff
+  walked both trees and forced Before to be evaluated.
+pointers:
+  - core/directory.go:WithChanges
+code: |
+  Directory.withChanges(changes)              # Workspace.withChanges records it in the overlay
+    diff = changes.Before.diff(changes.After)  # structural diff: walks both trees
+    copy declared added/modified paths out of diff
+    remove declared removals

@@ -1,0 +1,23 @@
+kind: lag
+title: "Mirror lock: only bundle import is narrowed on main + #14576"
+status: open
+discovered_in: 14576
+prs: [14167, 14576]
+size: M
+risk: medium
+apis: [GitRef.tree, GitRef.withCommit, GitRepository.bundle, GitRef.push, GitRef.log]
+claim: >-
+  Remote tree checkouts (including submodule clones over the network), commit-base
+  promotions, bundle creation, push preparation and full-history logs all hold
+  git-remote::<url> for their whole operation; #14576 narrows bundle import only. #14167
+  covers checkouts, promotions and bundle creation, but not push preparation or
+  log/contains unshallows.
+proposal: >-
+  After #14167, apply the same 'update + copy out, then unlock' split to push preparation;
+  make the lock-held span/op (#14167's git.mirror.locked) the standard for every holder.
+pointers:
+  - core/git_remote.go:initRemote@4e9d0b0
+  - core/git_remote.go:RemoteGitRef.Tree@4e9d0b0
+  - core/git_commit_remote.go:GitRemoteCommitBase@4e9d0b0
+  - core/git_bundle.go:CreateGitBundleFile@4e9d0b0
+  - core/git_push.go:GitRef.Push@4e9d0b0

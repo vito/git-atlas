@@ -1,0 +1,4 @@
+family: remotes
+since: 14511
+also: [GitRepository.remote, GitRepository.defaultRemote]
+notes: remote(name) and defaultRemote share this entry.

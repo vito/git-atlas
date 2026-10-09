@@ -1,0 +1,4 @@
+summary: >-
+  Saves recipes for cached values that could not be rebuilt, so more git results can be
+  replayed.
+color: "#1864ab"

@@ -1,0 +1,9 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  history:
+    status: "yes"
+    note: "Owned storage merges Upstream names (#14433)."
+    prs: [14433]
+  replay:
+    status: na
+    note: Per-session by design.

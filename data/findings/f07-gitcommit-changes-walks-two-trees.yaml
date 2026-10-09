@@ -1,0 +1,20 @@
+kind: lag
+title: GitCommit.changes walks two trees although git already knows the delta
+status: open
+discovered_in: 14576
+size: M
+risk: medium
+apis: [GitCommit.changes, Directory.changes]
+claim: >-
+  changes() diffs this.tree(discard) against the parent's tree. When the child tree is an
+  incremental COW child the walk is a layer walk; for remote history or any
+  non-incremental pair, it is a double walk of two whole checkouts (and both must be
+  materialized). planIncrementalGitCheckout already turns diff-tree --raw into exactly the
+  changed paths with modes.
+proposal: >-
+  Give Changeset an optional precomputed path set from diff-tree for commit-to-commit
+  changes (and still materialize content lazily).
+pointers:
+  - core/schema/git.go:gitSchema.commitChanges@4e9d0b0
+  - core/git_local_incremental.go:parseIncrementalGitCheckoutPlan@4e9d0b0
+  - core/changeset.go:ComputePaths@4e9d0b0

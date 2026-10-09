@@ -1,0 +1,58 @@
+as_of: 4e9d0b0  # main 0e766ba + #14576
+cells:
+  canon:
+    status: "yes"
+    note: "treeCacheKey (#14576) on top of pinned-by-SHA source trees (#14147)."
+    requires: 14576
+    prs: [14147, 14576]
+  ckbase:
+    status: "yes"
+    note: "CheckoutBase from withCommit/pulls; inferred for withContents-over-checkout (#14576)."
+    prs: [14576]
+  cow:
+    status: "yes"
+    note: "Local retained checkouts: delta → wipe → fetch (#14576)."
+    requires: 14576
+    prs: [14576]
+  fbrec:
+    status: "yes"
+    note: nativeFallback on incremental/contents/cow/delta spans + markers.
+  history:
+    status: "yes"
+    note: "Owned shallow storage mounts at depth 1 for source trees (#14400)."
+    prs: [14400]
+  incr:
+    status: "yes"
+    note: "#14399; any ancestor + pull bases (#14576)."
+    prs: [14399, 14576]
+  instr:
+    status: "yes"
+    note: "git.tree.<path>[why] and git.checkout.<path>[why] markers (#14576)."
+    requires: 14576
+    prs: [14576]
+  layers:
+    status: "yes"
+    note: COW outputs stay in one lineage, so later diffs walk layers.
+  lock:
+    status: "yes"
+    note: "Remote checkouts hold the mirror lock through checkout and submodule clones until #14167."
+    requires: 14167
+    prs: [14167]
+  nego:
+    status: "yes"
+    note: "Mirror pins fetched SHAs (#14170); COW delta fetch negotiates from HEAD (#14576)."
+    prs: [14170, 14576]
+  pack:
+    status: "yes"
+    note: >-
+      Remote depth-0 checkouts copy out with pack-objects only in #14167; refs still fetch
+      file://mirror + index-pack on main.
+    requires: 14167
+    prs: [14167]
+  refresh:
+    status: na
+    note: Checkouts write a fresh stat-less index by design.
+  replay:
+    status: "yes"
+    note: "DirectoryGitTreeLazy; gitFullCheckout kind (#14224, #14472)."
+    prs: [14224, 14472]

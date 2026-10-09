@@ -1,0 +1,52 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  Equivalent spellings of one tree become one call and one snapshot (treeCacheKey). Local
+  source trees try three paths: incremental from any ancestor CheckoutBase (withCommit
+  parent or pull receiver), a COW copy of the retained checkout the storage came from
+  (inferred from the producing recipe, for traces recorded before checkout bases), then
+  the full alternates checkout. Retained checkouts (keep .git, depth 0) become COW
+  children: a delta on the base's own checkout (fetching only what is missing, negotiated
+  from HEAD), else a wipe of the repository snapshot with one parallel checkout -f, else
+  the old fetch. Every path records why the cheaper ones were skipped.
+effect: >-
+  Cold resume of a heavy agent trace 10m23s → 4m53s (whole PR); e.g. 40 full source
+  trees (165 s) and 26 full-history fetches (~3.4 s each) removed; a committed head's
+  checkout layer 21 MiB → 0.5 MiB.
+pointers:
+  - core/schema/git.go:canonicalGitTreeArgs
+  - core/git_local.go:LocalGitRef.Tree
+  - core/git_local_checkout_tree.go:contentsCheckoutTree
+  - core/git_local_cow.go:cowTree
+  - core/git_source_tree.go:startGitSourceTree
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    args canonicalized: defaults dropped; no .git ⇒ depth, includeTags dropped (treeCacheKey)
+    if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
+    if keep .git, depth 0, no tags: return GitRef.__fullCheckout
+      (saved under its own recipe kind: gitFullCheckout)
+    dir = DirectoryGitTreeLazy{ref, discard, depth, includeTags}   # built on first read, persisted
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes]), set after materialization
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      (depth dropped once the mirror is complete: mirrorFetchDepth)
+      (automatic maintenance runs synchronously, inside the lock)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only            # owned shallow: depth 1; deep reads hydrate first
+    discard:
+      ① incrementalTree: CheckoutBase (withCommit parent or pull receiver; any ancestor) → COW of its tree + delta
+      ② contentsCheckoutTree: COW of the retained checkout the storage came from, minus .git (+ delta)
+      ③ new snapshot: init + alternates → mounted objects (no fetch); checkout; rm .git
+      marker: git.tree.<incremental|checkout|full>[why]
+    keep .git, depth ≤ 0:
+      ① COW delta: child of the base's __fullCheckout; fetch --negotiation-tip=HEAD; write the delta
+      ② COW wipe: child of the repository snapshot; checkout -f every file (4 workers); no fetch
+      ③ new snapshot: init; fetch <mount> SHA:tmpref; checkout
+      marker: git.checkout.<delta|wipe|full>[why]
+    keep .git, depth > 0: new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout

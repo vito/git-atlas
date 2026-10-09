@@ -1,0 +1,27 @@
+source: code
+sha: "4e9d0b04e218427fdf2ff49f369f0530baf06279"
+verified_at: null
+what: >-
+  Local HEADs get copy-on-write checkouts: a delta on the base's own checkout
+  (CheckoutBase, or inferred: checkout | checkout-git-dir | pull-receiver), else a wipe of
+  the repository snapshot with one parallel checkout -f and no fetch (tags recorded with
+  for-each-ref --merged). Inherited objects are never rewritten (timestamp walk skips
+  .git/objects by inode); the snapshot root gets a fresh snapshot's mode and owner.
+effect: >-
+  ~3.4 s of transfer + index-pack per checkout × 26 on one resume removed; synthetic
+  5000-commit history 0.6–1.7 s → 0.13 s (wipe); committed head's layer 21 MiB → 0.5
+  MiB (delta).
+pointers:
+  - core/git_local_cow.go:cowTree
+  - core/git_local_cow.go:cowDeltaTree
+  - core/git_local_cow.go:cowWipeTree
+  - core/git_local_cow.go:cowGitCheckout
+  - at: core/git.go:finishGitCheckout
+    note: gitCheckoutReuse
+code: |
+  WorkspaceGit.directory = git.__checkout.directory('.git')
+  WorkspaceGit.__checkout = git.head.__fullCheckout           # keyed by the resolved ref
+  GitRef.__fullCheckout = Backend.Tree(keep .git, depth 0)   # recipe kind gitFullCheckout
+    remote: lock; mirror fetch --unshallow; checkout (see GitRef.tree)
+    local:  ① COW delta on base checkout ② COW wipe (checkout -f, no fetch) ③ fetch the whole history
+    finish: read-tree HEAD (index without stat data); mtime = 1s (skips inherited .git/objects)

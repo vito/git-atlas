@@ -1,0 +1,69 @@
+- id: cow
+  name: COW checkout (delta/wipe)
+  desc: >-
+    Retained checkouts built as copy-on-write children of an existing snapshot (#14576:
+    core/git_local_cow.go).
+- id: incr
+  name: incremental source tree
+  desc: >-
+    Source-only tree as a COW child of an ancestor's tree + diff-tree delta (#14399; any
+    ancestor in #14576).
+- id: ckbase
+  name: checkout base provenance
+  desc: >-
+    An owned, persisted CheckoutBase recipe (or #14576's recipe-based inference) that
+    later materializations build on.
+- id: canon
+  name: canonical tree args
+  desc: >-
+    Equivalent tree() spellings collapse to one call / snapshot (#14576 treeCacheKey);
+    pinned-by-SHA source trees (#14147).
+- id: layers
+  name: layer-walk diffs
+  desc: >-
+    Changeset paths and snapshot diffs computed from the layers between snapshots of one
+    lineage (#14466).
+- id: ncommit
+  name: native commit
+  desc: "Commit written with plumbing over borrowed objects, no checkout (#14396)."
+- id: nmerge
+  name: native merge
+  desc: "Sparse staging + merge-tree + checkout replay (#14397)."
+- id: scoped
+  name: scoped merge base
+  desc: "General merge base with objects only in scope (#14576)."
+- id: nego
+  name: fetch negotiation
+  desc: >-
+    Fetches advertise what the destination already has (pinned refs #14170;
+    --negotiation-tip #14576).
+- id: pack
+  name: pack-objects copy-out
+  desc: >-
+    Copy a closure with pack-objects via a transient alternate instead of fetch +
+    index-pack (#14400 promotion, #14576 bundle prerequisites, #14167
+    checkouts/joins/bundle create).
+- id: lock
+  name: mirror lock narrowing
+  desc: >-
+    Hold git-remote::<url> only to update the mirror and copy out (#14576 bundle import;
+    #14167 everything else).
+- id: history
+  name: no-fetch history
+  desc: >-
+    Answer from objects the engine already has: alternates views, owned shallow
+    boundaries, local donors, hydration on demand (#14395, #14400).
+- id: refresh
+  name: index refresh
+  desc: "update-index --refresh before porcelain git on a stat-less retained index (#14576)."
+- id: instr
+  name: path markers / phases
+  desc: Which path ran and why, as span attributes and wcprof markers or phase ops.
+- id: fbrec
+  name: fallback recording
+  desc: Fallback reasons recorded with fixed codes (span attribute and/or wcprof marker).
+- id: replay
+  name: recipe-replay friendly
+  desc: >-
+    Persisted private recipe / lazy producer so a resumed or remote-cached session can
+    rebuild it (#14224 stack, #14472); NotReplayable where intentional.

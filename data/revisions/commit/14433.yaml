@@ -1,0 +1,24 @@
+source: code
+verified_at: null
+what: >-
+  The committed repository carries the parent's Upstream, so names it lacks keep resolving
+  through the authenticated remote across descendant commits.
+pointers:
+  - at: core/schema/git_commit_create.go:gitRefWithCommitRepository
+    note: Upstream
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args) → DirectoryGitCommitLazy   # saved recipe
+      same-base provenance (Before = tree(discardGitDir) of this SHA, same repo recipe)?
+        remote parent: storage = ref(SHA).__nativeCommitBase(depth 1)   # pack-objects closure, mirror lock
+          (depth 0: approved host donor PackCommit first, else the remote)
+        native: COW child of repo storage; scratch bare repo, objects via alternate
+          read-tree; stage only changed paths (sparse); write-tree; commit-tree
+          copy new objects only; publish branch / detached HEAD
+      else, or any failure:
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = __withCommitRepository: withContents(dir) + CheckoutBase{Parent, CommitSHA, Tree} + HistorySource + Upstream
+    return repo.head

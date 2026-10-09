@@ -1,0 +1,16 @@
+source: pr-description
+verified_at: null
+what: >-
+  __cleaned becomes a lazy, persisted producer; when nothing needs cleaning it answers
+  with the storage itself.
+pointers:
+  - core/git_local.go:DirectoryGitCleanedLazy
+code: |
+  GitRepository.uncommitted
+    dirty = Backend.Dirty()                     # local: the storage directory
+    clean = __cleaned → DirectoryGitCleanedLazy  # persisted producer; unchanged → storage itself
+      COW child of storage; copy .git/index to a private file
+      git restore --staged .
+      git restore .
+      git clean -fd
+    return dirty.changes(from: clean)

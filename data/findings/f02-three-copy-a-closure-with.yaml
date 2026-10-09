@@ -1,0 +1,26 @@
+kind: dup
+title: Three 'copy a closure with pack-objects through a transient alternate' helpers
+status: open
+discovered_in: 14167
+prs: [14167, 14400, 14576]
+size: "S–M"
+risk: low
+apis: [GitRef.withCommit, GitRepository.withBundle, GitRepository.bundle, GitRef.tree]
+claim: >-
+  The same technique (pack-objects --revs in the destination, source objects via
+  GIT_ALTERNATE_OBJECT_DIRECTORIES, GIT_NO_REPLACE_OBJECTS, GIT_NO_LAZY_FETCH, verify,
+  fallback to fetch) exists as packRemoteCommitBaseDepth (#14400),
+  packGitBundlePrerequisites (#14576, adds --use-bitmap-index), and #14167's
+  packGitObjects/packGitClosure, which #14167 also routes the commit-base promotion
+  through. Flags and refusal checks differ (bitmap use, shallow source/destination guards,
+  object-format checks).
+proposal: >-
+  Adopt #14167's git_pack_copy.go as the single helper (with an opt-in bitmap flag), and
+  port #14576's bundle prerequisites to it.
+pointers:
+  - core/git_commit_remote.go:packRemoteCommitBaseDepth@4e9d0b0
+  - core/git_bundle.go:packGitBundlePrerequisites@4e9d0b0
+  - at: core/git_pack_copy.go:packGitObjects@3c07ff7
+    note: "#14167 branch"
+  - core/git_pack_copy.go:packGitClosure@3c07ff7
+  - core/git_pack_copy.go:newGitPackCopy@3c07ff7

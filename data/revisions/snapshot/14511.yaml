@@ -1,0 +1,19 @@
+source: pr-description
+verified_at: null
+what: >-
+  Freezing keeps the checkout's named remotes and the upstream its branch follows
+  (__withRemoteSelection), so defaultRemote() still works on the frozen value.
+pointers:
+  - core/schema/workspace_checkpoint.go:checkpointCapturedGitRemotes
+code: |
+  Workspace.snapshot / freeze
+    live host workspace: CaptureGit (client): HEAD, remote URL, unpushed bundle, worktree commit
+      untracked files → interactive approval
+      SSH origin, no agent → PrepareGitSSHAuth; pass a scoped socket to git(url)
+      repo = git(url) [.withBundle(bundle, prerequisiteRef)]      # no remote: Host.__gitDir
+      clean capture on a remote ref → register approved host history donor
+      repo = repo.__withRemoteSelection(captured remotes, upstream)
+      W = repo.ref(HEAD sha).asWorkspace
+        .withChanges(worktree.tree(discard, depth 1, no tags).changes(from: HEAD.tree(…)))
+    git-ref workspace: pin the ref by SHA; keep the overlay
+    nothing capturable: return the workspace unchanged

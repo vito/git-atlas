@@ -1,0 +1,10 @@
+source: pr-description
+verified_at: null
+what: List the remote (session-cached ls-remote) and filter by glob patterns.
+pointers:
+  - core/schema/git.go:gitSchema.tags
+  - core/schema/git.go:gitSchema.branches
+code: |
+  GitRepository.tags(patterns) / branches(patterns)
+    remote = repo.LoadRemote()               # ls-remote, cached per session
+    return remote.Filter(patterns).Tags() / .Branches()

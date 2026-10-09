@@ -1,0 +1,29 @@
+source: pr-description
+verified_at: null
+what: >-
+  Trees without .git are content-addressed independently of the ref name, so a named ref
+  is re-selected by its SHA first (pinned recipe). Full-history trees with .git are routed
+  through a shared GitRef.__fullCheckout selector, which WorkspaceGit.__checkout also uses
+  (ab34fda). Registered remotes are written into checkouts and are part of the content
+  digest (520b4f3).
+pointers:
+  - core/schema/git.go:gitSchema.tree
+  - core/schema/git.go:pinnedGitTree
+  - core/schema/git.go:gitSchema.fullCheckout
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
+    if keep .git, depth 0, no tags: return GitRef.__fullCheckout
+    dir = ref.Backend.Tree(discard, depth, includeTags)        # eager, in the resolver
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes])
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      (automatic maintenance runs synchronously, inside the lock)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout; [rm .git]

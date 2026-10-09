@@ -1,0 +1,32 @@
+- pr: 14037
+  reason: Module ref parsing (core/gitref), not a public Git field.
+- pr: 14042
+  reason: Module source loading.
+- pr: 14049
+  reason: Naming only.
+- pr: 14070
+  reason: "Output formatting fix; no change to the path."
+- pr: 14076
+  reason: Module/workspace address parsing (core/gitref).
+- pr: 14101
+  reason: "CLI; util/gitutil ls-remote helper only."
+- pr: 14114
+  reason: Module resolution error reporting.
+- pr: 14358
+  reason: "MCP; incidental changeset.go change."
+- pr: 14388
+  reason: "Engine-service protocol; git files touched for registration, not the git paths."
+- pr: 14427
+  reason: URL parsing for module sources.
+- pr: 14431
+  reason: >-
+    eBPF traffic accounting around git commands; no path change (noted in the matrix as
+    instrumentation).
+- pr: 14448
+  reason: Log hygiene in util/gitutil.
+- pr: 14460
+  reason: >-
+    Workspace.withPatchFile / MCP recording; not a git path (its freeze follow-up #14531
+    is included).
+- pr: 14516
+  reason: Workspace config, not git capture.

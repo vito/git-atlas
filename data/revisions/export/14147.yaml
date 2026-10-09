@@ -1,0 +1,21 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduced: write a frozen source's commits and pending edits to a host checkout,
+  preserving unrelated edits and staging, with retry safety: capture the destination,
+  integrate in a COW copy of its retained checkout, and ship one bundle that the client
+  applies guarded by the captured checkout-state digest.
+pointers:
+  - core/schema/workspace_export.go:workspaceSchema.saveWorkspace
+  - core/schema/workspace_export.go:applyWorkspaceBundle
+  - core/workspace_export.go:WorkspaceSaveDirectory
+code: |
+  Workspace.export(path, from)
+    freeze source (and from)
+    metadata, bundle = CaptureGit(path)                  # destination, untracked dropped
+    destination = rebuild from capture (git(url).withBundle(…).ref(HEAD).asWorkspace)
+    dir = source.__saveDirectory(destination, from, committer)   # NotReplayable
+      COW of destination git.__checkout
+      fetch source HEAD; snapshot both sides' dirt; cherry-pick integrate; 2-parent transport commit
+    bundle = dir.asGit.bundle(refs: [HEAD], base: destination HEAD)
+    client ApplyBundle(bundle, expected checkout-state digest)

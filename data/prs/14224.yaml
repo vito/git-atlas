@@ -1,0 +1,7 @@
+title: "remote cache stack #14224 · #14228 · #14229 (with #14051): lazy, persisted producers"
+stack: [14051, 14224, 14228, 14229]
+merged_via: 14229
+summary: >-
+  Remote-cache stack (#14051, #14224, #14228, #14229): lazy, persisted producers, so git
+  results have recipes that survive restarts and move between engines.
+color: "#ae3ec9"

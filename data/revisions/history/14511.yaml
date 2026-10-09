@@ -1,0 +1,25 @@
+source: pr-description
+verified_at: null
+what: >-
+  Introduces GitRef.contains(other) for branch filtering (is the workspace commit in the
+  remote default branch?). Missing history is fetched into temporary storage with the
+  original access, only as deep as needed; unknown is an error.
+effect: With 32 unrelated shortened histories, two git history checks instead of 35.
+pointers:
+  - core/schema/git_remotes.go:gitSchema.contains
+  - core/git_remotes.go:containsWithFullHistory
+code: |
+  GitRef.log(limit, paths, base)
+    unfiltered: fetch limit generations; uneven shallow boundary → retry with full history
+    owned shallow storage: answer above the boundary; deeper → __hydrateRepository
+    paths/base: ref.mount(depth 0) → git log …    # remote: --unshallow the mirror, under its lock
+  GitRef.commonAncestor(other) / contains(other)
+    mountRefs(a, b):
+      same repository → mount once
+      local refs → alternates view over the mounted object stores (no fetch)
+      owned shallow child vs its anchor/descendants → the child's store
+      complete local donor holding every commit → alternates view (no fetch, no lock)
+      owned child vs its exact remote parent → the child's objects
+      else refJoin: tmp repo; fetch each ref from its backend (each under its own mirror lock)
+    git merge-base [--is-ancestor]
+    contains, history incomplete → containsWithFullHistory: fetch --unshallow only what is needed

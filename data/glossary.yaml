@@ -1,0 +1,117 @@
+- term: Recipe (call ID)
+  def: >-
+    How a result was made: the chain of API calls and arguments. Traces record recipes,
+    which is how sessions can be resumed.
+- term: Recipe digest vs content digest
+  def: >-
+    The hash of the recipe, vs. a hash of what the result is. Caches may answer by either.
+    Provenance checks (native paths, promotion keys) always use recipe digests, because
+    equal content can carry different credentials.
+- term: Lazy / cold / warm
+  def: >-
+    A result whose computation runs only when read (e.g. `DirectoryGitTreeLazy`). A lazy
+    that hasn't run yet is cold; fast paths often only build on warm bases.
+- term: Snapshot / COW child
+  def: >-
+    An overlayfs-backed filesystem state managed by the engine. A copy-on-write child adds
+    one layer on a parent; only what changes is written. Chains are capped at 64 lower
+    layers.
+- term: Mirror
+  def: >-
+    The engine's bare repository for one remote URL (`RemoteGitMirror`), shared across
+    credentials and persisted. Every fetch from the remote lands there first.
+- term: "`git-remote::<url>`"
+  def: The engine-wide lock serializing all access to a mirror.
+- term: GitRef
+  def: >-
+    A repository, a ref name and a resolved SHA, plus a backend ref (`RemoteGitRef` or
+    `LocalGitRef`).
+- term: Owned storage / LocalGitRepository
+  def: >-
+    A Git repository living in an engine snapshot, not a remote: a host checkout's pack, a
+    commit, a pull, a bundle import.
+- term: CheckoutBase
+  def: >-
+    Provenance on local storage: the exact recipe of an ancestor commit (and, for remote
+    parents, its pinned tree) that this commit's materializations may be deltas of.
+- term: HistorySource / owned shallow
+  def: >-
+    Storage promoted from a remote at depth 1, shallow at exactly one anchor; deeper
+    history is hydrated on demand.
+- term: Upstream
+  def: >-
+    The remote that owned storage came from, kept so names and SHAs it lacks still
+    resolve, with the original authentication.
+- term: Source tree
+  def: >-
+    `tree(discardGitDir: true)`: the files of a commit without `.git`. What workspace
+    reads see.
+- term: Retained checkout
+  def: >-
+    `GitRef.__fullCheckout` (= `WorkspaceGit.__checkout`): worktree plus `.git` with full
+    history and a stat-less index. The base for pulls, resets and exports.
+- term: Incremental tree
+  def: >-
+    A source tree built as a COW child of an ancestor's tree, writing only the `diff-tree`
+    delta.
+- term: COW delta / wipe
+  def: >-
+    Retained checkouts built as a COW child of an ancestor's checkout (writing only the
+    delta), or of the repository's own snapshot (rewriting the worktree, no fetch).
+  pr: 14576
+- term: Contents checkout tree
+  def: >-
+    A source tree made from the retained checkout that a repository's storage was produced
+    from, found through that storage's recipe.
+  pr: 14576
+- term: Native commit / native merge
+  def: >-
+    Commits and workspace reconciliations done with Git plumbing over borrowed objects
+    (sparse index, `commit-tree`, `merge-tree`), never checking out or hashing the
+    baseline.
+- term: General merge / scoped base
+  def: >-
+    The fallback merge: a temporary repository whose base commit is the whole tree. The
+    scoped base writes objects only where the merge can write.
+  pr: 14576
+- term: Changeset
+  def: >-
+    A `(Before, After)` pair of directories, with paths computed by layer walks when the
+    snapshots share a lineage.
+- term: Frozen (value) workspace
+  def: >-
+    A workspace pinned to a Git ref plus an overlay changeset, independent of the client's
+    live checkout. Produced by `snapshot`/`freeze`.
+- term: Fold
+  def: >-
+    The pull's walk over selected source commits: mark picked or redundant ones, then
+    fast-forward or cherry-pick the rest.
+- term: Negotiation tip
+  def: >-
+    A commit `git fetch` advertises as already present ("have"). Without refs or tips, a
+    fetch assumes it has nothing and receives the whole history.
+- term: Stat-less index / refresh
+  def: >-
+    An index written by `read-tree` carries no file stat data, so every file looks
+    modified. `update-index --refresh` compares content and records stat data, read-only.
+- term: Promotion / hydration
+  def: >-
+    Copying a remote commit's closure into owned storage (`__nativeCommitBase`);
+    completing owned shallow history on demand (`__hydrateRepository`).
+- term: Approved / local donor
+  def: >-
+    A client checkout allowed to supply history for a captured anchor (`PackCommit`); a
+    complete local repository already in the engine that proves a history read without the
+    remote.
+- term: refJoin
+  def: >-
+    A temporary repository that fetches several refs (from different repositories) to
+    answer a joined history question.
+- term: wcprof
+  def: >-
+    The engine's wall-clock profiler: ops, waits and zero-length markers per class. Used
+    by every number in the narrative report.
+- term: Critical path
+  def: >-
+    The chain of work a session's end actually waited on; summed self time is not the same
+    thing.

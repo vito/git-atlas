@@ -1,0 +1,7 @@
+summary: >-
+  Builds same-base commits natively with git plumbing over borrowed objects instead of a
+  checkout.
+effects: >-
+  withCommit: 12k-file / 98 MB repo, three one-file commits: median Workspace.withCommit
+  11.07 s → 4.59 s.
+color: "#c92a2a"

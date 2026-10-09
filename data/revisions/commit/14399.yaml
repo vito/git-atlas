@@ -1,0 +1,22 @@
+source: code
+verified_at: null
+what: >-
+  The committed repository is opened through a private, persisted __withCommitRepository
+  recipe that records the exact parent as CheckoutBase, so the new HEAD's source tree is
+  an incremental delta (see GitRef.tree).
+pointers:
+  - core/schema/git_commit_create.go:gitRefWithCommitRepository
+code: |
+  GitRef.withCommit(changes, message, date, author…)
+    dir = __withCommitDirectory(args)                        # persisted private recipe
+      same-base provenance (Before = tree(discardGitDir) of this SHA, same repo recipe)?
+        native: COW child of repo storage; scratch bare repo, objects via alternate
+          read-tree; stage only changed paths (sparse); write-tree; commit-tree
+          copy new objects only; publish branch / detached HEAD
+      else, or any failure:
+      tree = ref.tree(discardGitDir: true)
+      applied = tree.changes(from: changes.Before).withChangeset(changes, FAIL) vs tree
+      base = ref.asWorkspace.git.__checkout                  # full checkout with .git
+      COW child of base: applyContent; stage; git commit (hooks off)
+    repo = __withCommitRepository: withContents(dir) + CheckoutBase{Parent, CommitSHA}
+    return repo.head

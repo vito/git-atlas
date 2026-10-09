@@ -1,0 +1,55 @@
+title: "Dagger git APIs: implementation atlas"
+
+# The repository being tracked.
+upstream: https://github.com/dagger/dagger
+github_repo: dagger/dagger
+branch: main
+schema: docs/docs-graphql/schema.graphqls
+
+# The baseline: main just before #14000 merged. Everything merged before it
+# (including #14012, which landed as rebased commits when main's history was
+# rewritten on 2026-09-02) is one baseline tab per family; PRs merged after it
+# on the branch's first-parent history are tracked.
+cutoff:
+  sha: 5ddd1941220d4a0345ac521ce06a9590a08b2631
+  date: "2026-09-03"
+  label: main before #14000 (5ddd194, merge of #14002)
+
+# A PR merged after the cutoff that touches one of these paths must have a
+# data/prs/<n>.yaml or an entry in data/skipped.yaml (see QUEUE.md).
+tracked:
+  - core/git*.go
+  - core/schema/git*.go
+  - core/changeset*.go
+  - core/schema/changeset*.go
+  - core/workspace_pull*.go
+  - core/workspace_export*.go
+  - core/schema/workspace_commit*.go
+  - core/schema/workspace_pull*.go
+  - core/schema/workspace_export*.go
+  - core/schema/workspace_reset*.go
+  - core/schema/workspace_snapshot*.go
+  - core/gitref/**
+  - util/gitutil/**
+ignore:
+  - "**/*_test.go"
+  - "**/testdata/**"
+
+# Sidebar and matrix grouping; fields sort alphabetically within a type.
+type_order: [Query, GitRepository, GitRemote, GitRef, GitCommit, GitBundle, File, Directory, Changeset, Workspace, WorkspaceGit]
+default_api: GitRef.tree
+
+links:
+  - title: "narrative report: Dagger's git lifecycle"
+    url: https://gistpreview.github.io/?8708a1871b0bf01a83ee91ada133cd4e
+  - title: source and data (github.com/vito/git-atlas)
+    url: https://github.com/vito/git-atlas
+
+about: |
+  A browser over the public git-related fields of the Dagger API, showing how each field's implementation path changed PR by PR. Fields that are thin wrappers over one path (head/ref/branch/tag/commit/latest; GitRef.tree and GitCommit.tree) are grouped into implementation families, and each family has one tab per PR that changed it. A tab's pseudocode compresses the resolver path (call → materialization → git commands → snapshot); "diff vs previous tab" diffs the pseudocode, not the Go source.
+
+  Grounding: every tab says whether it was written from the code at the PR's commit (source: code) or mainly from the PR description and commit messages (source: pr-description), and whether anyone has independently re-verified it since (verified). Its code pointers link to the exact commit and are checked mechanically: the file must exist there and define the named function. The consistency matrix and the consolidation findings are the author's reading of the code at the commit each one names.
+
+  Cutoff: everything on main before #14000 merged (5ddd194, 2026-09-03 UTC; this includes #14012, which reached main as rebased commits when main's history was rewritten on 2026-09-02) is one baseline tab per family. That point starts the current era: #14000 replaced host .git flattening with client-packed reconstruction and added bundles, and #14147 introduced the workspace Git APIs. Fields introduced after the cutoff start at the PR that introduced them. The remote-cache stack #14051 → #14224 → #14228 → #14229 merged as one merge commit and is one tab.
+
+  Unmerged PRs come after the merged ones. Their tabs are pinned to the head commit they describe and diff against the newest merged tab (they are based on main, not on each other). Signatures and docs are derived from the schema; PR titles, states and commits from git, and from GitHub for unmerged PRs.

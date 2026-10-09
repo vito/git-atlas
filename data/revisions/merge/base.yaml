@@ -1,0 +1,20 @@
+source: pr-description
+verified_at: null
+what: >-
+  Merge two (or, octopus, many) changesets on their common Before in a scratch git
+  repository: commit the whole base with git add -A, apply each side on a branch, git
+  merge with the requested strategy, verify every declared path landed (hardened by
+  #14012), drop .git.
+pointers:
+  - core/changeset.go:gitMergeChangesets
+  - core/changeset.go:gitOctopusMergeChangesets
+code: |
+  Changeset.withChangeset(other, onConflict)   # withChangesets: octopus, FAIL/FAIL_EARLY only
+    FAIL_EARLY: path conflicts → fail before merging
+    base = MergeBeforeDirectories(ours, theirs)
+    COW scratch of base (withGitMergeWorkspace):
+      git init; git add -A; commit 'base'          # an object for every base file
+      branch per side: applyContent(diff); commit
+      git merge (-X ours|theirs | markers); verify declared paths landed
+      rm .git
+    return Changeset(before: base, after: scratch)

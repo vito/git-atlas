@@ -1,0 +1,15 @@
+source: pr-description
+verified_at: null
+what: >-
+  withContents retains the receiver's remote (or the remote the receiver was itself
+  derived from) as Upstream, so names the supplied storage lacks resolve through it with
+  the receiver's authentication.
+pointers:
+  - core/schema/git.go:withContents
+  - core/git_local.go:GitUpstream
+code: |
+  Directory.asGit = GitRepository{LocalGitRepository{this}}     # no URL, no routing
+  GitRepository.withContents(directory)               # persisted
+    backend = LocalGitRepository{directory, Upstream: GitUpstream(receiver)}; ValidateSelfContained
+    keep receiver's URL, remotes, upstream selection, discard flag
+  GitRef.asRepository: clone repo; HEAD pinned to this ref

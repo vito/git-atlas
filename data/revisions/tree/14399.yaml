@@ -1,0 +1,36 @@
+source: code
+verified_at: null
+what: >-
+  A commit made by GitRef.withCommit retains its parent's exact recipe (CheckoutBase). A
+  source-only tree of exactly that commit is a COW child of the parent's canonical tree
+  with only the diff-tree delta written. Gates: the parent must be the commit's sole raw
+  parent; gitlink/.gitmodules/.gitattributes changes, unsafe paths, cold-parent chains and
+  >64 overlay layers fall back to the full checkout.
+effect: >-
+  Part of the native-commit stack measured in #14397 (12k-file repo, three one-file
+  commits: 11.07 s → 2.28 s median Workspace.withCommit across #14396–#14397).
+pointers:
+  - core/git_local_incremental.go:LocalGitRef.incrementalTree
+  - core/git_local_incremental.go:planIncrementalGitCheckout
+  - core/git_local.go:GitCheckoutBase
+code: |
+  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+    if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
+    if keep .git, depth 0, no tags: return GitRef.__fullCheckout
+    dir = DirectoryGitTreeLazy{ref, discard, depth, includeTags}   # built on first read, persisted
+    remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes]), set after materialization
+
+  RemoteGitRef.Tree(…)
+    lock git-remote::<url>                                    # held for the whole block
+      mirror: fetch origin SHA:refs/dagger.fetched/SHA (--depth=N | --unshallow)   # pinned negotiation tip
+      (depth dropped once the mirror is complete: mirrorFetchDepth)
+      (automatic maintenance runs synchronously, inside the lock)
+      new snapshot: init; fetch file://mirror SHA:tmpref (--depth=N)
+        checkout; submodule update --init --recursive; [rm .git]; mtime = 1s
+
+  LocalGitRef.Tree(…)
+    mount repository snapshot read-only
+    discard and CheckoutBase(parent) and SHA == CommitSHA (sole parent):
+      incrementalTree: diff-tree parent SHA → COW child of parent's tree, write the delta only
+    discard: new snapshot: init + alternates → mounted objects (no fetch); checkout; rm .git
+    keep .git: new snapshot: init; fetch <mount> SHA:tmpref (--depth=N); checkout
