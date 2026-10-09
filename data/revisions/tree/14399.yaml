@@ -1,5 +1,5 @@
 source: code
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   A commit made by GitRef.withCommit on a local parent retains that parent's exact recipe
   (CheckoutBase); commits on remote parents record none, so they keep the full checkout. A
