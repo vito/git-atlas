@@ -9,16 +9,35 @@ The atlas describes how each public git field of the Dagger API is
 implemented, one tab per PR that changed it. Read `README.md` for the data
 model; this is the procedure.
 
+## Tools
+
+With the git-atlas expertise composed (it is, in this workspace), you have:
+
+- `trackedDiff(pr, paths?, stat?)`: what a dagger/dagger PR changed under the
+  tracked paths: a merged PR's merge commit against its first parent, an open
+  PR's head against its merge base. The header names the commit to read at
+  (and the `sha:` to pin for open PRs). Start with `stat: true`.
+- `findSymbol(name, commit, paths?)`: where `refJoin`, `LocalGitRef.Tree` or
+  `GitCheckoutBase` is defined at a commit, printed as ready-made pointers.
+- `committer_fileAt` / `committer_show` with
+  `from: "https://github.com/dagger/dagger#<sha>"` to read whole files or
+  other commits; `gh ... --repo dagger/dagger` for descriptions and comments.
+- The `git-atlas/generate` generator and `git-atlas/*` checks (README).
+
+Outside an agent, the same helpers are `go run ./cmd/atlas tracked-diff
+[-stat] <pr>` and `go run ./cmd/atlas find-symbol <name> <commit>`.
+
 ## 0. Refresh and pick the work
 
 1. `dagger generate` (needs a GitHub token for unmerged PRs, see README).
 2. Read `QUEUE.md`. Blocking entries make `dagger check` fail; work them
-   oldest first, since later tabs diff against earlier ones.
+   oldest first, since later tabs diff against earlier ones. Open PRs never
+   appear there on their own: you are told which ones to track.
 
 ## 1. Decide: describe or skip
 
-Read the PR: `gh pr view <n> --repo dagger/dagger`, its diff restricted to
-the tracked files listed in the queue, and its commits.
+Read the PR: `gh pr view <n> --repo dagger/dagger`, `trackedDiff(<n>)`, and
+its commits.
 
 Skip it when no public git field's *implementation path* changes: renames,
 logging, error text, tests only, module/address parsing, CLI-only changes,
@@ -71,10 +90,11 @@ code: |
 Rules:
 
 - Read the code at the commit the tab describes: the merge commit for merged
-  PRs (`gh pr view <n> --json mergeCommit`), the head for open ones. Read
+  PRs (`trackedDiff` prints it), the head for open ones. Read
   `<path>` at that sha; do not describe main or your memory of it.
 - Every pointer must name a file that exists at that commit and a symbol
-  defined in it; `dagger check` verifies this. Prefer the resolver plus the
+  defined in it; `dagger check` verifies this. Get pointers from
+  `findSymbol` rather than guessing the file. Prefer the resolver plus the
   one or two functions where the behavior changed.
 - Pseudocode compresses the path (call → materialization → git commands →
   snapshot). Keep the previous tab's lines verbatim where nothing changed.

@@ -21,6 +21,82 @@ type GitAtlas {
   }
 
   """
+  Expertise for maintaining the atlas: the procedure, the grounding rules,
+  and tools to read upstream PRs and find symbols at a commit.
+  """
+  agent(base: LLM!): LLM! @agent {
+    base
+      .withTools(currentNode, except: ["generate", "validate", "fresh", "coverage", "unit", "smoke"])
+      .withSystemPrompt(systemPrompt)
+  }
+
+  let systemPrompt = """
+    This workspace is the git atlas: hand-written YAML under data/ describing how each
+    public git-related field of the Dagger API is implemented in dagger/dagger, one tab
+    (data/revisions/<family>/<pr>.yaml) per PR that changed it. index.html, QUEUE.md and
+    derived/ are generated; never edit them by hand.
+
+    Before adding or changing anything under data/, read the process-pr skill
+    (ReadSkill "process-pr") and follow it. The essentials:
+    - Describe the code at the commit a tab is about: a merged PR's merge commit, or an
+      open PR's head (pin it with sha:). Never describe main, or your memory of it.
+    - Read upstream with trackedDiff (a PR's diff, limited to the tracked paths), then
+      committer_fileAt / committer_show with from: "https://github.com/dagger/dagger#<sha>"
+      for whole files. gh needs --repo dagger/dagger for upstream PRs.
+    - Write source: code only for code you actually read at that commit; otherwise
+      source: pr-description. Leave verified_at: null unless you re-verified an
+      existing tab against the code.
+    - Before writing a pointer (path:symbol), look the symbol up with findSymbol at the
+      tab's commit and copy its path:symbol.
+    - Finish with the git-atlas generator (dagger generate) and then the git-atlas
+      checks; fix every validate failure before committing.
+    """
+
+  """
+  Show what a dagger/dagger PR changed under the atlas's tracked paths
+  (atlas.yaml): a merged PR's merge commit against its first parent, or an
+  unmerged PR's current head against its merge base with main. The header
+  names the commit to read files at and, for unmerged PRs, the sha: to pin.
+  """
+  trackedDiff(
+    ws: Workspace!,
+    """PR number in dagger/dagger."""
+    pr: Int!,
+    """Globs replacing the tracked paths, e.g. ["core/git_local*.go"]."""
+    paths: [String!]! = [],
+    """Only the diffstat: which tracked files changed, and how much."""
+    stat: Boolean! = false,
+  ): String! @cache(policy: FunctionCachePolicy.Never) {
+    let args = ["atlas", "tracked-diff", "-upstream", "/cache/upstream.git", "-paths", paths.join(",")]
+    if (stat) { args += ["-stat"] }
+    runner(source(ws))
+      .withEnvVariable("ATLAS_NONCE", UUID.v7)
+      .withExec(args + [toString(pr)])
+      .stdout
+  }
+
+  """
+  Find where a Go symbol is defined in dagger/dagger at a commit, printed as
+  pointers ready for data/ (path:Symbol@sha). name is a function, a method
+  as Type.method (a bare method name lists every receiver), or a
+  type/var/const. Tests are excluded.
+  """
+  findSymbol(
+    ws: Workspace!,
+    """Symbol to look for, e.g. refJoin, LocalGitRef.Tree or GitCheckoutBase."""
+    name: String!,
+    """Commit to search: a full or short SHA, or a branch such as main."""
+    commit: String!,
+    """Globs replacing the default scope (core, engine, dagql, util, cmd)."""
+    paths: [String!]! = [],
+  ): String! @cache(policy: FunctionCachePolicy.Never) {
+    runner(source(ws))
+      .withEnvVariable("ATLAS_NONCE", UUID.v7)
+      .withExec(["atlas", "find-symbol", "-upstream", "/cache/upstream.git", "-paths", paths.join(","), name, commit])
+      .stdout
+  }
+
+  """
   Refresh derived data from the upstream branch tip and GitHub, assign
   colors to new PRs, and rebuild QUEUE.md and index.html.
   """
@@ -61,6 +137,23 @@ type GitAtlas {
   """
   coverage(ws: Workspace!): Void @check {
     atlasCheck(ws, "coverage")
+  }
+
+  """
+  Exercise the agent tools against known upstream commits: trackedDiff on a
+  merged PR, findSymbol for a method that lives outside the file its name
+  suggests.
+  """
+  agentTools(ws: Workspace!): Void @check {
+    let diff = trackedDiff(ws, pr: 14395, stat: true)
+    if (!diff.contains("merged 2026-09-30 as a96196e") or !diff.contains("core/git_local.go")) {
+      raise "trackedDiff 14395: unexpected output:\n" + diff
+    }
+    let found = findSymbol(ws, name: "withRemote", commit: "40a74d06ffe6b18d6cac020a1e3a7b007ebb7f19")
+    if (!found.contains("core/schema/git_push.go:gitSchema.withRemote@40a74d0")) {
+      raise "findSymbol withRemote: unexpected output:\n" + found
+    }
+    null
   }
 
   """

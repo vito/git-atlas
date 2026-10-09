@@ -39,7 +39,7 @@ index.html                     GENERATED: the page
 site/template.html             the page's HTML/CSS/JS; data is injected at __DATA__
 cmd/atlas/                     the Go tool behind generate and check
 smoke/                         headless-browser smoke test
-.dagger/main.dang              the Dagger module (generate + checks)
+.dagger/main.dang              the Dagger module (generate, checks, agent expertise)
 .agents/skills/process-pr/     how to add a new PR
 ```
 
@@ -105,6 +105,8 @@ Without Dagger, the same tool runs directly (needs Go and git):
 go run ./cmd/atlas generate -refresh   # like dagger generate (reads GITHUB_TOKEN)
 go run ./cmd/atlas generate            # re-render at the pinned upstream tip
 go run ./cmd/atlas check validate      # or fresh, coverage
+go run ./cmd/atlas tracked-diff -stat 14395        # a PR's diff under tracked paths
+go run ./cmd/atlas find-symbol refJoin 4e9d0b0     # where a symbol is defined
 ```
 
 ## Check
@@ -119,6 +121,7 @@ dagger check
 | `git-atlas:fresh` | regenerating at the **pinned** upstream tip would change `index.html`, `QUEUE.md`, `derived/` or a PR color, i.e. someone edited data without running generate |
 | `git-atlas:coverage` | `QUEUE.md` has blocking entries (below) |
 | `git-atlas:unit` | the tool's unit tests fail |
+| `git-atlas:agent-tools` | `trackedDiff` or `findSymbol` stop giving known answers for fixed upstream commits |
 | `git-atlas:smoke` | `index.html` fails in headless Chromium, loaded directly and the way gistpreview injects it (fetch + `document.write`): every tab and page must render, and the PR dropdown must select, persist to the URL, and highlight tabs, timeline rows, matrix cells and findings |
 
 `fresh` regenerates at the pinned tip rather than the live one so that checks
@@ -154,4 +157,20 @@ Tracked paths are a judgment call: too wide and the queue fills with workspace
 or module PRs that never touch git, too narrow and git changes slip through.
 Edit `tracked`/`ignore` in `atlas.yaml` as the code moves.
 
+The queue is path-based, not a search: merged PRs are found from `main`'s
+history. Open PRs are never discovered automatically; add one when you want
+it tracked (its tabs pin the head they describe).
+
 To process a PR, follow [`.agents/skills/process-pr/SKILL.md`](.agents/skills/process-pr/SKILL.md).
+
+## Working with an agent
+
+The `git-atlas` module publishes `@agent` expertise, so any agent working in a
+checkout of this repo gets a system prompt with the grounding rules (read the
+code at the tab's commit; `source: code` only for code actually read) and two
+tools: `trackedDiff(pr)` and `findSymbol(name, commit)`. The other installed
+modules supply the rest: `editor` (files, `generate`, `check`), `committer`
+(git, and reading dagger/dagger at any commit via `from:`), `contributor`
+(`gh`), `staff` (parallel workers, e.g. one per PR) and `browser` (looking at
+the page). A typical request: "run generate and process the queue", or
+"track #14600".
