@@ -30,3 +30,5 @@
     is included).
 - pr: 14516
   reason: Workspace config, not git capture.
+- pr: 14593
+  reason: "Schema/cache plumbing for the Go SDK's ID memoization: marks GitRef.push @reevaluate and forwards PerCallWhen through git's implicit inputs; no field's path changes."
