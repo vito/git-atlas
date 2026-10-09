@@ -1,5 +1,5 @@
 source: code
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   FETCH_HEAD is not a negotiation tip, so each fetch into the mirror claimed to have
   nothing and re-received shared history. Each fetched SHA is now pinned as

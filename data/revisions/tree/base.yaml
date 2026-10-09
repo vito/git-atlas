@@ -1,5 +1,5 @@
 source: code
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   The resolver builds the tree eagerly. Remote refs hold the mirror lock while they fetch
   into the mirror AND check out, submodules included. Local refs fetch the history (to the
