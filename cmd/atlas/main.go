@@ -54,12 +54,7 @@ func run(root, upstreamDir string, refresh bool) (*build, error) {
 	if err != nil {
 		return nil, err
 	}
-	cutoff, err := time.Parse("2006-01-02", d.Config.Cutoff.Date)
-	if err != nil {
-		return nil, fmt.Errorf("atlas.yaml: cutoff.date: %w", err)
-	}
-	since := cutoff.AddDate(0, 0, -30).Format("2006-01-02")
-	u, err := OpenUpstream(upstreamDir, d.Config.Upstream, since)
+	u, err := OpenUpstream(upstreamDir, d.Config.Upstream, cloneSince(d))
 	if err != nil {
 		return nil, err
 	}
@@ -108,13 +103,29 @@ func (o outputs) paths() []string {
 	return ps
 }
 
+// cloneSince is the shallow horizon of the upstream clone: a month before
+// the cutoff, so the cutoff commit and its parents are present.
+func cloneSince(d *Data) string {
+	cutoff, err := time.Parse("2006-01-02", d.Config.Cutoff.Date)
+	if err != nil {
+		return "2000-01-01"
+	}
+	return cutoff.AddDate(0, 0, -30).Format("2006-01-02")
+}
+
+func newFlags(name string) *flag.FlagSet { return flag.NewFlagSet("atlas "+name, flag.ExitOnError) }
+
 func main() {
+	if len(os.Args) >= 2 && (os.Args[1] == "tracked-diff" || os.Args[1] == "find-symbol") {
+		toolMain(os.Args[1], os.Args[2:])
+		return
+	}
 	fs := flag.NewFlagSet("atlas", flag.ExitOnError)
 	root := fs.String("root", ".", "repository root")
 	up := fs.String("upstream", "", "upstream clone directory (default <root>/tmp/upstream.git)")
 	refresh := fs.Bool("refresh", false, "generate: fetch the branch tip and re-read unmerged PRs")
 	if len(os.Args) < 2 {
-		fmt.Fprintln(os.Stderr, "usage: atlas generate [-refresh] | atlas check validate|fresh|coverage")
+		fmt.Fprintln(os.Stderr, "usage: atlas generate [-refresh] | atlas check validate|fresh|coverage | atlas tracked-diff <pr> | atlas find-symbol <name> <commit>")
 		os.Exit(2)
 	}
 	cmd, args := os.Args[1], os.Args[2:]
