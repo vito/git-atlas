@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+:root{
+  --bg:#f7f6f2; --paper:#ffffff; --ink:#1d2330; --muted:#5b6475; --line:#e3e1da;
+  --blue:#2f6fed; --blue-soft:#e7efff; --green:#1f9d6b; --green-soft:#e2f6ee;
+  --amber:#d98a00; --amber-soft:#fff3dc; --red:#d64545; --red-soft:#fde8e8;
+  --violet:#7b4fd6; --violet-soft:#efe8ff; --teal:#0f8b96; --teal-soft:#dff4f5;
+  --pc:#5b6475;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans)}
+code{font-family:var(--mono);font-size:.88em;background:#efece4;border-radius:5px;padding:.06em .32em}
+a{color:var(--blue)}
+.app{display:grid;grid-template-columns:310px 1fr;height:100vh}
+aside{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0;background:#f3f1ea}
+aside .brand{padding:16px 16px 10px}
+aside .brand b{display:block;font-size:15px}
+aside .brand span{font-size:12px;color:var(--muted)}
+aside input{margin:0 14px 10px;padding:8px 10px;border:1px solid var(--line);border-radius:9px;font:inherit;background:#fff}
+aside .list{overflow:auto;padding:0 8px 20px;flex:1}
+aside h5{margin:14px 8px 4px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+aside a.item{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:4px 8px;border-radius:7px;color:var(--ink);text-decoration:none;font-family:var(--mono);font-size:12.5px}
+aside a.item:hover{background:#e8e5dc}
+aside a.item.sel{background:var(--ink);color:#fff}
+aside a.item .dots{display:flex;gap:2px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;max-width:120px}
+aside a.item .dots i{width:6px;height:6px;border-radius:2px;background:#c9c5ba;display:inline-block}
+aside a.item .dots i.u{background:#fff;border:1px dashed #9a958a}
+main{overflow:auto;min-width:0}
+.topbar{position:sticky;top:0;z-index:5;background:rgba(247,246,242,.96);backdrop-filter:blur(4px);border-bottom:1px solid var(--line);padding:10px 28px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.topbar a.page{padding:6px 11px;border-radius:9px;text-decoration:none;color:var(--ink);font-weight:600;font-size:13.5px}
+.topbar a.page:hover{background:#ebe8df}
+.topbar a.page.sel{background:var(--ink);color:#fff}
+.topbar .sp{flex:1}
+.prsel{position:relative}
+.prsel > button{font:600 13px var(--sans);padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:#fff;cursor:pointer;display:flex;gap:6px;align-items:center}
+.prsel > button .sws{display:inline-flex;gap:2px}
+.prmenu{position:absolute;right:0;top:calc(100% + 6px);width:520px;max-width:92vw;max-height:70vh;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(29,35,48,.18);z-index:20}
+.prmenu[hidden]{display:none}
+.prtools{display:flex;gap:6px;align-items:center;padding:10px;border-bottom:1px solid var(--line);font-size:12.5px}
+.prtools input{flex:1;padding:6px 8px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.prtools a{padding:4px 8px;border-radius:7px;background:#efece4;color:var(--ink);text-decoration:none;font-weight:600}
+.prlist{overflow:auto;padding:6px}
+.pri{display:grid;grid-template-columns:18px 14px 62px 1fr auto;gap:7px;align-items:center;padding:5px 6px;border-radius:7px;font-size:12.5px;cursor:pointer}
+.pri:hover{background:#f3f1ea}
+.pri .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px}
+.st{font:700 10px/1 var(--sans);letter-spacing:.04em;text-transform:uppercase;padding:3px 6px;border-radius:5px;background:#efece4;color:#4b5263;white-space:nowrap}
+.st-open{background:#e7f5ec;color:#1f7a4f;border:1px dashed #1f9d6b}
+.st-closed{background:#f1f0ed;color:#8a8f99;text-decoration:line-through}
+.st-merged{background:var(--blue-soft);color:var(--blue)}
+.st-unknown{background:#fde8e8;color:var(--red)}
+.content{padding:22px 28px 80px;max-width:1300px}
+h1{font-size:26px;margin:4px 0 6px;letter-spacing:-.01em}
+h2{font-size:20px;margin:26px 0 8px}
+.sub{color:var(--muted);margin:0 0 14px;max-width:960px}
+.badge{display:inline-flex;gap:5px;align-items:center;font:700 10.5px/1 var(--sans);letter-spacing:.05em;padding:4px 7px;border-radius:6px;vertical-align:2px;white-space:nowrap;background:#e9e6dc;color:#4b5263}
+.badge.hl{background:var(--pc);color:#fff}
+.badge.u{border:1.5px dashed var(--pc);background:#fff;color:var(--ink)}
+.badge.u.hl{background:var(--pc);color:#fff;border-color:#fff}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:12px 0}
+pre.sig{font-family:var(--mono);font-size:12.5px;background:#1d2330;color:#e6e9f0;border-radius:12px;padding:14px 16px;overflow:auto;margin:10px 0}
+pre.sig .k{color:#8fb4ff} pre.sig .t{color:#8fe3bd} pre.sig .f{color:#ffd28f} pre.sig .d{color:#9aa3b5}
+.doc{color:#333b4a;max-width:960px;white-space:pre-wrap;font-size:14px}
+details.docs{margin:6px 0}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chip{font-family:var(--mono);font-size:12px;padding:3px 8px;border-radius:8px;background:#ebe8df;color:var(--ink);text-decoration:none}
+.chip:hover{background:#ddd9cd}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin:18px 0 0;border-bottom:2px solid var(--ink);padding-bottom:0}
+.tab{border:1px solid var(--line);border-bottom:0;border-radius:10px 10px 0 0;padding:7px 11px 6px;font-size:12.5px;text-decoration:none;color:var(--ink);background:#efece4;display:flex;flex-direction:column;align-items:flex-start;line-height:1.25}
+.tab small{color:var(--muted);font-size:10.5px}
+.tab:hover{background:#e6e2d7}
+.tab.sel{background:var(--ink);color:#fff;border-color:var(--ink)} .tab.sel small{color:#c9d1e4}
+.tab.u{border:1.5px dashed #9a958a;border-bottom:0;background:#fbfaf7}
+.tab.hl{border-color:var(--pc);box-shadow:inset 0 3px 0 var(--pc)}
+.tab.hl.sel{background:var(--pc);border-color:var(--pc);color:#fff} .tab.hl.sel small{color:rgba(255,255,255,.85)}
+.tab.base{background:#e4e1d8}
+.tabbody{background:var(--paper);border:1px solid var(--line);border-top:0;border-radius:0 0 14px 14px;padding:16px 18px}
+.tabbody.hl{border-color:var(--pc);border-width:0 1.5px 1.5px}
+.tabbody.u{border-style:dashed}
+.meta{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.meta h3{margin:0;font-size:17px}
+.meta .date{color:var(--muted);font-size:13px}
+.grounding{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 8px;font-size:12px}
+.grounding span{padding:3px 7px;border-radius:6px;background:#efece4;color:#4b5263}
+.grounding .code{background:var(--green-soft);color:#14704c}
+.grounding .desc{background:var(--amber-soft);color:#8a5a00}
+.what{max-width:960px}
+.effect{border-left:4px solid var(--green);background:var(--green-soft);padding:8px 12px;border-radius:0 10px 10px 0;margin:10px 0;max-width:960px}
+.notes{border-left:4px solid #9aa3b5;background:#f3f1ea;padding:8px 12px;border-radius:0 10px 10px 0;margin:10px 0;max-width:960px;font-size:13.5px}
+.where{font-family:var(--mono);font-size:12px;color:var(--teal);margin:8px 0}
+.where a,.where span{display:inline-block;margin-right:12px;color:var(--teal)}
+.where small{color:var(--muted);font-family:var(--sans)}
+.modes{display:flex;gap:6px;margin:10px 0 6px;align-items:center;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.modes a{padding:3px 9px;border-radius:7px;text-decoration:none;color:var(--ink);background:#efece4;font-weight:600}
+.modes a.sel{background:var(--ink);color:#fff}
+pre.code{font-family:var(--mono);font-size:12.5px;line-height:1.55;background:#fbfaf7;border:1px solid var(--line);border-radius:12px;padding:10px 0;overflow:auto;margin:6px 0}
+pre.code .ln{display:block;padding:0 14px 0 30px;position:relative;white-space:pre}
+pre.code .ln::before{content:" ";position:absolute;left:10px;color:var(--muted)}
+pre.code .ln.add{background:#e2f6ee}
+pre.code .ln.add::before{content:"+";color:var(--green);font-weight:700}
+pre.code .ln.del{background:#fde8e8;color:#8a3a3a;text-decoration:line-through;text-decoration-color:rgba(214,69,69,.45)}
+pre.code .ln.del::before{content:"−";color:var(--red);font-weight:700}
+pre.code .cm{color:#8a8f99}
+pre.code .ln.add .cm{color:#4f7a66}
+.svgbox{margin:10px 0;background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;overflow:auto}
+table{border-collapse:collapse;font-size:13px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+tr.hl td{background:var(--pct)}
+table.grid td.c{text-align:center;padding:4px 3px}
+table.grid th.v{writing-mode:vertical-rl;transform:rotate(180deg);font-size:11px;letter-spacing:.02em;text-transform:none;white-space:nowrap;padding:6px 3px;height:170px}
+.cell{display:inline-block;width:22px;height:20px;border-radius:5px;font:700 11px/20px var(--sans);text-align:center;text-decoration:none}
+.cell.yes{background:var(--green-soft);color:var(--green)}
+.cell.partial{background:var(--amber-soft);color:#9a6200}
+.cell.gap{background:var(--red-soft);color:var(--red);outline:1.5px solid var(--red)}
+.cell.na{background:transparent;color:#c4c0b4}
+.cell.pend{background:#fff;outline:1.5px dashed #8a8f99;color:#4b5263}
+.cell.hl{box-shadow:0 0 0 2.5px var(--pc)}
+.dot{display:inline-block;width:14px;height:14px;border-radius:4px;text-decoration:none;background:#9aa3b5}
+.dot.b{background:#cfcabd} .dot.u{background:#fff;border:1.5px dashed #8a8f99}
+.dot.hl{background:var(--pc);border:0}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);align-items:center;margin:8px 0}
+.legend span{display:inline-flex;gap:5px;align-items:center}
+.finding{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:12px 0}
+.finding.conflict{border-left:5px solid var(--amber)} .finding.dup{border-left:5px solid var(--violet)} .finding.lag{border-left:5px solid var(--red)} .finding.naming{border-left:5px solid var(--teal)}
+.finding.hl{box-shadow:0 0 0 2px var(--pc);background:var(--pct)}
+.finding.closed{opacity:.7}
+.finding h3{margin:0 0 6px;font-size:16px}
+.finding .tags{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;align-items:center}
+.pill{display:inline-block;font:600 11.5px/1 var(--sans);padding:5px 8px;border-radius:999px;background:#ebe8df}
+.pill.k-dup{background:var(--violet-soft);color:var(--violet)} .pill.k-lag{background:var(--red-soft);color:var(--red)} .pill.k-conflict{background:var(--amber-soft);color:#9a6200} .pill.k-naming{background:var(--teal-soft);color:var(--teal)}
+.pill.s-open{background:#fff;border:1px solid var(--line)} .pill.s-fixed{background:var(--green-soft);color:var(--green)} .pill.s-wontfix{background:#efece4;color:#8a8f99}
+.ptr{font-family:var(--mono);font-size:12px;color:var(--teal)}
+.ptr a{color:var(--teal)}
+.notebox{background:#fbfaf7;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13.5px;min-height:40px}
+.cmp{display:grid;grid-template-columns:150px 1fr 1fr;gap:0}
+.cmp > div{border-bottom:1px solid var(--line);padding:8px}
+.cmp .h{font-weight:700;background:#efece4}
+details summary{cursor:pointer;color:var(--blue);font-size:12.5px}
+select{font:inherit;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:#fff}
+dl.gloss dt{font-weight:700;margin-top:12px}
+dl.gloss dd{margin:2px 0 0 0;color:#333b4a;max-width:900px}
+@media (max-width:900px){.app{grid-template-columns:1fr;height:auto}aside{max-height:45vh}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand"><b>Git API atlas</b><span>public fields · one tab per PR that changed the implementation</span></div>
+  <input id="q" type="search" placeholder="Filter fields (e.g. tree, pull, bundle)…" autocomplete="off">
+  <div class="list" id="list"></div>
+</aside>
+<main id="main">
+  <div class="topbar">
+    <a class="page" data-page="apis" data-href="#" href="#">APIs</a>
+    <a class="page" data-page="timeline" data-href="#timeline" href="#timeline">Timeline</a>
+    <a class="page" data-page="matrix" data-href="#matrix" href="#matrix">Consistency matrix</a>
+    <a class="page" data-page="findings" data-href="#findings" href="#findings">Consolidation</a>
+    <a class="page" data-page="compare" data-href="#compare" href="#compare">Compare</a>
+    <a class="page" data-page="glossary" data-href="#glossary" href="#glossary">Glossary</a>
+    <a class="page" data-page="about" data-href="#about" href="#about">About &amp; queue</a>
+    <span class="sp"></span>
+    <div class="prsel" id="prsel">
+      <button type="button" id="prbtn" aria-haspopup="true" aria-expanded="false">Highlight PRs <span class="sws" id="prsws"></span> ▾</button>
+      <div class="prmenu" id="prmenu" hidden>
+        <div class="prtools"><input id="prq" type="search" placeholder="Filter PRs…" autocomplete="off"><a href="#" data-hl="open">open</a><a href="#" data-hl="none">none</a><a href="#" data-hl="all">all</a></div>
+        <div class="prlist" id="prlist"></div>
+      </div>
+    </div>
+  </div>
+  <div class="content" id="view"><p>Loading…</p></div>
+</main>
+</div>
+<script type="application/json" id="gitdata">__DATA__</script>
+<script>
+(function () {
+  'use strict';
+  var D = JSON.parse(document.getElementById('gitdata').textContent);
+  var PR = {}, API = {}, IMPL = D.impls, mode = 'diff', matrixOnlyGaps = false;
+  D.prs.forEach(function (p, i) { p.idx = i; PR[p.id] = p; });
+  D.apis.forEach(function (a) { API[a.id] = a; });
+  var DEFAULT_SEL = D.prs.filter(function (p) { return p.state === 'open'; }).map(function (p) { return p.id; });
+  var sel = {}; // selected (highlighted) PR ids
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function ticks(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+  function merged(p) { return p.state === 'merged' || p.state === 'base'; }
+  function isSel(id) { return !!sel[id]; }
+  function selIds() { return D.prs.filter(function (p) { return sel[p.id]; }).map(function (p) { return p.id; }); }
+  function pcStyle(p) { return p ? ' style="--pc:' + esc(p.color) + ';--pct:' + esc(p.color) + '1c"' : ''; }
+  function firstSel(ids) {
+    for (var i = 0; i < (ids || []).length; i++) if (sel[ids[i]] && PR[ids[i]]) return PR[ids[i]];
+    return null;
+  }
+  function tabsOf(implId) {
+    var impl = IMPL[implId];
+    if (!impl) return [];
+    var t = impl.tabs.slice();
+    t.sort(function (a, b) { return PR[a.pr].idx - PR[b.pr].idx; });
+    return t;
+  }
+  function prLabel(p) { return p.id === 'base' ? 'baseline' : '#' + p.id; }
+  function stateText(p) { return merged(p) ? p.date : p.state; }
+  function prBadge(p) {
+    var txt = p.state === 'base' ? 'BASELINE' : p.state === 'merged' ? 'merged ' + p.date : p.state.toUpperCase() + ' · #' + p.id;
+    return '<span class="badge' + (merged(p) ? '' : ' u') + (isSel(p.id) ? ' hl' : '') + '"' + pcStyle(p) + '><i class="sw" style="background:' + esc(p.color) + '"></i>' + esc(txt) + '</span>';
+  }
+  function prChip(id, prefix) {
+    var p = PR[id];
+    if (!p) return '';
+    return '<span class="badge' + (merged(p) ? '' : ' u') + (isSel(id) ? ' hl' : '') + '"' + pcStyle(p) + '><i class="sw" style="background:' + esc(p.color) + '"></i>' + esc((prefix || '') + prLabel(p)) + '</span>';
+  }
+  function apisOfImpl(implId) { return D.apis.filter(function (a) { return a.impl === implId; }); }
+  function ptrHTML(p) {
+    var t = esc(p.t) + (p.n ? ' <small>(' + esc(p.n) + ')</small>' : '');
+    return p.u ? '<a href="' + esc(p.u) + '" target="_blank" rel="noopener">' + t + '</a>' : '<span>' + t + '</span>';
+  }
+  // Line diff (LCS); returns [{t:'same'|'add'|'del', s}]
+  function diffLines(a, b) {
+    var n = a.length, m = b.length, i, j, dp = [];
+    for (i = 0; i <= n; i++) { dp.push(new Array(m + 1).fill(0)); }
+    for (i = n - 1; i >= 0; i--) for (j = m - 1; j >= 0; j--)
+      dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    var out = []; i = 0; j = 0;
+    while (i < n && j < m) {
+      if (a[i] === b[j]) { out.push({ t: 'same', s: b[j] }); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) { out.push({ t: 'del', s: a[i] }); i++; }
+      else { out.push({ t: 'add', s: b[j] }); j++; }
+    }
+    while (i < n) out.push({ t: 'del', s: a[i++] });
+    while (j < m) out.push({ t: 'add', s: b[j++] });
+    return out;
+  }
+  function lineHTML(s) {
+    var k = s.indexOf('#');
+    if (k >= 0 && (k === 0 || s.charAt(k - 1) === ' ') && !/^#\d/.test(s.slice(k))) {
+      return esc(s.slice(0, k)) + '<span class="cm">' + esc(s.slice(k)) + '</span>';
+    }
+    return esc(s);
+  }
+  function codeHTML(prev, cur, m) {
+    var rows = (m === 'diff' && prev) ? diffLines(prev, cur) : cur.map(function (s) { return { t: 'same', s: s }; });
+    return '<pre class="code">' + rows.map(function (r) {
+      var cls = r.t === 'add' ? ' add' : r.t === 'del' ? ' del' : '';
+      return '<span class="ln' + cls + '">' + (lineHTML(r.s) || ' ') + '</span>';
+    }).join('') + '</pre>';
+  }
+  function sigHTML(sigs, typ) {
+    return '<pre class="sig"><span class="k">type</span> ' + esc(typ) + ' {\n' + sigs.map(function (s) {
+      return s.sig.map(function (l, i) {
+        var h = esc(l).replace(/(:\s*)(\[?[A-Z][A-Za-z]*!?\]?!?)/g, '$1<span class="t">$2</span>').replace(/(@\w+)/g, '<span class="d">$1</span>').replace(/(\s#\s\w+)$/, '<span class="d">$1</span>');
+        if (i === 0) h = h.replace(/^(\w+)/, '<span class="f">$1</span>');
+        return '  ' + h;
+      }).join('\n');
+    }).join('\n') + '\n}</pre>';
+  }
+
+  // ---------- sidebar ----------
+  function listHTML(q, selId) {
+    q = (q || '').toLowerCase();
+    var groups = {}, order = [];
+    D.apis.forEach(function (a) {
+      var impl = IMPL[a.impl] || { title: '' };
+      var hay = (a.id + ' ' + a.field + ' ' + impl.title + ' ' + a.sigs.map(function (s) { return s.field + ' ' + s.doc; }).join(' ')).toLowerCase();
+      if (q && hay.indexOf(q) < 0) return;
+      if (!groups[a.type]) { groups[a.type] = []; order.push(a.type); }
+      groups[a.type].push(a);
+    });
+    if (!order.length) return '<p style="padding:8px;color:#5b6475">No match.</p>';
+    return order.map(function (t) {
+      return '<h5>' + esc(t) + '</h5>' + groups[t].map(function (a) {
+        var dots = tabsOf(a.impl).map(function (tb) {
+          var p = PR[tb.pr];
+          if (isSel(p.id)) return '<i style="background:' + esc(p.color) + '" title="' + esc(prLabel(p)) + '"></i>';
+          return '<i class="' + (merged(p) ? '' : 'u') + '"></i>';
+        }).join('');
+        return '<a class="item' + (a.id === selId ? ' sel' : '') + '" href="#' + esc(a.id) + '">' +
+          '<span>' + esc(a.field) + '</span><span class="dots">' + dots + '</span></a>';
+      }).join('');
+    }).join('');
+  }
+
+  // ---------- API view ----------
+  // Default tab: the newest highlighted unmerged PR, else the newest merged.
+  function defaultTab(ts) {
+    var i;
+    for (i = ts.length - 1; i >= 0; i--) { if (!merged(PR[ts[i].pr]) && isSel(ts[i].pr)) return i; }
+    for (i = ts.length - 1; i >= 0; i--) { if (merged(PR[ts[i].pr])) return i; }
+    return ts.length - 1;
+  }
+  function apiView(id, prId) {
+    var a = API[id];
+    if (!a) return '<h1>Unknown field</h1><p>' + esc(id) + '</p>';
+    var impl = IMPL[a.impl], ts = tabsOf(a.impl);
+    var si = -1;
+    ts.forEach(function (t, i) { if (t.pr === prId) si = i; });
+    if (si < 0) si = defaultTab(ts);
+    var t = ts[si], p = PR[t.pr];
+    // An unmerged PR is based on the branch, not on other unmerged PRs: diff
+    // it against the newest merged tab before it.
+    var prevIdx = si - 1;
+    if (!merged(p)) { while (prevIdx >= 0 && !merged(PR[ts[prevIdx].pr])) prevIdx--; }
+    var prev = prevIdx >= 0 ? ts[prevIdx].code : null;
+    var siblings = apisOfImpl(a.impl).filter(function (x) { return x.id !== id; });
+    var h = '';
+    h += '<div class="meta"><h1>' + esc(a.type + '.' + a.field) + '</h1><span class="date">introduced: ' + (a.since === 'pre-cutoff' ? 'before the cutoff' : prChip(a.since)) + '</span>' + (a.removed ? ' ' + prChip(a.removed, 'removed in ') : '') + '</div>';
+    h += sigHTML(a.sigs, a.type);
+    h += a.sigs.map(function (s) {
+      if (!s.doc) return '';
+      var body = '<div class="doc">' + esc(s.doc) + '</div>';
+      return a.sigs.length > 1 ? '<details class="docs"><summary>' + esc(s.field) + '</summary>' + body + '</details>' : body;
+    }).join('');
+    h += '<div class="chips"><span class="pill">implementation: ' + esc(impl.title) + '</span>';
+    if (siblings.length) {
+      h += '<span class="pill">shares it with</span>' + siblings.map(function (s) {
+        return '<a class="chip" href="#' + esc(s.id) + '">' + esc(s.id) + '</a>';
+      }).join('');
+    }
+    h += '</div>';
+    if (a.purpose) h += '<div class="card" style="font-size:13.5px">' + esc(a.purpose) + '</div>';
+    if (a.note) h += '<div class="card" style="font-size:13.5px">' + esc(a.note) + '</div>';
+    h += '<div class="tabs">' + ts.map(function (tb, i) {
+      var pp = PR[tb.pr];
+      var cls = 'tab' + (pp.state === 'base' ? ' base' : '') + (merged(pp) ? '' : ' u') + (isSel(pp.id) ? ' hl' : '') + (i === si ? ' sel' : '');
+      return '<a class="' + cls + '"' + pcStyle(pp) + ' href="#' + esc(id) + '/' + esc(tb.pr) + '">' +
+        '<span>' + esc(prLabel(pp)) + '</span><small>' + esc(stateText(pp)) + '</small></a>';
+    }).join('') + '</div>';
+    h += '<div class="tabbody' + (merged(p) ? '' : ' u') + (isSel(p.id) ? ' hl' : '') + '"' + pcStyle(p) + '>';
+    h += '<div class="meta">' + prBadge(p) + '<h3>' + (p.url ? '<a href="' + esc(p.url) + '">' + esc(prLabel(p)) + '</a> ' : '') + esc(p.title) + '</h3>';
+    if (t.sha) h += '<span class="date">describes ' + esc(t.sha) + '</span>';
+    h += '</div>';
+    h += '<div class="grounding"><span class="' + (t.source === 'code' ? 'code' : 'desc') + '">' + (t.source === 'code' ? 'written from the code at ' + esc(t.sha) : 'mainly from the PR description / commit messages') + '</span><span>' + (t.verified ? 'verified ' + esc(t.verified) : 'not independently verified') + '</span></div>';
+    h += '<div class="what">' + esc(t.what) + '</div>';
+    if (t.effect) h += '<div class="effect"><b>Measured:</b> ' + esc(t.effect) + '</div>';
+    if (t.notes) h += '<div class="notes">' + esc(t.notes) + '</div>';
+    h += '<div class="where">' + t.where.map(ptrHTML).join('') + '</div>';
+    if (t.svg) h += '<div class="svgbox">' + t.svg + '</div>';
+    if (t.code.length) {
+      h += '<div class="modes">pseudocode: <a href="#" data-mode="diff" class="' + (mode === 'diff' ? 'sel' : '') + '">diff vs previous tab</a><a href="#" data-mode="full" class="' + (mode === 'full' ? 'sel' : '') + '">full</a>' +
+        (prevIdx >= 0 ? '<span>· compared with ' + esc(prLabel(PR[ts[prevIdx].pr])) + (!merged(p) && prevIdx !== si - 1 ? ' (' + esc(prLabel(p)) + ' is not merged, so it diffs against the newest merged tab)' : '') + '</span>' : '<span>· first tab</span>') + '</div>';
+      h += codeHTML(prev, t.code, mode);
+    }
+    h += '</div>';
+    return h;
+  }
+
+  // ---------- timeline ----------
+  function implOrder() { return D.implOrder.filter(function (k) { return IMPL[k]; }); }
+  function dotClass(p) { return isSel(p.id) ? 'dot hl' : p.state === 'base' ? 'dot b' : merged(p) ? 'dot' : 'dot u'; }
+  function timelineView() {
+    var ks = implOrder();
+    var h = '<h1>Timeline: every PR on one axis</h1><p class="sub">Rows are PRs in merge order (unmerged PRs last); columns are implementation families (a family can back several public fields). A square marks a tab: that PR changed the family\'s implementation path. Highlighted PRs (top right) are colored. Click a square to open it.</p>';
+    h += '<div class="legend"><span><i class="dot b"></i>baseline</span><span><i class="dot"></i>merged</span><span><i class="dot u"></i>unmerged</span><span>colored: highlighted</span></div>';
+    h += '<div class="card" style="overflow:auto"><table class="grid"><tr><th>PR</th><th>merged</th>' + ks.map(function (k) {
+      return '<th class="v" title="' + esc(IMPL[k].title) + '">' + esc(IMPL[k].short || IMPL[k].title) + '</th>';
+    }).join('') + '<th>#</th></tr>';
+    D.prs.forEach(function (p) {
+      var cnt = 0;
+      var cells = ks.map(function (k) {
+        var has = IMPL[k].tabs.some(function (t) { return t.pr === p.id; });
+        if (!has) return '<td class="c"></td>';
+        cnt++;
+        var first = apisOfImpl(k)[0];
+        return '<td class="c"><a class="' + dotClass(p) + '"' + pcStyle(p) + ' title="' + esc(IMPL[k].title + ' · ' + prLabel(p)) + '" href="#' + esc(first ? first.id : '') + '/' + esc(p.id) + '"></a></td>';
+      }).join('');
+      h += '<tr class="' + (isSel(p.id) ? 'hl' : '') + '"' + pcStyle(p) + '><td style="white-space:nowrap">' + (p.url ? '<a href="' + esc(p.url) + '">' + esc(prLabel(p)) + '</a>' : esc(prLabel(p))) + ' <span style="color:#5b6475">' + esc(p.title.length > 58 ? p.title.slice(0, 56) + '…' : p.title) + '</span></td><td style="white-space:nowrap;color:#5b6475">' + esc(stateText(p)) + '</td>' + cells + '<td><b>' + cnt + '</b></td></tr>';
+    });
+    h += '</table></div>';
+    h += '<h2>Families per PR, at a glance</h2><div class="card">' + D.prs.map(function (p) {
+      var n = ks.filter(function (k) { return IMPL[k].tabs.some(function (t) { return t.pr === p.id; }); }).length;
+      var w = Math.round(n / ks.length * 100);
+      var col = isSel(p.id) ? p.color : merged(p) ? '#9aa3b5' : '#c9c5ba';
+      return '<div style="display:grid;grid-template-columns:90px 1fr 40px;gap:10px;align-items:center;margin:4px 0;font-size:13px"><span>' + esc(prLabel(p)) + '</span><span style="background:#efece4;border-radius:99px;height:12px;overflow:hidden"><span style="display:block;height:12px;width:' + w + '%;background:' + esc(col) + '"></span></span><span>' + n + '</span></div>';
+    }).join('') + '</div>';
+    return h;
+  }
+
+  // ---------- matrix ----------
+  var MSYM = { yes: '✓', partial: '◐', gap: '✗', na: '·' };
+  function cellOf(row, c) { return row.cells[c.id] || { s: 'na', note: '' }; }
+  function pending(v) { return v.req && PR[v.req] && !merged(PR[v.req]); }
+  function matrixView() {
+    var cols = D.matrixCols;
+    var h = '<h1>Consistency matrix</h1><p class="sub">Rows are public fields; columns are mechanisms that exist somewhere in the git stack. Click a cell for its note, evidence and the commit it was judged at. Red ✗ marks a mechanism that is missing but plausibly applicable: the laggards. A dashed cell holds only once an unmerged PR lands. A colored ring means a highlighted PR changed that cell.</p>';
+    h += '<div class="legend"><span><span class="cell yes">✓</span>applies</span><span><span class="cell partial">◐</span>partial</span><span><span class="cell gap">✗</span>missing but could</span><span><span class="cell pend">✓</span>only once an unmerged PR lands</span><span><span class="cell na">·</span>not applicable</span>' +
+      '<span><a href="#" id="gaponly" class="chip">' + (matrixOnlyGaps ? 'show all rows' : 'show only rows with gaps') + '</a></span></div>';
+    h += '<div class="card" style="overflow:auto"><table class="grid"><tr><th>field</th>' + cols.map(function (c) {
+      return '<th class="v" title="' + esc(c.desc) + '">' + esc(c.name) + '</th>';
+    }).join('') + '<th>gaps</th></tr>';
+    var lastType = '';
+    D.matrix.forEach(function (row, ri) {
+      var gaps = 0;
+      cols.forEach(function (c) { if (cellOf(row, c).s === 'gap') gaps++; });
+      if (matrixOnlyGaps && !gaps) return;
+      var a = API[row.api], type = row.api.split('.')[0];
+      if (type !== lastType) { h += '<tr><td colspan="' + (cols.length + 2) + '" style="background:#f3f1ea;font-weight:700;font-size:12px">' + esc(type) + '</td></tr>'; lastType = type; }
+      h += '<tr><td style="white-space:nowrap"><a class="ptr" href="#' + esc(row.api) + '">' + esc(a ? a.type + '.' + a.field : row.api) + '</a></td>' + cols.map(function (c, ci) {
+        var v = cellOf(row, c), hp = firstSel(v.prs), pend = pending(v);
+        var cls = 'cell ' + (pend ? 'pend' : v.s) + (hp ? ' hl' : '');
+        var title = c.name + ': ' + (v.note || 'not applicable') + (pend ? ' [only once #' + v.req + ' lands]' : '');
+        return '<td class="c"><a href="#" class="' + cls + '"' + pcStyle(hp) + ' data-note="' + ri + ':' + ci + '" title="' + esc(title) + '">' + MSYM[v.s] + '</a></td>';
+      }).join('') + '<td><b style="color:' + (gaps ? 'var(--red)' : 'var(--muted)') + '">' + gaps + '</b></td></tr>';
+    });
+    h += '</table><div class="notebox" id="note">Click a cell to read why.</div></div>';
+    h += '<h2>Columns</h2><div class="card"><table>' + cols.map(function (c) { return '<tr><td><b>' + esc(c.name) + '</b></td><td>' + esc(c.desc) + '</td></tr>'; }).join('') + '</table></div>';
+    return h;
+  }
+  function matrixNote(key) {
+    var parts = key.split(':'), row = D.matrix[+parts[0]], col = D.matrixCols[+parts[1]];
+    var v = cellOf(row, col);
+    var h = '<b>' + esc(row.api) + ' × ' + esc(col.name) + '</b> — <span class="cell ' + (pending(v) ? 'pend' : v.s) + '">' + MSYM[v.s] + '</span> ' + esc(v.note || 'Not applicable to this field.');
+    if (pending(v)) h += '<div style="margin-top:6px">Holds only once ' + prChip(v.req) + ' lands.</div>';
+    if (v.prs && v.prs.length) h += '<div style="margin-top:6px">Changed by ' + v.prs.map(function (id) { return prChip(id); }).join(' ') + '</div>';
+    if (v.ev && v.ev.length) h += '<div class="where">' + v.ev.map(ptrHTML).join('') + '</div>';
+    if (v.asof) h += '<div style="margin-top:6px;color:#5b6475;font-size:12.5px">judged at ' + esc(v.asof) + '</div>';
+    return h;
+  }
+
+  // ---------- findings ----------
+  function findingsView() {
+    var kinds = { dup: 'duplicated mechanism', lag: 'lagging API', conflict: 'merge conflict / ordering', naming: 'naming / instrumentation' };
+    var h = '<h1>Consolidation opportunities</h1><p class="sub">Concrete findings from the matrix and the per-PR histories. Sizes: S ≈ a day, M ≈ a few days, L ≈ a week or more. Risk is about behavior change, not effort. A finding is highlighted when a highlighted PR found it, fixed it, or is involved.</p>';
+    h += D.findings.map(function (f, i) {
+      var hp = firstSel([f.discovered_in, f.fixed_in].concat(f.prs || []));
+      return '<div class="finding ' + esc(f.kind) + (hp ? ' hl' : '') + (f.status !== 'open' ? ' closed' : '') + '" id="' + esc(f.id) + '"' + pcStyle(hp) + '><h3>' + (i + 1) + '. ' + esc(f.title) + '</h3>' +
+        '<div class="tags"><span class="pill s-' + esc(f.status) + '">' + esc(f.status) + '</span>' + (f.fixed_in ? prChip(f.fixed_in, 'fixed in ') : '') + prChip(f.discovered_in, 'found in ') +
+        '<span class="pill k-' + esc(f.kind) + '">' + esc(kinds[f.kind] || f.kind) + '</span><span class="pill">size ' + esc(f.size) + '</span><span class="pill">risk ' + esc(f.risk) + '</span>' +
+        (f.apis || []).map(function (a) { return '<a class="chip" href="#' + esc(a) + '">' + esc(a) + '</a>'; }).join('') + '</div>' +
+        ((f.prs || []).length ? '<div class="tags">involves ' + f.prs.map(function (id) { return prChip(id); }).join(' ') + '</div>' : '') +
+        '<div class="what">' + esc(f.body) + '</div>' +
+        '<div style="margin-top:6px">' + f.pointers.map(function (p) { return '<div class="ptr">→ ' + ptrHTML(p) + '</div>'; }).join('') + '</div>' +
+        (f.proposal ? '<div class="effect" style="border-color:var(--blue);background:var(--blue-soft)"><b>Proposal:</b> ' + esc(f.proposal) + '</div>' : '') + '</div>';
+    }).join('');
+    return h;
+  }
+
+  // ---------- compare ----------
+  function compareView(aId, bId) {
+    var opts = function (s) {
+      return D.apis.map(function (a) { return '<option value="' + esc(a.id) + '"' + (a.id === s ? ' selected' : '') + '>' + esc(a.id) + '</option>'; }).join('');
+    };
+    var h = '<h1>Compare two fields side by side</h1><p class="sub">Rows are the PRs that touched either implementation, in merge order. Spot where one field picked up an optimization the other did not.</p>';
+    h += '<div class="card">A: <select id="cmpA">' + opts(aId) + '</select> &nbsp; B: <select id="cmpB">' + opts(bId) + '</select></div>';
+    var A = API[aId], B = API[bId];
+    if (!A || !B) return h;
+    var ta = tabsOf(A.impl), tb = tabsOf(B.impl), ids = {};
+    ta.concat(tb).forEach(function (t) { ids[t.pr] = 1; });
+    var prs = Object.keys(ids).map(function (k) { return PR[k]; }).sort(function (x, y) { return x.idx - y.idx; });
+    function side(ts, api, p) {
+      var t = ts.filter(function (x) { return x.pr === p.id; })[0];
+      if (!t) return '<div style="color:#c4c0b4">—</div>';
+      return '<div><a href="#' + esc(api.id) + '/' + esc(p.id) + '">open tab</a> · ' + esc(t.what.length > 260 ? t.what.slice(0, 258) + '…' : t.what) +
+        (t.code.length ? '<details><summary>pseudocode</summary>' + codeHTML(null, t.code, 'full') + '</details>' : '') + '</div>';
+    }
+    h += '<div class="card"><div class="cmp"><div class="h">PR</div><div class="h">' + esc(aId) + (A.impl === B.impl ? ' (same implementation as B)' : '') + '</div><div class="h">' + esc(bId) + '</div>';
+    prs.forEach(function (p) {
+      h += '<div>' + prBadge(p) + '<br><small>' + esc(prLabel(p)) + '</small></div>' + side(ta, A, p) + side(tb, B, p);
+    });
+    h += '</div></div>';
+    return h;
+  }
+
+  // ---------- glossary ----------
+  function glossaryView() {
+    var h = '<h1>Glossary</h1><p class="sub">Terms used across the tabs, the matrix and the findings.</p><div class="card"><dl class="gloss">';
+    h += D.glossary.map(function (g) {
+      return '<dt>' + ticks(g.term) + (g.pr ? ' ' + prChip(g.pr, 'since ') : '') + '</dt><dd>' + ticks(g.def) + '</dd>';
+    }).join('');
+    return h + '</dl></div>';
+  }
+
+  // ---------- about ----------
+  function aboutView() {
+    var m = D.meta, h = '<h1>About, sources and coverage</h1>';
+    h += '<div class="card"><div class="what" style="white-space:pre-wrap">' + esc(m.about) + '</div>';
+    h += '<p style="font-size:13px;color:#5b6475">Upstream: ' + esc(m.upstream.repo) + ' ' + esc(m.upstream.branch) + ' @ <code>' + esc(m.upstream.sha.slice(0, 7)) + '</code> (' + esc(m.upstream.date) + '). Cutoff: ' + esc(m.cutoff.label) + '.</p>';
+    h += (m.links || []).map(function (l) { return '<div><a href="' + esc(l.url) + '">' + esc(l.title) + '</a></div>'; }).join('') + '</div>';
+    var kinds = { uncovered: 'not yet covered', recheck: 'tabs predate the merge', moved: 'head moved' };
+    h += '<h2>Coverage queue</h2><div class="card">' + (D.queue.length ? '<table>' + D.queue.map(function (q) {
+      return '<tr><td><a href="https://github.com/' + esc(m.upstream.repo) + '/pull/' + esc(q.pr) + '">#' + esc(q.pr) + '</a></td><td>' + esc(kinds[q.kind] || q.kind) + (q.blocking ? '' : ' (advisory)') + '</td><td>' + esc(q.title) + (q.detail ? '<br><small style="color:#5b6475">' + esc(q.detail) + '</small>' : '') + '</td></tr>';
+    }).join('') + '</table>' : 'Empty: every PR merged since the cutoff that touches a tracked path is covered or skipped.') + '</div>';
+    h += '<h2>PRs with tabs</h2><div class="card"><table><tr><th>PR</th><th>state</th><th>summary</th><th>families</th></tr>' + D.prs.slice().reverse().map(function (p) {
+      var fam = implOrder().filter(function (k) { return IMPL[k].tabs.some(function (t) { return t.pr === p.id; }); }).map(function (k) { return IMPL[k].short || IMPL[k].title; });
+      return '<tr class="' + (isSel(p.id) ? 'hl' : '') + '"' + pcStyle(p) + '><td style="white-space:nowrap"><i class="sw" style="background:' + esc(p.color) + '"></i> ' + (p.url ? '<a href="' + esc(p.url) + '">' + esc(prLabel(p)) + '</a>' : esc(prLabel(p))) + '</td><td style="white-space:nowrap">' + esc(stateText(p)) + '<br><small style="color:#5b6475">' + esc(p.sha || '') + '</small></td><td><b>' + esc(p.title) + '</b><br>' + esc(p.summary) +
+        (p.why ? '<br><i>Why:</i> ' + esc(p.why) : '') + (p.effects ? '<br><small style="color:#14704c;white-space:pre-wrap">' + esc(p.effects) + '</small>' : '') + '</td><td style="font-size:12px">' + esc(fam.join(', ')) + '</td></tr>';
+    }).join('') + '</table></div>';
+    h += '<h2>Skipped PRs (touched tracked paths, no change to a public field\'s implementation path)</h2><div class="card"><table>' + D.skipped.map(function (s) {
+      return '<tr><td><a href="https://github.com/' + esc(m.upstream.repo) + '/pull/' + esc(s.pr) + '">#' + esc(s.pr) + '</a></td><td>' + esc(s.title) + '</td><td style="color:#5b6475">' + esc(s.why) + '</td></tr>';
+    }).join('') + '</table></div>';
+    return h;
+  }
+
+  // ---------- PR selection ----------
+  function sameSet(a, b) { return a.length === b.length && a.every(function (x) { return b.indexOf(x) >= 0; }); }
+  function hlSuffix() {
+    var ids = selIds();
+    return sameSet(ids, DEFAULT_SEL) ? '' : '?hl=' + ids.join(',');
+  }
+  function setSelection(ids) {
+    sel = {};
+    (ids || []).forEach(function (id) { if (PR[id]) sel[id] = true; });
+  }
+  function prMenuHTML(q) {
+    q = (q || '').toLowerCase();
+    return D.prs.slice().reverse().filter(function (p) {
+      return !q || (p.id + ' ' + p.title + ' ' + p.state).toLowerCase().indexOf(q) >= 0;
+    }).map(function (p) {
+      return '<label class="pri"><input type="checkbox" data-pr="' + esc(p.id) + '"' + (isSel(p.id) ? ' checked' : '') + '><i class="sw" style="background:' + esc(p.color) + '"></i><b>' + esc(prLabel(p)) + '</b><span class="t" title="' + esc(p.title) + '">' + esc(p.title) + '</span><span class="st st-' + esc(p.state) + '">' + esc(p.state === 'merged' ? p.date : p.state) + '</span></label>';
+    }).join('');
+  }
+  function swatchesHTML() {
+    var ids = selIds();
+    if (!ids.length) return '<span style="color:#8a8f99;font-weight:400">none</span>';
+    return ids.map(function (id) { return '<i class="sw" title="' + esc(prLabel(PR[id])) + '" style="background:' + esc(PR[id].color) + '"></i>'; }).join('');
+  }
+
+  // ---------- routing ----------
+  function parseHash(hash) {
+    var h = decodeURIComponent((hash || '').replace(/^#/, ''));
+    var qi = h.indexOf('?'), hl = null;
+    if (qi >= 0) {
+      var m = /(?:^|&)hl=([^&]*)/.exec(h.slice(qi + 1));
+      if (m) hl = m[1] ? m[1].split(',') : [];
+      h = h.slice(0, qi);
+    }
+    var r;
+    if (!h) r = { page: 'apis', api: D.defaultApi };
+    else if (h === 'timeline' || h === 'matrix' || h === 'findings' || h === 'about' || h === 'glossary') r = { page: h };
+    else if (h.indexOf('compare') === 0) {
+      var ab = h.replace(/^compare=?/, '').split(',');
+      r = { page: 'compare', a: ab[0] || D.defaultApi, b: ab[1] || 'GitRepository.withBundle' };
+    } else {
+      var parts = h.split('/');
+      var api = API[parts[0]] ? parts[0] : D.aliases[parts[0]] || D.defaultApi;
+      r = { page: 'apis', api: api, pr: parts[1] };
+    }
+    r.hl = hl;
+    return r;
+  }
+  function render(hash) {
+    var r = parseHash(hash);
+    setSelection(r.hl === null ? DEFAULT_SEL : r.hl);
+    var html;
+    if (r.page === 'timeline') html = timelineView();
+    else if (r.page === 'matrix') html = matrixView();
+    else if (r.page === 'findings') html = findingsView();
+    else if (r.page === 'about') html = aboutView();
+    else if (r.page === 'glossary') html = glossaryView();
+    else if (r.page === 'compare') html = compareView(r.a, r.b);
+    else html = apiView(r.api, r.pr);
+    return { route: r, html: withHL(html) };
+  }
+  // Carry the selection through every internal link.
+  function withHL(html) {
+    var s = hlSuffix();
+    if (!s) return html;
+    return html.replace(/href="#([^"?]+)"/g, function (m, r) { return 'href="#' + r + s + '"'; });
+  }
+  function routeHash(r) {
+    if (r.page === 'apis') return '#' + r.api + (r.pr ? '/' + r.pr : '');
+    if (r.page === 'compare') return '#compare=' + r.a + ',' + r.b;
+    return '#' + r.page;
+  }
+  var hasDOM = typeof document !== 'undefined' && document.getElementById && document.getElementById('view');
+  function paint() {
+    var res = render(location.hash);
+    document.getElementById('view').innerHTML = res.html;
+    var q = document.getElementById('q');
+    document.getElementById('list').innerHTML = withHL(listHTML(q ? q.value : '', res.route.page === 'apis' ? res.route.api : null));
+    var pages = document.querySelectorAll('.topbar a.page'), s = hlSuffix();
+    for (var i = 0; i < pages.length; i++) {
+      var base = pages[i].getAttribute('data-href');
+      pages[i].setAttribute('href', base === '#' ? (s ? '#' + D.defaultApi + s : '#') : base + s);
+      pages[i].className = 'page' + (pages[i].getAttribute('data-page') === res.route.page ? ' sel' : '');
+    }
+    document.getElementById('prsws').innerHTML = swatchesHTML();
+    document.getElementById('prlist').innerHTML = prMenuHTML(document.getElementById('prq').value);
+    var main = document.getElementById('main');
+    if (main && main.scrollTo && res.route.page !== 'apis') main.scrollTo(0, 0);
+  }
+  function applySelection(ids) {
+    setSelection(ids);
+    var r = parseHash(location.hash);
+    location.hash = routeHash(r) + hlSuffix();
+    paint(); // hashchange may not fire when only the default selection changed
+  }
+  if (hasDOM) {
+    window.addEventListener('hashchange', paint);
+    document.getElementById('q').addEventListener('input', function () {
+      var r = parseHash(location.hash);
+      document.getElementById('list').innerHTML = withHL(listHTML(this.value, r.page === 'apis' ? r.api : null));
+    });
+    var menu = document.getElementById('prmenu'), btn = document.getElementById('prbtn');
+    btn.addEventListener('click', function () {
+      menu.hidden = !menu.hidden;
+      btn.setAttribute('aria-expanded', String(!menu.hidden));
+      if (!menu.hidden) document.getElementById('prq').focus();
+    });
+    document.addEventListener('click', function (e) {
+      if (!menu.hidden && !document.getElementById('prsel').contains(e.target)) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    });
+    document.getElementById('prq').addEventListener('input', function () {
+      document.getElementById('prlist').innerHTML = prMenuHTML(this.value);
+    });
+    document.getElementById('prlist').addEventListener('change', function (e) {
+      var id = e.target && e.target.getAttribute('data-pr');
+      if (!id) return;
+      var ids = selIds().filter(function (x) { return x !== id; });
+      if (e.target.checked) ids.push(id);
+      applySelection(ids);
+    });
+    menu.querySelector('.prtools').addEventListener('click', function (e) {
+      var k = e.target && e.target.getAttribute('data-hl');
+      if (!k) return;
+      e.preventDefault();
+      applySelection(k === 'open' ? DEFAULT_SEL : k === 'all' ? D.prs.map(function (p) { return p.id; }) : []);
+    });
+    document.getElementById('view').addEventListener('click', function (e) {
+      var t = e.target;
+      if (t && t.getAttribute && t.getAttribute('data-mode')) { e.preventDefault(); mode = t.getAttribute('data-mode'); paint(); return; }
+      if (t && t.id === 'gaponly') { e.preventDefault(); matrixOnlyGaps = !matrixOnlyGaps; paint(); return; }
+      if (t && t.getAttribute && t.getAttribute('data-note')) { e.preventDefault(); document.getElementById('note').innerHTML = withHL(matrixNote(t.getAttribute('data-note'))); }
+    });
+    document.getElementById('view').addEventListener('change', function (e) {
+      if (e.target && (e.target.id === 'cmpA' || e.target.id === 'cmpB')) {
+        location.hash = '#compare=' + document.getElementById('cmpA').value + ',' + document.getElementById('cmpB').value + hlSuffix();
+      }
+    });
+    paint();
+  }
+  // exposed for testing
+  if (typeof window !== 'undefined') {
+    window.GitEvo = { data: D, render: render, apiView: apiView, listHTML: listHTML, matrixNote: matrixNote, tabsOf: tabsOf, diffLines: diffLines,
+      parseHash: parseHash, selection: selIds, setSelection: setSelection, applySelection: applySelection, defaultSelection: DEFAULT_SEL };
+  }
+})();
+</script>
+</body>
+</html>
