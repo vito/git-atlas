@@ -20,6 +20,11 @@ source = "github.com/vito/agents/committer"
 [modules.contributor]
 source = "github.com/vito/agents/contributor"
 
+[modules.contributor.settings]
+# Without a token the gh tool is disabled. PR numbers resolve against this
+# repo; pass --repo dagger/dagger for upstream PRs.
+githubToken = "cmd://gh auth token"
+
 [modules.staff]
 source = "github.com/vito/agents/staff"
 

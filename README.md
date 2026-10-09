@@ -10,8 +10,8 @@ mechanisms × fields, consolidation findings and a glossary. A dropdown at the
 top right highlights any set of PRs everywhere (tabs, matrix cells, timeline
 rows, findings); the selection is kept in the URL.
 
-Published copy: <https://gistpreview.github.io/?f33895836cd94dfcc7caab754162019c>
-(gist f33895836cd94dfcc7caab754162019c; see [Publishing](#publishing)).
+Published with GitHub Pages: <https://vito.github.io/git-atlas/>, served from
+`index.html` on `main`, so pushing a regenerated page publishes it.
 
 Everything in the page comes from small hand-written files under `data/` plus
 data derived from [dagger/dagger](https://github.com/dagger/dagger) by
@@ -155,11 +155,3 @@ or module PRs that never touch git, too narrow and git changes slip through.
 Edit `tracked`/`ignore` in `atlas.yaml` as the code moves.
 
 To process a PR, follow [`.agents/skills/process-pr/SKILL.md`](.agents/skills/process-pr/SKILL.md).
-
-## Publishing
-
-The page is self-contained, so the gist is just a copy of `index.html`:
-
-```sh
-gh gist edit f33895836cd94dfcc7caab754162019c -f git-api-evolution.html index.html
-```
