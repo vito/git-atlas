@@ -1,5 +1,5 @@
 source: pr-description
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   Trees without .git are content-addressed independently of the ref name, so a named ref
   is re-selected by its SHA first (pinned recipe). Full-history trees with .git are routed
