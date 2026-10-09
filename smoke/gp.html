@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<!-- Mimics gistpreview.github.io: fetch the page, then document.write it
+     into this document without calling document.close(). -->
+<html><head><meta charset="utf-8"><title>gistpreview</title></head>
+<body>
+<script>
+fetch('test.html').then(function (r) { return r.text(); }).then(function (t) {
+  document.write(t);
+});
+</script>
+</body></html>

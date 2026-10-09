@@ -1,0 +1,12 @@
+[modules.git-atlas]
+source = ".dagger"
+# The builtin generate/stale check re-runs `generate`, which fetches the
+# upstream branch tip, so it fails whenever dagger/dagger moves. The
+# git-atlas:fresh check is its deterministic counterpart: it regenerates at
+# the pinned upstream commit.
+check.skip = ["generate/stale"]
+
+[modules.git-atlas.settings]
+# Optional; lets generate read unmerged PRs from the GitHub API. Remove it
+# (or use "env://GITHUB_TOKEN") if you don't have the gh CLI.
+githubToken = "cmd://gh auth token"

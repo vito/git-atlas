@@ -1,0 +1,123 @@
+"""
+Keep the git atlas in sync with dagger/dagger.
+
+dagger generate refreshes everything derived (PR metadata, API signatures and
+docs, QUEUE.md, index.html); dagger check verifies the hand-written data
+against the upstream code and makes sure nothing derived is stale.
+"""
+type GitAtlas {
+  let githubToken: Secret
+
+  new(
+    """
+    GitHub token, used only by generate to read unmerged PRs (state, title,
+    head). Optional: without it, unmerged PRs keep their previous metadata
+    and take their heads from git ls-remote.
+    """
+    githubToken: Secret = null,
+  ) {
+    self.githubToken = githubToken
+    self
+  }
+
+  """
+  Refresh derived data from the upstream branch tip and GitHub, assign
+  colors to new PRs, and rebuild QUEUE.md and index.html.
+  """
+  generate(ws: Workspace!): Changeset! @generate @cache(policy: FunctionCachePolicy.Never) {
+    let src = source(ws)
+    let ctr = runner(src).withEnvVariable("ATLAS_REFRESH_NONCE", UUID.v7)
+    let tok = githubToken
+    if (tok != null) {
+      ctr = ctr.withSecretVariable("GITHUB_TOKEN", tok)
+    }
+    ctr
+      .withExec(["atlas", "generate", "-refresh", "-upstream", "/cache/upstream.git"])
+      .directory("/src")
+      .changes(src)
+  }
+
+  """
+  Validate the data: schema (required fields, enums, unique colors), cross
+  references (PRs, APIs, families, mechanisms), API names against the GraphQL
+  schema, and every code pointer against the file at its commit.
+  """
+  validate(ws: Workspace!): Void @check {
+    atlasCheck(ws, "validate")
+  }
+
+  """
+  Fail when generating at the pinned upstream commit would change anything:
+  index.html, QUEUE.md, derived/ and PR colors must be committed up to date.
+  """
+  fresh(ws: Workspace!): Void @check {
+    atlasCheck(ws, "fresh")
+  }
+
+  """
+  Fail while QUEUE.md has blocking entries: merged PRs that touch tracked
+  paths but are neither described nor skipped, and tabs written against a
+  head that has since merged.
+  """
+  coverage(ws: Workspace!): Void @check {
+    atlasCheck(ws, "coverage")
+  }
+
+  """
+  Unit tests of the atlas tool (globs, pointer parsing, symbol lookup).
+  """
+  unit(ws: Workspace!): Void @check {
+    container.from("golang:1.24-alpine")
+      .withMountedCache("/go/pkg/mod", cacheVolume("git-atlas-go-mod"))
+      .withMountedCache("/root/.cache/go-build", cacheVolume("git-atlas-go-build"))
+      .withEnvVariable("CGO_ENABLED", "0")
+      .withWorkdir("/build")
+      .withDirectory("/build", source(ws), include: ["go.mod", "go.sum", "cmd/**"])
+      .withExec(["go", "test", "./cmd/..."])
+      .sync
+    null
+  }
+
+  """
+  Load index.html in headless Chromium, directly and the way gistpreview
+  injects it, and drive the PR highlight dropdown.
+  """
+  smoke(ws: Workspace!): Void @check {
+    let src = source(ws)
+    container.from("alpine:3.22")
+      .withExec(["apk", "add", "--no-cache", "chromium", "python3"])
+      .withDirectory("/w", src.directory("smoke"))
+      .withFile("/w/index.html", src.file("index.html"))
+      .withExec(["sh", "/w/run.sh"])
+      .sync
+    null
+  }
+
+  let atlasCheck(ws: Workspace!, name: String!): Void {
+    runner(source(ws))
+      .withExec(["atlas", "check", name, "-upstream", "/cache/upstream.git"])
+      .sync
+    null
+  }
+
+  let source(ws: Workspace!): Directory! {
+    ws.directory("/", exclude: [".git", ".dagger", "tmp"])
+  }
+
+  let runner(src: Directory!): Container! {
+    let bin = container.from("golang:1.24-alpine")
+      .withMountedCache("/go/pkg/mod", cacheVolume("git-atlas-go-mod"))
+      .withMountedCache("/root/.cache/go-build", cacheVolume("git-atlas-go-build"))
+      .withEnvVariable("CGO_ENABLED", "0")
+      .withWorkdir("/build")
+      .withDirectory("/build", src, include: ["go.mod", "go.sum", "cmd/**"])
+      .withExec(["go", "build", "-o", "/out/atlas", "./cmd/atlas"])
+      .file("/out/atlas")
+    container.from("alpine:3.22")
+      .withExec(["apk", "add", "--no-cache", "git", "ca-certificates"])
+      .withFile("/usr/local/bin/atlas", bin)
+      .withMountedCache("/cache", cacheVolume("git-atlas-upstream"), sharing: CacheSharingMode.LOCKED)
+      .withDirectory("/src", src)
+      .withWorkdir("/src")
+  }
+}
