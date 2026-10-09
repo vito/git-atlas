@@ -1,0 +1,1121 @@
+{
+  "upstream": {
+    "branch": "main",
+    "sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+    "date": "2026-10-09"
+  },
+  "prs": {
+    "14000": {
+      "number": 14000,
+      "title": "core,engine: reconstruct host git from client packs and add git bundles",
+      "state": "merged",
+      "merged_at": "2026-09-03T17:06:00Z",
+      "merge_sha": "b37370b922dc616858c4600d5acbd010f4c67aa6",
+      "source": "git"
+    },
+    "14015": {
+      "number": 14015,
+      "title": "fix(core): remove the per-command cost of a remote git module source",
+      "state": "merged",
+      "merged_at": "2026-09-09T13:05:53Z",
+      "merge_sha": "7ff4e8d2aecbb75b33bb16e0ab6afd15a003ed8c",
+      "source": "git"
+    },
+    "14034": {
+      "number": 14034,
+      "title": "core: add SemVer version constraints",
+      "state": "merged",
+      "merged_at": "2026-09-09T08:39:33Z",
+      "merge_sha": "3735c8fa4ed918a90f26ad3166f5f74db338e4b6",
+      "source": "git"
+    },
+    "14037": {
+      "number": 14037,
+      "title": "feat(core): https redirect mechanism for module refs (dagger-get)",
+      "state": "merged",
+      "merged_at": "2026-09-05T01:24:52Z",
+      "merge_sha": "b1449dc2d4d2c68d5c03d239c7a06b05b597de71",
+      "source": "git"
+    },
+    "14042": {
+      "number": 14042,
+      "title": "fix(workspace): preserve module source backing",
+      "state": "merged",
+      "merged_at": "2026-09-04T04:20:49Z",
+      "merge_sha": "44f87a32cf6aceb807c02bebde03ccb0e3fd014e",
+      "source": "git"
+    },
+    "14049": {
+      "number": 14049,
+      "title": "core, dagql: clarify operation names and cache terminology",
+      "state": "merged",
+      "merged_at": "2026-09-18T20:55:49Z",
+      "merge_sha": "601d12f42491a0b6711c1e884224ed4d2a1dc3a6",
+      "source": "git"
+    },
+    "14051": {
+      "number": 14051,
+      "title": "snapshots: import and reuse locally exported chains",
+      "state": "merged",
+      "merged_at": "2026-09-21T19:09:50Z",
+      "merge_sha": "9282dfa1271e1907a3e3af6dc2114df652ca2b62",
+      "head_sha": "87a8043da423ed866a17667ded23066130cb1101",
+      "base": "main",
+      "created_at": "2026-09-05T09:10:47Z",
+      "closed_at": "2026-09-21T19:09:50Z",
+      "source": "github"
+    },
+    "14070": {
+      "number": 14070,
+      "title": "core: normalize diff --git header prefixes in Changeset.asPatch",
+      "state": "merged",
+      "merged_at": "2026-09-10T15:02:43Z",
+      "merge_sha": "b2d75d5527d9af76d0121b59cce7398e23d419b5",
+      "source": "git"
+    },
+    "14076": {
+      "number": 14076,
+      "title": "core: unify module and workspace Git reference parsing",
+      "state": "merged",
+      "merged_at": "2026-09-09T16:03:49Z",
+      "merge_sha": "ef029c074e5dd94f33d2eeabfc99fdaf133bd622",
+      "source": "git"
+    },
+    "14085": {
+      "number": 14085,
+      "title": "core: normalize Git lock identities",
+      "state": "merged",
+      "merged_at": "2026-09-09T15:19:27Z",
+      "merge_sha": "cc94daf8d86a21247b9c5ee770df630f53432166",
+      "source": "git"
+    },
+    "14097": {
+      "number": 14097,
+      "title": "fix: finish remote Git maintenance before releasing its mirror",
+      "state": "merged",
+      "merged_at": "2026-09-17T00:21:54Z",
+      "merge_sha": "f5101501bb4de4db1400801d2bc84758a6b25e12",
+      "source": "git"
+    },
+    "14101": {
+      "number": 14101,
+      "title": "cli: add workspace ls, cat, grep, exec, export, and git commands",
+      "state": "merged",
+      "merged_at": "2026-09-10T20:41:10Z",
+      "merge_sha": "59a9b904d1f237a3effbfe0298c8965a875ef950",
+      "source": "git"
+    },
+    "14114": {
+      "number": 14114,
+      "title": "fix: report remote module resolution",
+      "state": "merged",
+      "merged_at": "2026-09-11T01:50:42Z",
+      "merge_sha": "f78bf2c58feec99030c5933c8c64c96de0eb87b1",
+      "source": "git"
+    },
+    "14147": {
+      "number": 14147,
+      "title": "git: snapshotting and a ton of APIs",
+      "state": "merged",
+      "merged_at": "2026-09-17T21:29:21Z",
+      "merge_sha": "40a74d06ffe6b18d6cac020a1e3a7b007ebb7f19",
+      "source": "git"
+    },
+    "14167": {
+      "number": 14167,
+      "title": "fix(git): hold mirror locks only to copy objects out",
+      "state": "open",
+      "head_sha": "3c07ff709a5f5114ce1bba13fabccd9280250221",
+      "base": "main",
+      "created_at": "2026-09-16T17:07:51Z",
+      "source": "github"
+    },
+    "14170": {
+      "number": 14170,
+      "title": "fix(git): retain mirror fetch negotiation tips",
+      "state": "merged",
+      "merged_at": "2026-09-16T22:29:17Z",
+      "merge_sha": "245a7a2ee572480ee13d819b32cb2e198bd8ef4c",
+      "source": "git"
+    },
+    "14215": {
+      "number": 14215,
+      "title": "agent: make workspace change summaries durable to workspace swaps",
+      "state": "merged",
+      "merged_at": "2026-09-20T23:04:13Z",
+      "merge_sha": "0313dfedb934b4dcd1cc906c06d5a289c302212e",
+      "source": "git"
+    },
+    "14224": {
+      "number": 14224,
+      "title": "remote cache stack #14224 · #14228 · #14229 (with #14051): lazy, persisted producers",
+      "state": "merged",
+      "merged_at": "2026-09-21T19:09:49Z",
+      "merge_sha": "9282dfa1271e1907a3e3af6dc2114df652ca2b62",
+      "source": "git"
+    },
+    "14227": {
+      "number": 14227,
+      "title": "fix(changeset): export only declared changed paths",
+      "state": "merged",
+      "merged_at": "2026-09-18T22:40:52Z",
+      "merge_sha": "4056f4a8b225a01edc9de46ec54e03184b9780d8",
+      "source": "git"
+    },
+    "14228": {
+      "number": 14228,
+      "title": "remote cache: value transfer between engines",
+      "state": "merged",
+      "merged_at": "2026-09-21T19:09:55Z",
+      "merge_sha": "9282dfa1271e1907a3e3af6dc2114df652ca2b62",
+      "head_sha": "dbd528117af25291af8c30be598c528db7ab5bef",
+      "base": "sipsma/remote-cache-transfer-foundations",
+      "created_at": "2026-09-18T22:12:38Z",
+      "closed_at": "2026-09-21T19:09:55Z",
+      "source": "github"
+    },
+    "14229": {
+      "number": 14229,
+      "title": "remote cache: lazy part acquisition",
+      "state": "merged",
+      "merged_at": "2026-09-21T19:09:49Z",
+      "merge_sha": "9282dfa1271e1907a3e3af6dc2114df652ca2b62",
+      "source": "git"
+    },
+    "14273": {
+      "number": 14273,
+      "title": "core: snapshot live workspace export inputs",
+      "state": "merged",
+      "merged_at": "2026-09-23T01:47:04Z",
+      "merge_sha": "0ceaef62fbf51d4df8137ad53649af30c205ab4e",
+      "source": "git"
+    },
+    "14274": {
+      "number": 14274,
+      "title": "workspace: support agent snapshots in private SSH repos",
+      "state": "merged",
+      "merged_at": "2026-09-26T01:10:36Z",
+      "merge_sha": "4b0a126454c390d71fa2f9abef7cf0f93705a629",
+      "source": "git"
+    },
+    "14358": {
+      "number": 14358,
+      "title": "core/mcp: run batched tool calls in the order written",
+      "state": "merged",
+      "merged_at": "2026-09-28T20:59:02Z",
+      "merge_sha": "4baac19df4dc3d8babffe18e3f9073bfbdb36925",
+      "source": "git"
+    },
+    "14359": {
+      "number": 14359,
+      "title": "git: support revision suffixes (HEAD~3, main^2) in GitRepository.ref",
+      "state": "merged",
+      "merged_at": "2026-09-29T15:38:46Z",
+      "merge_sha": "cf813ea5a60ac81f686e74e6fa4f502f12930014",
+      "source": "git"
+    },
+    "14382": {
+      "number": 14382,
+      "title": "perf: reuse public Git advertisements within a session",
+      "state": "merged",
+      "merged_at": "2026-10-06T02:00:24Z",
+      "merge_sha": "7980ab3c7c6a9b6dad27884cf52309ac24526e34",
+      "source": "git"
+    },
+    "14388": {
+      "number": 14388,
+      "title": "remote cache protocol: the engine side of the engine-service protocol",
+      "state": "merged",
+      "merged_at": "2026-09-29T22:30:30Z",
+      "merge_sha": "ab1ebdbfdce0e8dc8fafdc09f184715578cbaf86",
+      "source": "git"
+    },
+    "14395": {
+      "number": 14395,
+      "title": "perf(git): read cached history without fetching",
+      "state": "merged",
+      "merged_at": "2026-09-30T20:49:30Z",
+      "merge_sha": "a96196e9d8ba4a8ebc77bc31d7bbac188469e84b",
+      "source": "git"
+    },
+    "14396": {
+      "number": 14396,
+      "title": "perf(git): build same-base commits natively",
+      "state": "merged",
+      "merged_at": "2026-09-30T21:44:31Z",
+      "merge_sha": "801126f88b5796973715dc95fb144ad5ff34a228",
+      "source": "git"
+    },
+    "14397": {
+      "number": 14397,
+      "title": "perf(workspace): reconcile Git deltas natively",
+      "state": "merged",
+      "merged_at": "2026-10-01T17:00:39Z",
+      "merge_sha": "4473191c10743976f2852b1432bf61b72d84ca33",
+      "source": "git"
+    },
+    "14399": {
+      "number": 14399,
+      "title": "perf(git): check out commit deltas incrementally",
+      "state": "merged",
+      "merged_at": "2026-10-01T21:14:55Z",
+      "merge_sha": "2f9de2a0c9db28a0e166e9d09b56418bdeb1203a",
+      "source": "git"
+    },
+    "14400": {
+      "number": 14400,
+      "title": "perf(git): commit remote workspaces natively",
+      "state": "merged",
+      "merged_at": "2026-10-06T19:07:21Z",
+      "merge_sha": "a34d69b2fcae77ca0d40c944ccfab8ff5e1c08ff",
+      "source": "git"
+    },
+    "14401": {
+      "number": 14401,
+      "title": "perf(git): reuse approved host history on demand",
+      "state": "merged",
+      "merged_at": "2026-10-06T20:48:11Z",
+      "merge_sha": "913c0faee9fff2341cdacebe7df6a8d4c183d74f",
+      "source": "git"
+    },
+    "14403": {
+      "number": 14403,
+      "title": "core: allow lookups to bypass workspace locks",
+      "state": "merged",
+      "merged_at": "2026-10-01T23:08:16Z",
+      "merge_sha": "9ace10865a4e09e10fc29dfcb2a5b53b0d62365e",
+      "source": "git"
+    },
+    "14427": {
+      "number": 14427,
+      "title": "fix(workspace): handle SSH module source URLs",
+      "state": "merged",
+      "merged_at": "2026-10-07T01:49:13Z",
+      "merge_sha": "228637c644f3ed5f75330dfdda3cbc81e60e5a44",
+      "source": "git"
+    },
+    "14431": {
+      "number": 14431,
+      "title": "core: report engine and operation network bytes",
+      "state": "merged",
+      "merged_at": "2026-10-03T22:36:48Z",
+      "merge_sha": "85c47bfdc9e1934e2daf5b38fb23f3c93b5591a0",
+      "source": "git"
+    },
+    "14433": {
+      "number": 14433,
+      "title": "fix(git): resolve missing refs through the upstream",
+      "state": "merged",
+      "merged_at": "2026-10-06T22:08:29Z",
+      "merge_sha": "e2af618b27b822685853b514ca92bc062252bfe1",
+      "source": "git"
+    },
+    "14448": {
+      "number": 14448,
+      "title": "fix(git): keep plumbing output out of span logs",
+      "state": "merged",
+      "merged_at": "2026-10-06T22:32:39Z",
+      "merge_sha": "30b6955ebc62e707c6c9aa37bf28f038e9f6191e",
+      "source": "git"
+    },
+    "14460": {
+      "number": 14460,
+      "title": "mcp: record tool changesets as workspace patches",
+      "state": "merged",
+      "merged_at": "2026-10-07T20:30:42Z",
+      "merge_sha": "f72cf717cb054c9501a5930b5a4a65fd15e77a80",
+      "source": "git"
+    },
+    "14466": {
+      "number": 14466,
+      "title": "core: apply, diff and merge changesets by their layers",
+      "state": "merged",
+      "merged_at": "2026-10-08T23:44:15Z",
+      "merge_sha": "18504114ce9008963885f57a3d98176a08112849",
+      "source": "git"
+    },
+    "14472": {
+      "number": 14472,
+      "title": "core: save recipes for cached values that could not be rebuilt",
+      "state": "merged",
+      "merged_at": "2026-10-05T18:51:41Z",
+      "merge_sha": "9a2926b230aed0baf10e44c02603e0168e30cddf",
+      "source": "git"
+    },
+    "14488": {
+      "number": 14488,
+      "title": "fix(core): let agents read private git URLs",
+      "state": "merged",
+      "merged_at": "2026-10-07T00:30:25Z",
+      "merge_sha": "16155cdcae4b2169d24bd3a8330cac8915a5c2a0",
+      "source": "git"
+    },
+    "14511": {
+      "number": 14511,
+      "title": "Add Git branch filtering",
+      "state": "merged",
+      "merged_at": "2026-10-07T20:42:09Z",
+      "merge_sha": "195b09187512b7e114f47048c773310701af87a7",
+      "source": "git"
+    },
+    "14516": {
+      "number": 14516,
+      "title": "workspace: carry user config in snapshots, add Workspace.withUserConfig",
+      "state": "merged",
+      "merged_at": "2026-10-07T03:33:13Z",
+      "merge_sha": "2520b10e5a32289e878fb84e3d892f19ebb58274",
+      "source": "git"
+    },
+    "14525": {
+      "number": 14525,
+      "title": "fix(core): resolve noLock git refs live",
+      "state": "merged",
+      "merged_at": "2026-10-06T23:40:23Z",
+      "merge_sha": "86035e6b7f6de4665ce7d6c118b559df1a0abb3f",
+      "source": "git"
+    },
+    "14530": {
+      "number": 14530,
+      "title": "workspace: prepare SSH auth for export destination",
+      "state": "merged",
+      "merged_at": "2026-10-08T22:35:26Z",
+      "merge_sha": "0c586690122ce49d88c719f7f1f9e8123389f7fa",
+      "source": "git"
+    },
+    "14531": {
+      "number": 14531,
+      "title": "workspace: freeze Git workspaces as-is, bound embedded patches",
+      "state": "merged",
+      "merged_at": "2026-10-08T01:22:58Z",
+      "merge_sha": "d84226110e84281f333d9c0dfefdc8bba095538b",
+      "source": "git"
+    },
+    "14572": {
+      "number": 14572,
+      "title": "core: stop dagger generate deleting a removed file's directory",
+      "state": "merged",
+      "merged_at": "2026-10-08T22:42:15Z",
+      "merge_sha": "8bc7074fe3d83fb38b6a2c17f1dc631545dbea55",
+      "source": "git"
+    },
+    "14576": {
+      "number": 14576,
+      "title": "core: speed up workspace git checkouts, pulls and merges",
+      "state": "open",
+      "head_sha": "4e9d0b04e218427fdf2ff49f369f0530baf06279",
+      "base": "main",
+      "created_at": "2026-10-08T18:37:16Z",
+      "source": "github"
+    },
+    "base": {
+      "number": 0,
+      "title": "Baseline: main before #14000 (5ddd194)",
+      "state": "base",
+      "merged_at": "2026-09-03T01:03:44Z",
+      "merge_sha": "5ddd1941220d4a0345ac521ce06a9590a08b2631",
+      "source": "config"
+    }
+  },
+  "apis": {
+    "Changeset.addedPaths": {
+      "sig": [
+        "addedPaths: [String!]!"
+      ],
+      "doc": "Files and directories that were added in the newer directory.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.asPatch": {
+      "sig": [
+        "asPatch: File!"
+      ],
+      "doc": "Return a Git-compatible patch of the changes",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.diffStats": {
+      "sig": [
+        "diffStats: [DiffStat!]!"
+      ],
+      "doc": "Structured per-path diff statistics (kind and line counts) for this changeset.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.export": {
+      "sig": [
+        "export(path: String!): String!"
+      ],
+      "doc": "Applies the diff represented by this changeset to a path on the host.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.isEmpty": {
+      "sig": [
+        "isEmpty: Boolean!"
+      ],
+      "doc": "Returns true if the changeset is empty (i.e. there are no changes).",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.modifiedPaths": {
+      "sig": [
+        "modifiedPaths: [String!]!"
+      ],
+      "doc": "Files and directories that existed before and were updated in the newer directory.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.removedPaths": {
+      "sig": [
+        "removedPaths: [String!]!"
+      ],
+      "doc": "Files and directories that were removed. Directories are indicated by a\ntrailing slash, and their child paths are not included.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.withChangeset": {
+      "sig": [
+        "withChangeset(",
+        "  changes: ID!  # Changeset",
+        "  onConflict: ChangesetMergeConflict = FAIL",
+        "): Changeset!"
+      ],
+      "doc": "Add changes to an existing changeset\n\nBy default the operation will fail in case of conflicts, for instance a file\nmodified in both changesets. The behavior can be adjusted using onConflict\nargument",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Changeset.withChangesets": {
+      "sig": [
+        "withChangesets(",
+        "  changes: [ID!]!  # Changeset",
+        "  onConflict: ChangesetsMergeConflict = FAIL",
+        "): Changeset!"
+      ],
+      "doc": "Add changes from multiple changesets using git octopus merge strategy\n\nThis is more efficient than chaining multiple withChangeset calls when merging many changesets.\n\nOnly FAIL and FAIL_EARLY conflict strategies are supported (octopus merge cannot use -X ours/theirs).",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Directory.asGit": {
+      "sig": [
+        "asGit: GitRepository!"
+      ],
+      "doc": "Converts this directory to a local git repository",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Directory.changes": {
+      "sig": [
+        "changes(",
+        "  from: ID!  # Directory",
+        "): Changeset!"
+      ],
+      "doc": "Return the difference between this directory and another directory, typically an older snapshot.\n\nThe difference is encoded as a changeset, which also tracks removed files, and can be applied to other directories.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Directory.diff": {
+      "sig": [
+        "diff(",
+        "  other: ID!  # Directory",
+        "): Directory!"
+      ],
+      "doc": "Return the difference between this directory and an another directory. The difference is encoded as a directory.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Directory.withChanges": {
+      "sig": [
+        "withChanges(",
+        "  changes: ID!  # Changeset",
+        "): Directory!"
+      ],
+      "doc": "Return a directory with changes from another directory applied to it.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "File.asGitBundle": {
+      "sig": [
+        "asGitBundle: GitBundle!"
+      ],
+      "doc": "Interpret this file as a Git bundle by lazily parsing its header.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitBundle.asFile": {
+      "sig": [
+        "asFile: File!"
+      ],
+      "doc": "Return the bundle bytes as a File.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitBundle.objectFormat": {
+      "sig": [
+        "objectFormat: String!"
+      ],
+      "doc": "Object format capability: sha1 or sha256.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitBundle.prerequisiteSHAs": {
+      "sig": [
+        "prerequisiteSHAs: [String!]!"
+      ],
+      "doc": "Commits that must already exist wherever this bundle is applied.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitBundle.refs": {
+      "sig": [
+        "refs: [GitBundleRef!]!"
+      ],
+      "doc": "Refs advertised by the bundle and the object IDs they resolve to.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitBundle.validate": {
+      "sig": [
+        "validate: GitBundle!"
+      ],
+      "doc": "Perform full structural verification of the bundle and error if it is malformed.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitBundle.version": {
+      "sig": [
+        "version: Int!"
+      ],
+      "doc": "Bundle format version (2 or 3).",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitCommit.ancestorReleaseTag": {
+      "sig": [
+        "ancestorReleaseTag(includePreRelease: Boolean = false): GitRef"
+      ],
+      "doc": "The latest semver release tag reachable from this commit.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.authorEmail": {
+      "sig": [
+        "authorEmail: String!"
+      ],
+      "doc": "Git author email.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.authorName": {
+      "sig": [
+        "authorName: String!"
+      ],
+      "doc": "Git author name.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.authoredDate": {
+      "sig": [
+        "authoredDate: String!"
+      ],
+      "doc": "Git author date, in RFC3339 format.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.changes": {
+      "sig": [
+        "changes(",
+        "  against: ID  # GitCommit",
+        "): Changeset!"
+      ],
+      "doc": "Returns the changes from the first parent to this commit, excluding Git metadata.\n\nRoot commits are compared with an empty tree. Merge commits are compared with their first parent, not a merge base.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitCommit.committedDate": {
+      "sig": [
+        "committedDate: String!"
+      ],
+      "doc": "Git committer date, in RFC3339 format.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.committerEmail": {
+      "sig": [
+        "committerEmail: String!"
+      ],
+      "doc": "Git committer email.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.committerName": {
+      "sig": [
+        "committerName: String!"
+      ],
+      "doc": "Git committer name.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.message": {
+      "sig": [
+        "message: String!"
+      ],
+      "doc": "Full commit message.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.messageBody": {
+      "sig": [
+        "messageBody: String!"
+      ],
+      "doc": "Commit message body, excluding the headline.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.messageHeadline": {
+      "sig": [
+        "messageHeadline: String!"
+      ],
+      "doc": "First line of the commit message.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.parentShas": {
+      "sig": [
+        "parentShas: [String!]!"
+      ],
+      "doc": "Parent commit SHAs.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.releaseTag": {
+      "sig": [
+        "releaseTag(includePreRelease: Boolean = false): GitRef"
+      ],
+      "doc": "The latest semver release tag that points directly at this commit.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.sha": {
+      "sig": [
+        "sha: String!"
+      ],
+      "doc": "The full commit SHA.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.shortSha": {
+      "sig": [
+        "shortSha: String!"
+      ],
+      "doc": "The abbreviated commit SHA.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitCommit.tree": {
+      "sig": [
+        "tree(",
+        "  discardGitDir: Boolean = false",
+        "  depth: Int = 1",
+        "  includeTags: Boolean = false",
+        "): Directory!"
+      ],
+      "doc": "The filesystem tree at this commit.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.asRepository": {
+      "sig": [
+        "asRepository: GitRepository!"
+      ],
+      "doc": "Return this ref's repository with HEAD pinned to the selected commit.\n\nPreserves the original repository backend, connection information, and other\nrefs. Does not modify a branch or checkout, or prune history.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRef.asWorkspace": {
+      "sig": [
+        "asWorkspace(cwd: String = \"/\"): Workspace!"
+      ],
+      "doc": "Creates a synthetic workspace from this git ref.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.commitSHA": {
+      "sig": [
+        "commitSHA: String!"
+      ],
+      "doc": "The resolved commit SHA at this ref.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.commonAncestor": {
+      "sig": [
+        "commonAncestor(",
+        "  other: ID!  # GitRef",
+        "): GitRef!"
+      ],
+      "doc": "Find the best common ancestor between this ref and another ref.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.contains": {
+      "sig": [
+        "contains(",
+        "  other: ID!  # GitRef",
+        "): Boolean!"
+      ],
+      "doc": "Return true when the other ref's commit equals this commit or is an ancestor of it.\n\nCompares commit history across branches, tags and detached refs. Incomplete or unavailable history is an error.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRef.log": {
+      "sig": [
+        "log(",
+        "  limit: Int = 10",
+        "  paths: [String!]",
+        "  base: ID  # GitRef",
+        "): [GitCommit!]!"
+      ],
+      "doc": "Commits reachable from this ref, newest first, starting with the commit this ref resolves to.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.name": {
+      "sig": [
+        "name: String!"
+      ],
+      "doc": "The resolved name of this ref.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.push": {
+      "sig": [
+        "push(",
+        "  to: ID  # GitRepository",
+        "  remote: String = \"\"",
+        "  branch: String = \"\"",
+        "  expectedRemoteSHA: String = \"\"",
+        "): GitPushResult!"
+      ],
+      "doc": "Push this ref's commit and history to a remote repository using the destination's credentials.\n\nThe source can come from a remote repository or an engine-side Git repository.\nTo publish a workspace's commits, use Workspace.git.head.push. Pushing does\nnot modify the calling client's checkout, and checkout hooks do not run.\n\nA missing remote ref is created. Without a lease, Git's normal non-force rules\napply. Each invocation performs a push; loading the returned receipt does not\npush again.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRef.targetCommit": {
+      "sig": [
+        "targetCommit: GitCommit!"
+      ],
+      "doc": "The commit this ref resolves to.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.tree": {
+      "sig": [
+        "tree(",
+        "  discardGitDir: Boolean = false",
+        "  depth: Int = 1",
+        "  includeTags: Boolean = false",
+        "): Directory!"
+      ],
+      "doc": "The filesystem tree at this ref.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRef.withCommit": {
+      "sig": [
+        "withCommit(",
+        "  changes: ID!  # Changeset",
+        "  message: String!",
+        "  date: String!",
+        "  authorName: String!",
+        "  authorEmail: String!",
+        "  committerName: String",
+        "  committerEmail: String",
+        "  committerDate: String",
+        "  allowEmpty: Boolean = false",
+        "  signoff: Boolean = false",
+        "): GitRef!"
+      ],
+      "doc": "Create a single-parent commit on this ref by applying a changeset's edits.\n\nThree-way merges the changeset against this ref's tree, using its before\nsnapshot as the base. Preserves compatible parent edits and fails on\nconflicts. Does not modify the input repository or host checkout.\n\nIdentity and dates are explicit; neither client Git configuration nor the current clock is consulted.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRemote.repository": {
+      "sig": [
+        "repository: GitRepository!"
+      ],
+      "doc": "Access this remote's repository using its fetch URL and the caller's\ncredentials, or the source's existing capability for this exact destination.\n\nHEAD is the remote's HEAD, independent of the workspace's selected commit.\nRemote registration alone does not grant credentials.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRepository.asWorkspace": {
+      "sig": [
+        "asWorkspace(cwd: String = \"/\"): Workspace!"
+      ],
+      "doc": "Creates a synthetic workspace from this repository's HEAD and uncommitted file changes.\n\nPending changes are applied at the repository root. The staging split is not\npreserved. The source repository is not modified.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.branch": {
+      "sig": [
+        "branch(name: String!, noLock: Boolean = false): GitRef!"
+      ],
+      "doc": "Returns details of a branch.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.branches": {
+      "sig": [
+        "branches(patterns: [String!]): [String!]!"
+      ],
+      "doc": "branches that match any of the given glob patterns.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.bundle": {
+      "sig": [
+        "bundle(",
+        "  refs: [String!]!",
+        "  base: ID  # GitRef",
+        "): GitBundle!"
+      ],
+      "doc": "Pack the given refs and the objects needed to reconstruct them into a Git bundle.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRepository.commit": {
+      "sig": [
+        "commit(id: String!): GitCommit!"
+      ],
+      "doc": "Returns details of a commit.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.defaultRemote": {
+      "sig": [
+        "defaultRemote: GitRemote"
+      ],
+      "doc": "Return the sole remote, otherwise origin, otherwise the selected branch's upstream remote, otherwise null.\n\nFrozen workspaces retain their captured upstream selection. Does not contact remote servers.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRepository.head": {
+      "sig": [
+        "head(noLock: Boolean = false): GitRef!"
+      ],
+      "doc": "Returns details for HEAD.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.latest": {
+      "sig": [
+        "latest(version: String = \"\", noLock: Boolean = false): GitRef!"
+      ],
+      "doc": "Return the latest stable release tag, falling back to HEAD when no release exists.\n\nRelease selection accepts an optional \"v\" prefix, incomplete versions, and\nzero-padded numeric components. This operation is pinned unless noLock is\nenabled.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.ref": {
+      "sig": [
+        "ref(name: String!, noLock: Boolean = false): GitRef!"
+      ],
+      "doc": "Returns details of a ref.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.remote": {
+      "sig": [
+        "remote(name: String!): GitRemote!"
+      ],
+      "doc": "Look up a remote by name. Fails when the remote does not exist.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRepository.remotes": {
+      "sig": [
+        "remotes: [GitRemote!]!"
+      ],
+      "doc": "List this repository's named remotes, with registered remotes overriding configured ones. Does not contact remote servers.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRepository.tag": {
+      "sig": [
+        "tag(name: String!, noLock: Boolean = false): GitRef!"
+      ],
+      "doc": "Returns details of a tag.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.tags": {
+      "sig": [
+        "tags(patterns: [String!]): [String!]!"
+      ],
+      "doc": "tags that match any of the given glob patterns.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.uncommitted": {
+      "sig": [
+        "uncommitted: Changeset!"
+      ],
+      "doc": "Returns the changeset of uncommitted changes in the git repository.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "GitRepository.withBundle": {
+      "sig": [
+        "withBundle(",
+        "  bundle: ID!  # GitBundle",
+        "  prerequisiteRef: String = \"\"",
+        "): GitRepository!"
+      ],
+      "doc": "Import a Git bundle after fetching and verifying all of its prerequisites.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRepository.withContents": {
+      "sig": [
+        "withContents(",
+        "  directory: ID!  # Directory",
+        "): GitRepository!"
+      ],
+      "doc": "Replace this repository's storage with the supplied self-contained Git\nrepository, retaining its logical URL and push destinations.\n\nAccepts a whole checkout (including .git and pending file edits), .git\ncontents, or a bare repository. Does not initialize a repository, merge\nhistories, or modify either input.\n\nThe receiver's logical routing wins over the supplied Git configuration; that\nconfiguration is not rewritten. Use Directory.asGit to open the supplied\nrepository without retaining the receiver's routing.\n\nWhen the receiver is a remote repository (or was derived from one), that\nremote is retained with its authentication: refs the supplied storage does not\ncontain resolve through it.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "GitRepository.withRemote": {
+      "sig": [
+        "withRemote(name: String!, url: String!, pushUrl: String = \"\"): GitRepository!"
+      ],
+      "doc": "Register a named remote on this repository, replacing any registered remote of the same name.\n\nRegistered remotes are recorded in checkouts materialized from this repository\n(GitRef.tree, Workspace.git.directory), so remote-aware tooling like gh can\nresolve and fetch from them. The origin remote also routes push when no\nexplicit destination is passed: its push URL, or its URL, becomes the default\ndestination.\n\nRouting metadata only, never a credential grant: pushes still authenticate\nwith the caller's own credentials and require approval as usual.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "Query.git": {
+      "sig": [
+        "git(",
+        "  url: String!",
+        "  keepGitDir: Boolean = true  @deprecated",
+        "  sshKnownHosts: String = \"\"",
+        "  sshAuthSocket: ID  # Socket",
+        "  httpAuthUsername: String = \"\"",
+        "  httpAuthToken: ID  # Secret",
+        "  httpAuthHeader: ID  # Secret",
+        "  experimentalServiceHost: ID  # Service",
+        "): GitRepository!"
+      ],
+      "doc": "Queries a Git repository.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Workspace.compareCommitsFrom": {
+      "sig": [
+        "compareCommitsFrom(",
+        "  source: ID!  # Workspace",
+        "  commits: [String!] = []",
+        "  maxCommits: Int = 100",
+        "): [WorkspaceCommitPick!]!"
+      ],
+      "doc": "Preview which source commits withCommitsFrom would apply, skip, or report as conflicting.\n\nResults are ordered oldest first and account for earlier applicable commits in\nthe same preview. The preview does not apply commits or write to the checkout.\n\nA local receiver is snapshotted automatically; untracked files require\ninteractive approval. Source uncommitted changes are ignored. Exceeding\nmaxCommits fails rather than returning a partial preview. Divergent merge\ncommits require manual integration.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "Workspace.export": {
+      "sig": [
+        "export(",
+        "  path: String = \"\"",
+        "  from: ID  # Workspace",
+        "): Void!"
+      ],
+      "doc": "Write this workspace's commits and pending changes to a checkout on the calling client.\n\nPath selects the destination; omitting it uses the calling client's current\nlocal workspace root, including when exporting a snapshot or committed\nworkspace. Exported file paths are relative to the workspace root regardless\nof its working directory. This writes only to the client making the call,\nnever the source's client.\n\nA live workspace exported to its own checkout applies only its overlay edits,\nwithout capturing the whole checkout. This also applies with an explicit path.\nPass from with the same live base to apply only changes since that overlay\nstate.\n\nOther exports integrate divergent commits by cherry-picking, preserve\nunrelated checkout edits, and refuse conflicts. Live inputs are snapshotted\nautomatically; capturing untracked source files requires interactive approval.\nStable inputs retain their baseline. Pass from to save only work since an\nearlier source value, including previously saved pending edits that are now\ncommitted.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Workspace.git": {
+      "sig": [
+        "git: WorkspaceGit!"
+      ],
+      "doc": "Git state for this workspace. Errors if the workspace is not in a git repository.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Workspace.snapshot": {
+      "sig": [
+        "snapshot: Workspace!  @experimental"
+      ],
+      "doc": "Return a snapshot of this workspace as a stable value.\n\nGit capture is a progressive enhancement: if the workspace has no Git\nrepository or commits, or the client cannot capture Git, return this workspace\nunchanged. Approval rejections and capture failures remain errors.\n\nUse the returned workspace for subsequent reads, edits, and module loading\nagainst the captured baseline. Snapshotting an existing stable value preserves\nits baseline; snapshot currentWorkspace again to capture later checkout\nchanges.\n\nOnly the owning client can capture a local checkout. Tracked changes are\ncaptured automatically; untracked files require interactive approval. Remote\nGit refs are pinned to their resolved commits. Capturing leaves the checkout\nunchanged.\n\nThe recipe is portable when a remote can serve its base; otherwise it is frozen for this session only.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "Workspace.withChanges": {
+      "sig": [
+        "withChanges(",
+        "  changes: ID!  # Changeset",
+        "): Workspace!"
+      ],
+      "doc": "Return this workspace with a changeset applied, without mutating the source.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "Workspace.withCommit": {
+      "sig": [
+        "withCommit(",
+        "  changes: ID!  # Changeset",
+        "  message: String!",
+        "  date: String!",
+        "  authorName: String",
+        "  authorEmail: String",
+        "  signoff: Boolean = false",
+        "): Workspace!"
+      ],
+      "doc": "Create a Git commit from a changeset and return a stable workspace with HEAD advanced.\n\nThe changeset is three-way merged into both HEAD and the frozen working tree.\nCompatible unselected edits remain uncommitted; incoming changes need not\nalready be in the working tree. Conflicts with either tree fail without\nmodifying the workspace. Empty changesets, or changes already present in HEAD,\nfail with nothing to commit.\n\nA local workspace is snapshotted automatically before committing; untracked\nfiles require interactive approval. The host checkout is not modified.\n\nMissing author fields are resolved from Git config in the calling client's\nworking directory at commit time, then recorded explicitly for reproducible\ncommits. Unconfigured fields default to Dagger and dagger@localhost.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "Workspace.withCommitsFrom": {
+      "sig": [
+        "withCommitsFrom(",
+        "  source: ID!  # Workspace",
+        "  commits: [String!] = []",
+        "  maxCommits: Int = 100",
+        "): Workspace!"
+      ],
+      "doc": "Integrate source commits into this workspace and return the result, preserving\nthis workspace's uncommitted changes and metadata.\n\nFast-forward when the selected commits include all new ancestors of their tip;\notherwise cherry-pick them oldest first. Already integrated commits and\npatches already present are skipped. Any conflict fails the operation. Source\nuncommitted changes are not transferred; merge them explicitly if needed. Use\ncompareCommitsFrom to preview the integration.\n\nA local receiver is snapshotted automatically; untracked files require\ninteractive approval. The checkout is not modified. Export the result with an\nexplicit path to write it to a checkout.\n\nCherry-picks preserve the source author and author date, use the calling\nclient's Git config for committer identity, and reuse the source committer\ndate for reproducible hashes. Origin trailers track cherry-picked commits.\nDivergent merge commits require manual integration.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "Workspace.withReset": {
+      "sig": [
+        "withReset(commit: String!, hard: Boolean = false): Workspace!"
+      ],
+      "doc": "Move this workspace's Git HEAD to a commit and return the resulting stable workspace.\n\nA local workspace is snapshotted automatically before resetting; untracked\nfiles require interactive approval. The host checkout is not modified. By\ndefault the difference between the previous working tree and the target commit\nstays uncommitted, as with git reset --mixed, so history can be reworked and\nreapplied with withCommit — e.g. to amend the latest commit message, reset\nto its parent and commit again.\n\nWith hard, the working tree is reset to the commit and every uncommitted change is discarded.\n\nCommits orphaned by the reset are not preserved: the frozen repository keeps\nreachable history only, so a reset cannot be undone by resetting forward\nagain.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "WorkspaceGit.directory": {
+      "sig": [
+        "directory: Directory!"
+      ],
+      "doc": "Return a self-contained Git metadata directory for this workspace's HEAD,\nincluding its full reachable history and an index matching HEAD.\n\nMount this directory at .git alongside workspace.directory(\"/\") to create a\nusable checkout. Pending workspace edits remain uncommitted; the original\ncheckout's staging state is not preserved.\n\nThis is a snapshot: Git writes to a mounted copy do not update the workspace.\nThe workspace must have a Git repository with a HEAD commit.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": false
+    },
+    "WorkspaceGit.head": {
+      "sig": [
+        "head: GitRef!"
+      ],
+      "doc": "The checked-out HEAD of this workspace.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    },
+    "WorkspaceGit.uncommitted": {
+      "sig": [
+        "uncommitted: Changeset!"
+      ],
+      "doc": "Uncommitted changes in this workspace, using the same rules as GitRepository.uncommitted.",
+      "schema_sha": "dbfaa800cfba8bcdba155e4c6415bc9225af9dfc",
+      "at_base": true
+    }
+  },
+  "queue": []
+}
