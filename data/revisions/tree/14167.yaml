@@ -1,6 +1,6 @@
 source: code
 sha: "655c54e254e447548294bbff50734009e6376059"
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   Proposed: hold the mirror lock only to update the mirror and copy objects out. A
   full-history (depth 0) copy uses pack-objects in the checkout with the mirror as a
