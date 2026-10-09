@@ -1,5 +1,5 @@
 source: code
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   git's detached automatic maintenance could repack the mirror (rewriting its shallow
   file) while the next fetch used it: 'shallow file has changed since we read it'.
