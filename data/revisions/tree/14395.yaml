@@ -1,5 +1,5 @@
 source: code
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   Source-only trees of local repositories no longer fetch and repack history only to
   delete .git: the scratch checkout borrows the mounted objects through a temporary

@@ -1,5 +1,5 @@
 source: code
-verified_at: null
+verified_at: 2026-10-09
 what: >-
   The tree becomes a lazy, persisted producer (DirectoryGitTreeLazy): nothing is checked
   out until the directory is read, and its recipe can rebuild it after a restart or on
