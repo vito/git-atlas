@@ -27,12 +27,18 @@ pointers:
   - at: core/git_pack_copy.go:packGitObjects
     note: new, branch
 code: |
-  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+  GitRef.tree(discardGitDir, depth=1, includeTags)
     if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
     if keep .git, depth 0, no tags: return GitRef.__fullCheckout
       (saved under its own recipe kind: gitFullCheckout)
     dir = DirectoryGitTreeLazy{ref, discard, depth, includeTags}   # built on first read, persisted
     remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes]), set after materialization
+
+  GitCommit.tree(discardGitDir, depth=1, includeTags)
+    if no .git: return repo.ref(SHA).tree(…)                   # shares GitRef.tree's pinned recipe
+    else dir = DirectoryGitCommitTreeLazy{commit, …}            # never __fullCheckout
+      on read: GitCommit.Tree: prefetch the commit; Backend.Tree(…)
+    remote: same contentDigest, on the lazy
 
   RemoteGitRef.Tree(…)
     setup auth/known hosts/DNS outside the lock (submodules need them later)

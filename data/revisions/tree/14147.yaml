@@ -10,12 +10,18 @@ pointers:
   - core/schema/git.go:gitSchema.tree
   - core/schema/git.go:pinnedGitTree
   - core/schema/git.go:gitSchema.fullCheckout
+  - core/schema/git.go:gitSchema.commitTree
 code: |
-  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+  GitRef.tree(discardGitDir, depth=1, includeTags)
     if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
     if keep .git, depth 0, no tags: return GitRef.__fullCheckout
     dir = ref.Backend.Tree(discard, depth, includeTags)        # eager, in the resolver
     remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes])
+
+  GitCommit.tree(discardGitDir, depth=1, includeTags)
+    if no .git: return repo.ref(SHA).tree(…)                   # shares GitRef.tree's pinned recipe
+    else GitCommit.Tree, eager (never __fullCheckout): prefetch the commit; Backend.Tree(…)
+    remote: same contentDigest
 
   RemoteGitRef.Tree(…)
     lock git-remote::<url>                                    # held for the whole block

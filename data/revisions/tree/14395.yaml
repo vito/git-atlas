@@ -11,11 +11,17 @@ pointers:
   - core/git.go:writeGitAlternates
   - core/git_remote.go:mirrorFetchDepth
 code: |
-  GitRef.tree(discardGitDir, depth=1, includeTags)            # GitCommit.tree takes the same route
+  GitRef.tree(discardGitDir, depth=1, includeTags)
     if no .git and ref named, not by SHA: return repo.ref(SHA).tree(…)
     if keep .git, depth 0, no tags: return GitRef.__fullCheckout
     dir = DirectoryGitTreeLazy{ref, discard, depth, includeTags}   # built on first read, persisted
     remote: contentDigest = hash(url, SHA, keepsGit [, depth, tags, name, remotes]), set after materialization
+
+  GitCommit.tree(discardGitDir, depth=1, includeTags)
+    if no .git: return repo.ref(SHA).tree(…)                   # shares GitRef.tree's pinned recipe
+    else dir = DirectoryGitCommitTreeLazy{commit, …}            # never __fullCheckout
+      on read: GitCommit.Tree: prefetch the commit; Backend.Tree(…)
+    remote: same contentDigest, on the lazy
 
   RemoteGitRef.Tree(…)
     lock git-remote::<url>                                    # held for the whole block

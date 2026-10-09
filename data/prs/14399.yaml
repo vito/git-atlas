@@ -1,6 +1,6 @@
 summary: Checks out commit deltas incrementally, as COW children of the parent's tree.
 effects: >-
-  tree / checkout: Part of the native-commit stack measured in #14397 (12k-file repo,
-  three one-file commits: 11.07 s → 2.28 s median Workspace.withCommit across
-  #14396–#14397).
+  tree / checkout: Median Workspace.withCommit 3.18 s → 0.94 s, full cycle 4.47 s → 2.74 s
+  (12k-file repo, three one-file scoped commits, vs. this PR's base after #14397; PR
+  description).
 color: "#087f5b"
